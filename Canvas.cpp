@@ -19,6 +19,7 @@ Canvas::Canvas(int width, int height)
 
 Canvas::~Canvas()
 {
+	delete[] data;
 }
 
 void Canvas::colourToData(int x, int y, sf::Color c)

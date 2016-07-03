@@ -14,5 +14,6 @@ public:
 	
 	void update();
 	float getWaveform(float i){ return boost * waveform[(int)(i*bufferSize)]; }
+	float getAmplitude();
 };
 

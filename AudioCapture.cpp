@@ -24,4 +24,17 @@ void AudioCapture::update()
 	while (BASS_ChannelGetData(recordHandle, 0, BASS_DATA_AVAILABLE) < bufferSize)
 	{ }
 	BASS_ChannelGetData(recordHandle, waveform, 4 * 2 * bufferSize);
+	BASS_ChannelGetData(recordHandle, 0, 0xFFFFFFF);//clear buffer
+}
+
+float AudioCapture::getAmplitude()
+{
+	float sum = 0;
+	for (int c = 0; c < bufferSize; c += bufferSize / 10)
+	{
+		sum += abs(waveform[c]);
+	}
+	sum /= 10;
+	sum *= boost;
+	return sum;
 }

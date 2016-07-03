@@ -1,18 +1,10 @@
 #pragma once
 #include <string>
-
-float clamp(float v, float min, float max)
-{
-	if (v < min)
-		return min;
-	if (v > max)
-		return max;
-	return v;
-}
+#include "Math.h"
 
 class Parameter
 {
-	float value, min, max;
+	float value, min, max, interval;
 	std::string name;
 public:
 	Parameter(std::string n, float v, float min, float max);
@@ -21,7 +13,9 @@ public:
 	float getValue(){ return value; }
 	void setValue(float v)
 	{
-		value = clamp(v, min, max);
+		value = Math::clamp(v, min, max);
 	}
+	void increment(){ value = Math::clamp(value + interval, min, max); }
+	void decrement(){ value = Math::clamp(value - interval, min, max); }
 };
 
