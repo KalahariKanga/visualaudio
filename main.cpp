@@ -26,7 +26,7 @@ int main(int argc, char** argv[])
 		sprite.setTexture(texture);
 		window.draw(sprite);
 		window.display();
-		canvas.setDrawColour(sf::Color(0,0,0,32));
+		canvas.setDrawColour(sf::Color(0,0,0,128));
 		canvas.drawRectangle(0, 0, 640, 480, 0);
 		while (window.pollEvent(ev))
 		{

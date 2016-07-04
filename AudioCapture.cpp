@@ -11,30 +11,40 @@ AudioCapture::AudioCapture()
 	BASS_RecordInit(-1);
 	recordHandle = BASS_RecordStart(44100, 2, BASS_SAMPLE_FLOAT, 0, 0);
 	waveform = new float[bufferSize];
+	FFT = new float[bufferSize/2];
 }
 
 
 AudioCapture::~AudioCapture()
 {
 	delete[] waveform;
+	delete[] FFT;
 }
 
 void AudioCapture::update()
 {
+	amplitudeRecalc = 1;
 	while (BASS_ChannelGetData(recordHandle, 0, BASS_DATA_AVAILABLE) < bufferSize)
 	{ }
-	BASS_ChannelGetData(recordHandle, waveform, 4 * 2 * bufferSize);
+	BASS_ChannelGetData(recordHandle, waveform, sizeof(float) * 2 * bufferSize);
+	BASS_ChannelGetData(recordHandle, FFT, BASS_DATA_FFT1024);
 	BASS_ChannelGetData(recordHandle, 0, 0xFFFFFFF);//clear buffer
 }
 
 float AudioCapture::getAmplitude()
 {
-	float sum = 0;
-	for (int c = 0; c < bufferSize; c += bufferSize / 10)
+	static float sum;
+	if (amplitudeRecalc)
 	{
-		sum += abs(waveform[c]);
+		amplitudeRecalc = 0;
+		sum = 0;
+		for (int c = 0; c < bufferSize; c += bufferSize / 10)
+		{
+			sum += abs(waveform[c]);
+		}
+		sum /= 10;
+		sum *= boost;
+		return sum;
 	}
-	sum /= 10;
-	sum *= boost;
 	return sum;
 }

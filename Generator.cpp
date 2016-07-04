@@ -17,8 +17,13 @@ void Generator::update(Canvas& target)
 		target.setDrawColour(sf::Color(c/3, 255*((float)c/640), 200));
 		target.drawLine(c, 240, c, 240 + ac->getWaveform((float)c/640));
 	}*/
-	target.setDrawColour(sf::Color(0, 255, 100));
-	target.drawRectangle(0, 0, 640, ac->getAmplitude(), 0);
+	/*target.setDrawColour(sf::Color(0, 255, 100));
+	target.drawRectangle(0, 0, 640, ac->getAmplitude(), 0);*/
+	for (int c = 0; c < 640; c++)
+	{
+		target.setDrawColour(sf::Color(c / 3, 255 * ((float)c / 640), 200));
+		target.drawLine(c, 480, c, 480 - ac->getFFT((float)c / 640));
+	}
 }
 
 void Generator::addParameter(std::string name, float value, float min, float max)
