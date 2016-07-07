@@ -1,34 +1,44 @@
 #include "AudioCapture.h"
 #include <iostream>
 
+static int callback(const void *inputBuffer, void *outputBuffer,
+	unsigned long framesPerBuffer,
+	const PaStreamCallbackTimeInfo* timeInfo,
+	PaStreamCallbackFlags statusFlags,
+	void *userData)
+{
+	for (int c = 0; c < framesPerBuffer; c++)
+		((AudioCapture*)userData)->waveform[c] = ((float*)inputBuffer)[c];
+	((AudioCapture*)userData)->amplitudeRecalc = 1;
+	return paContinue;
+}
+
 AudioCapture::AudioCapture()
 {
-	BASS_Init(-1, 44100, 0, 0, 0);
-	/*
-	BASS_SetConfig(BASS_CONFIG_BUFFER, 128);
-	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 10);
-	*/
-	BASS_RecordInit(-1);
-	recordHandle = BASS_RecordStart(44100, 2, BASS_SAMPLE_FLOAT, 0, 0);
+	Pa_Initialize();
+	PaStreamParameters inputParameters;
+	auto n = Pa_GetDefaultInputDevice();
+	auto info = Pa_GetDeviceInfo(n);
+	inputParameters.channelCount = info->maxInputChannels;
+	inputParameters.device = n;
+	inputParameters.sampleFormat = paFloat32;
+	inputParameters.suggestedLatency = info->defaultLowInputLatency;
 	waveform = new float[bufferSize];
-	FFT = new float[bufferSize/2];
+	inputParameters.hostApiSpecificStreamInfo = NULL;
+	Pa_OpenStream(&stream, &inputParameters, NULL, 44100, bufferSize, paNoFlag, callback, (void*)this);
+	Pa_StartStream(stream);
 }
 
 
 AudioCapture::~AudioCapture()
 {
+	Pa_Terminate();
 	delete[] waveform;
-	delete[] FFT;
 }
 
 void AudioCapture::update()
 {
-	amplitudeRecalc = 1;
-	while (BASS_ChannelGetData(recordHandle, 0, BASS_DATA_AVAILABLE) < bufferSize)
-	{ }
-	BASS_ChannelGetData(recordHandle, waveform, sizeof(float) * 2 * bufferSize);
-	BASS_ChannelGetData(recordHandle, FFT, BASS_DATA_FFT1024);
-	BASS_ChannelGetData(recordHandle, 0, 0xFFFFFFF);//clear buffer
+	
 }
 
 float AudioCapture::getAmplitude()
