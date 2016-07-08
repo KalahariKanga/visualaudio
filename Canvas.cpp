@@ -286,3 +286,11 @@ void Canvas::clear()
 {
 	clear(drawColour);
 }
+
+void Canvas::resize(int w, int h)
+{
+	delete[] data;
+	data = new sf::Uint8[w*h * 4];
+	width = w;
+	height = h;
+}

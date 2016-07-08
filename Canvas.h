@@ -4,14 +4,14 @@
 class Canvas
 {
 	sf::Color drawColour;
-	
+	int width, height;
 public:
 	Canvas();
 	Canvas(int, int);
 	~Canvas();
 	sf::Uint8* data = nullptr;
 	void colourToData(int x, int y, sf::Color c);
-	int width, height;
+	
 
 	void loadFromFile(std::string fname);
 
@@ -28,5 +28,9 @@ public:
 	//void drawLineFunction(int x0, int y0, int x1, int y1, std::function<float(float)> f, bool fixEndpoints = 1);
 	void clear();
 	void clear(sf::Color);
+
+	int getWidth(){ return width; }
+	int getHeight(){ return height; }
+	void resize(int w, int h);
 };
 
