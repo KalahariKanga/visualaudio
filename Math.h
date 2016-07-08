@@ -18,5 +18,9 @@ public:
 		float r = (float)rand() / (float)RAND_MAX;
 		return min + r * (max - min);
 	}
+	static float lint(float a, float b, float x)
+	{
+		return a + x*(b - a);
+	}
 };
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+#include "Palette.h"
 #define PI 3.14159265
 class Canvas
 {
@@ -32,5 +32,10 @@ public:
 	int getWidth(){ return width; }
 	int getHeight(){ return height; }
 	void resize(int w, int h);
+
+
+	//for now
+	Palette* pal;
+
 };
 

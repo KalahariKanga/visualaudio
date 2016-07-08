@@ -1,7 +1,8 @@
 
 #include "Generator.h"
-#include <iostream>
 
+#include <iostream>
+#include "Palette.h"
 
 
 int main(int argc, char** argv[])
@@ -14,14 +15,16 @@ int main(int argc, char** argv[])
 	sf::Image image;
 
 	AudioCapture AC;
+	Palette palette;
 	Generator gen(&AC);
 	Canvas canvas(windowWidth, windowHeight);
+	canvas.pal = &palette;
 	sf::Event ev;
 	bool quit = 0;
 	while (!quit){ 
 		AC.update(); 
 		gen.update(canvas);
-
+		palette.update();
 		image.create(windowWidth, windowHeight, canvas.data);
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
