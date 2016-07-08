@@ -43,6 +43,15 @@ int main(int argc, char** argv[])
 				canvas.resize(windowWidth, windowHeight);
 				std::cout << windowWidth << " " << windowHeight << "\n";
 			}
+			if (ev.type == sf::Event::KeyPressed)
+			{
+				switch (ev.key.code)
+				{
+				case sf::Keyboard::N:
+					AC.normalise();
+					break;
+				}
+			}
 		}
 	};
 	return 0;

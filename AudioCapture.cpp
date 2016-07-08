@@ -53,6 +53,12 @@ void AudioCapture::update()
 	
 }
 
+float AudioCapture::getWaveform(float i)
+{
+	float v = waveform[(int)(i*bufferSize)].r + waveform[(int)(i*bufferSize) + 1].r;
+	return boost * v / 2;
+}
+
 float AudioCapture::getAmplitude()
 {
 	static float sum;
@@ -69,4 +75,10 @@ float AudioCapture::getAmplitude()
 		return sum;
 	}
 	return sum;
+}
+
+void AudioCapture::normalise()
+{
+	float amp = getAmplitude()/boost;
+	boost = 20 / amp;
 }

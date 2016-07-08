@@ -17,10 +17,12 @@ public:
 	~AudioCapture();
 	
 	void update();
-	float getWaveform(float i){ return boost * waveform[(int)(i*bufferSize)].r; }
+	float getWaveform(float i);
 	float getFFT(float i){ return fft[(int)(i*bufferSize/4)].r; }
 	float getAmplitude();
 	
+	void normalise();
+
 	friend static int callback(const void *inputBuffer, void *outputBuffer,
 		unsigned long framesPerBuffer,
 		const PaStreamCallbackTimeInfo* timeInfo,
