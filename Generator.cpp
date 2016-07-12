@@ -1,5 +1,5 @@
 #include "Generator.h"
-
+#include <iostream>
 
 Generator::Generator(AudioCapture* AC) : ac(AC)
 {
@@ -30,5 +30,17 @@ void Generator::update(Canvas& target)
 
 void Generator::addParameter(std::string name, float value, float min, float max)
 {
-	parameters.emplace_back(name, value, min, max);
+	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(value, min, max)));
+}
+
+Parameter& Generator::getParameter(std::string name)
+{
+	try
+	{
+		return parameters.at(name);
+	}
+	catch (std::out_of_range)
+	{
+		std::cout << "Error: Unknown Parameter Name: " << name << "\n";
+	}
 }

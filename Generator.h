@@ -8,13 +8,15 @@
 class Generator
 {
 	
-	std::vector<Parameter> parameters;
-	void addParameter(std::string name, float value, float min, float max);
+	std::map<std::string, Parameter> parameters;
 protected:
 	AudioCapture* const ac;
+	void addParameter(std::string name, float value, float min, float max);
 public:
 	Generator(AudioCapture* AC);
 	~Generator();
 	virtual void update(Canvas& target);//draw
+	Parameter& getParameter(std::string name);
+
 };
 

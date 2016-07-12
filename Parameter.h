@@ -5,17 +5,30 @@
 class Parameter
 {
 	float value, min, max, interval;
-	std::string name;
+	bool changed = 1;
 public:
-	Parameter(std::string n, float v, float min, float max);
+	Parameter(float v, float min, float max);
 	~Parameter();
-	std::string getName(){ return name; }
-	float getValue(){ return value; }
+	float getValue()
+	{
+		changed = 0;
+		return value;
+	}
 	void setValue(float v)
 	{
+		changed = 1; //check if it's actually different?
 		value = Math::clamp(v, min, max);
 	}
-	void increment(){ value = Math::clamp(value + interval, min, max); }
-	void decrement(){ value = Math::clamp(value - interval, min, max); }
+	void increment()
+	{
+		value = Math::clamp(value + interval, min, max);
+		changed = 1;
+	}
+	void decrement()
+	{
+		value = Math::clamp(value - interval, min, max);
+		changed = 1;
+	}
+	bool hasChanged(){ return changed; }
 };
 

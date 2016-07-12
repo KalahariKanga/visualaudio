@@ -1,7 +1,7 @@
 #include "Parameter.h"
 
 
-Parameter::Parameter(std::string n, float v, float min, float max) : name(n), value(v), min(min), max(max)
+Parameter::Parameter(float v, float min, float max) : value(v), min(min), max(max)
 {
 	interval = (max - min) / 10;
 }
