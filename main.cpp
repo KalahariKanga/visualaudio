@@ -1,8 +1,8 @@
 
-#include "Generator.h"
 
 #include <iostream>
 #include <thread>
+#include "Gen_Swarm.h"
 #include "Palette.h"
 
 
@@ -18,7 +18,7 @@ int main(int argc, char** argv[])
 
 	AudioCapture AC;
 	Palette palette;
-	Generator gen(&AC);
+	Gen_Swarm gen(&AC);
 	Canvas canvas(windowWidth, windowHeight);
 	canvas.pal = &palette;
 	sf::Event ev;
@@ -56,6 +56,12 @@ int main(int argc, char** argv[])
 				{
 				case sf::Keyboard::N:
 					AC.normalise();
+					break;
+				case sf::Keyboard::Up:
+					gen.getParameter("noParts").increment();
+					break;
+				case sf::Keyboard::Down:
+					gen.getParameter("noParts").decrement();
 					break;
 				}
 			}

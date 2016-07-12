@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <cstdlib>
 class Math
 {
@@ -21,6 +22,14 @@ public:
 	static float lint(float a, float b, float x)
 	{
 		return a + x*(b - a);
+	}
+	static float point_direction(float x1, float y1, float x2, float y2)
+	{
+		return atan2(y2 - y1 , x2 - x1);
+	}
+	static float point_distance(float x1, float y1, float x2, float y2)
+	{
+		return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 	}
 };
 
