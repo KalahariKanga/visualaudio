@@ -2,12 +2,14 @@
 #include "Generator.h"
 
 #include <iostream>
+#include <thread>
 #include "Palette.h"
 
 
 int main(int argc, char** argv[])
 {
 	int windowWidth = 640, windowHeight = 480;
+	const int fps = 30;
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
 	sf::Sprite sprite;
@@ -21,7 +23,9 @@ int main(int argc, char** argv[])
 	canvas.pal = &palette;
 	sf::Event ev;
 	bool quit = 0;
-	while (!quit){ 
+	sf::Clock clock;
+	while (!quit){
+		clock.restart();
 		AC.update(); 
 		gen.update(canvas);
 		palette.update();
@@ -32,7 +36,7 @@ int main(int argc, char** argv[])
 		window.draw(sprite);
 		window.display();
 
-		canvas.setDrawColour(sf::Color(0,0,0,128));
+		canvas.setDrawColour(sf::Color(0,0,0,255));
 		canvas.drawRectangle(0, 0, windowWidth, windowHeight, 0);
 
 		while (window.pollEvent(ev))
@@ -56,6 +60,9 @@ int main(int argc, char** argv[])
 				}
 			}
 		}
+
+		if (clock.getElapsedTime().asSeconds() < 1.0/fps)
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	};
 	return 0;
 }
