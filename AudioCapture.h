@@ -6,19 +6,20 @@ class AudioCapture
 {
 	int boost = 5000;
 	const int bufferSize = 512;
+	int waveformSize;
 	bool amplitudeRecalc = 1;
 
 	PaStream* stream;
 
 	kiss_fft_cfg cfg;
-	kiss_fft_cpx *waveform, *fft;
+	kiss_fft_cpx *waveform, *fft, *data;
 public:
 	AudioCapture();
 	~AudioCapture();
 	
 	void update();
 	float getWaveform(float i);
-	float getFFT(float i){ return fft[(int)(i*bufferSize/4)].r; }
+	float getFFT(float i){ return fft[(int)(i*waveformSize/2)].r; }
 	float getAmplitude();
 	
 	void normalise();
