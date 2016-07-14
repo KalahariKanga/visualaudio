@@ -3,12 +3,12 @@
 
 Palette::Palette()
 {
-	l0 = sf::Color::Blue;
-	h0 = sf::Color::Red;
-	l1 = sf::Color::Red;
-	h1 = sf::Color::Blue;
+	l0 = sf::Color::Red;
+	h0 = sf::Color::Green;
+	l1 = sf::Color::Blue;
+	h1 = sf::Color::Yellow;
 	pos = 0;
-	speed = 0.01;
+	speed = 0.002;
 	build();
 }
 
@@ -43,5 +43,6 @@ void Palette::update()
 
 sf::Color Palette::getColour(float a)
 {
+	a = Math::clamp(a, 0, 1);
 	return colours[a * 256];
 }

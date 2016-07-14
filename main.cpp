@@ -17,18 +17,16 @@ int main(int argc, char** argv[])
 	sf::Image image;
 
 	AudioCapture AC;
-	Palette palette;
-	Gen_Swarm gen(&AC);
+	Generator gen(&AC);
 	Canvas canvas(windowWidth, windowHeight);
-	canvas.pal = &palette;
 	sf::Event ev;
 	bool quit = 0;
 	sf::Clock clock;
 	while (!quit){
 		clock.restart();
 		AC.update(); 
+		canvas.update();
 		gen.update(canvas);
-		palette.update();
 		image.create(windowWidth, windowHeight, canvas.data);
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);

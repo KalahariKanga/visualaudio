@@ -58,6 +58,11 @@ void Canvas::setDrawColour(sf::Color c)
 	drawColour = c;
 }
 
+void Canvas::setDrawColour(float a)
+{
+	drawColour = palette.getColour(a);
+}
+
 void Canvas::setDrawAlpha(float a)
 {
 	drawColour.a = a;//clamp(a*255, 0, 255);
@@ -293,4 +298,9 @@ void Canvas::resize(int w, int h)
 	data = new sf::Uint8[w*h * 4];
 	width = w;
 	height = h;
+}
+
+void Canvas::update()
+{
+	palette.update();
 }

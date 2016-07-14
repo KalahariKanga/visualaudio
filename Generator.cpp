@@ -22,9 +22,9 @@ void Generator::update(Canvas& target)
 	
 	for (int c = 0; c < width; c++)
 	{
-		target.setDrawColour(target.pal->getColour((float)c/width));
+		target.setDrawColour((float)c/width);
 		target.drawLine(c, height, c, height - (height / 2)*ac->getFFT((float)c / width));
-		target.drawLine(c, height / 2, c, height / 2 + ac->getWaveform((float)c / width));
+		target.drawLine(c, height / 2 - ac->getWaveform((float)c / width), c, height / 2 + ac->getWaveform((float)c / width));
 	}
 }
 

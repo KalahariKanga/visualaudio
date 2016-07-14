@@ -30,12 +30,12 @@ void Gen_Swarm::update(Canvas& target)
 			break;
 		case 1:
 			p.spd = ac->getAmplitude() / 5;
-			p.dir = ac->getAmplitude() / 5 + Math::point_direction(p.x,p.y,particles[0].x,particles[1].y);
-			//p.dir = ac->getAmplitude() / 5 + Math::point_direction(p.x, p.y, 0, 0);
+			//p.dir = ac->getAmplitude() / 5 + Math::point_direction(p.x,p.y,particles[0].x,particles[1].y);
+			p.dir = ac->getAmplitude() / 5 + Math::point_direction(p.x, p.y, 0, 0);
 			break;
 		}
 		p.update();
-		target.setDrawColour(target.pal->getColour(p.x/target.getWidth()));
+		target.setDrawColour(p.x/target.getWidth());
 		target.drawCircle(p.x, p.y, ac->getAmplitude()/3, 0);
 	}
 }

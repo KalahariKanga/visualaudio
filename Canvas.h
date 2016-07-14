@@ -4,6 +4,7 @@
 class Canvas
 {
 	sf::Color drawColour;
+	Palette palette;
 	int width, height;
 public:
 	Canvas();
@@ -17,6 +18,7 @@ public:
 
 	sf::Color getPoint(int x, int y);
 	void setDrawColour(sf::Color);
+	void setDrawColour(float a);
 	void setDrawAlpha(float);
 	void drawPoint(int x, int y);
 	void drawPoint(int x, int y, sf::Color col);
@@ -33,9 +35,8 @@ public:
 	int getHeight(){ return height; }
 	void resize(int w, int h);
 
-
-	//for now
-	Palette* pal;
+	void update();
+	
 
 };
 
