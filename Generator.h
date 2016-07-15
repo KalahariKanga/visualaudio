@@ -11,7 +11,7 @@ class Generator
 	std::map<std::string, Parameter> parameters;
 protected:
 	AudioCapture* const ac;
-	void addParameter(std::string name, float value, float min, float max);
+	void addParameter(std::string name, float value, float min, float max, float interval = -1);
 public:
 	Generator(AudioCapture* AC);
 	~Generator();

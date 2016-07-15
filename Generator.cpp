@@ -28,9 +28,9 @@ void Generator::update(Canvas& target)
 	}
 }
 
-void Generator::addParameter(std::string name, float value, float min, float max)
+void Generator::addParameter(std::string name, float value, float min, float max, float interval)
 {
-	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(value, min, max)));
+	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(value, min, max, interval)));
 }
 
 Parameter& Generator::getParameter(std::string name)

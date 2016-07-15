@@ -1,9 +1,10 @@
 #include "Parameter.h"
 
 
-Parameter::Parameter(float v, float min, float max) : value(v), min(min), max(max)
+Parameter::Parameter(float v, float min, float max, float interval) : value(v), min(min), max(max), interval(interval)
 {
-	interval = (max - min) / 10;
+	if (interval == -1)
+		interval = (max - min) / 10;
 }
 
 

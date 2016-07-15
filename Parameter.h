@@ -7,7 +7,7 @@ class Parameter
 	float value, min, max, interval;
 	bool changed = 1;
 public:
-	Parameter(float v, float min, float max);
+	Parameter(float v, float min, float max, float interval = -1);
 	~Parameter();
 	float getValue()
 	{
