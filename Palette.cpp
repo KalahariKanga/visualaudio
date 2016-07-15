@@ -44,5 +44,5 @@ void Palette::update()
 sf::Color Palette::getColour(float a)
 {
 	a = Math::clamp(a, 0, 1);
-	return colours[a * 256];
+	return colours[a * 255];
 }
