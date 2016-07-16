@@ -71,7 +71,7 @@ void AudioCapture::update()
 
 float AudioCapture::getWaveform(float i)
 {
-	return boost * data[(int)(i*waveformSize)].r;
+	return boost * waveform[(int)(i*waveformSize)].r;
 }
 
 float AudioCapture::getAmplitude()
