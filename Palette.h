@@ -2,8 +2,9 @@
 #include "SFML/graphics.hpp"
 #include <array>
 #include "Math.h"
+#include "InputReciever.h"
 
-class Palette
+class Palette : public InputReciever
 {
 	sf::Color l0, h0, l1, h1;
 	float pos, speed;

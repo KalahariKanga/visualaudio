@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include "Gen_Swarm.h"
+#include "Gen_CircleSpectrum.h"
 #include "Palette.h"
 
 
@@ -56,10 +57,10 @@ int main(int argc, char** argv[])
 					AC.normalise();
 					break;
 				case sf::Keyboard::Up:
-					gen.getParameter("noParts").increment();
+					canvas.getPalette().getParameter("paletteSpeed").increment();
 					break;
 				case sf::Keyboard::Down:
-					gen.getParameter("noParts").decrement();
+					canvas.getPalette().getParameter("paletteSpeed").decrement();
 					break;
 				}
 			}

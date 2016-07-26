@@ -1,7 +1,8 @@
 #pragma once
 #include "Palette.h"
+
 #define PI 3.14159265
-class Canvas
+class Canvas : public InputReciever
 {
 	sf::Color drawColour;
 	Palette palette;
@@ -36,7 +37,7 @@ public:
 	void resize(int w, int h);
 
 	void update();
-	
+	Palette& getPalette() { return palette; }
 
 };
 
