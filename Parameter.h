@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include "Math.h"
+#include "SFML/graphics.hpp"
 
 class Parameter
 {

@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <thread>
-#include "Action.h"
+#include "KeyboardInput.h"
 #include "Gen_Swarm.h"
 #include "Gen_CircleSpectrum.h"
 #include "Gen_Waveform.h"
 #include "Palette.h"
+
 
 
 int main(int argc, char** argv[])
@@ -26,8 +27,13 @@ int main(int argc, char** argv[])
 	bool quit = 0;
 	sf::Clock clock;
 
-	Action paletteFaster(canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
-	Action paletteSlower(canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
+	KeyboardInput keyboard;
+
+	Action paletteFaster(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
+	Action paletteSlower(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
+
+	keyboard.addAction((int)sf::Keyboard::Up, paletteFaster);
+	keyboard.addAction((int)sf::Keyboard::Down, paletteSlower);
 
 	while (!quit){
 		clock.restart();
@@ -62,15 +68,13 @@ int main(int argc, char** argv[])
 				case sf::Keyboard::N:
 					AC.normalise();
 					break;
-				case sf::Keyboard::Up:
-					paletteFaster.execute();
-					break;
-				case sf::Keyboard::Down:
-					paletteSlower.execute();
-					break;
 				}
+				keyboard.addEvent((int)ev.key.code);
+
 			}
 		}
+
+		keyboard.update();
 
 		if (clock.getElapsedTime().asSeconds() < 1.0/fps)
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));

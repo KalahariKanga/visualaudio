@@ -3,7 +3,7 @@
 
 class Action
 {
-	Parameter& target;
+	Parameter* target;
 	float amount;
 public:
 	enum class Type
@@ -11,7 +11,8 @@ public:
 		set, shift, trigger
 	} type;
 	
-	Action(Parameter& target, Action::Type type, float amount = 0);
+	Action();
+	Action(Parameter* target, Action::Type type, float amount = 0);
 	~Action();
 
 	void execute();
