@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <thread>
+#include "Action.h"
 #include "Gen_Swarm.h"
 #include "Gen_CircleSpectrum.h"
 #include "Palette.h"
@@ -23,6 +24,10 @@ int main(int argc, char** argv[])
 	sf::Event ev;
 	bool quit = 0;
 	sf::Clock clock;
+
+	Action paletteFaster(canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
+	Action paletteSlower(canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
+
 	while (!quit){
 		clock.restart();
 		AC.update(); 
@@ -57,10 +62,10 @@ int main(int argc, char** argv[])
 					AC.normalise();
 					break;
 				case sf::Keyboard::Up:
-					canvas.getPalette().getParameter("paletteSpeed").increment();
+					paletteFaster.execute();
 					break;
 				case sf::Keyboard::Down:
-					canvas.getPalette().getParameter("paletteSpeed").decrement();
+					paletteSlower.execute();
 					break;
 				}
 			}
