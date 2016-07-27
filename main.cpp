@@ -5,6 +5,7 @@
 #include "Action.h"
 #include "Gen_Swarm.h"
 #include "Gen_CircleSpectrum.h"
+#include "Gen_Waveform.h"
 #include "Palette.h"
 
 
@@ -19,7 +20,7 @@ int main(int argc, char** argv[])
 	sf::Image image;
 
 	AudioCapture AC;
-	Generator gen(&AC);
+	Gen_Waveform gen(&AC);
 	Canvas canvas(windowWidth, windowHeight);
 	sf::Event ev;
 	bool quit = 0;
