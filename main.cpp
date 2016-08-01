@@ -31,10 +31,10 @@ int main(int argc, char** argv[])
 
 	Action paletteFaster(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
 	Action paletteSlower(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
-
+	Action fill(&gen.getParameter("fill"), Action::Type::trigger);
 	keyboard.addAction((int)sf::Keyboard::Up, paletteFaster);
 	keyboard.addAction((int)sf::Keyboard::Down, paletteSlower);
-
+	keyboard.addAction((int)sf::Keyboard::Space, fill);
 	while (!quit){
 		clock.restart();
 		AC.update(); 
