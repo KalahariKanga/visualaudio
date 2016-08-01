@@ -1,12 +1,6 @@
 
 #include "Canvas.h"
 
-
-//Canvas::Canvas()
-//{
-//	
-//}
-
 Canvas::Canvas(int width, int height)
 {
 	drawColour = sf::Color(255, 0, 0);
