@@ -4,11 +4,11 @@
 #define PI 3.14159265
 class Canvas : public InputReciever
 {
-	sf::Color drawColour;
+	sf::Color drawColour, clearColour;
 	Palette palette;
 	int width, height;
 public:
-	Canvas();
+	Canvas() = delete;
 	Canvas(int, int);
 	~Canvas();
 	sf::Uint8* data = nullptr;

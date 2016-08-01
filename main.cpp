@@ -32,9 +32,13 @@ int main(int argc, char** argv[])
 	Action paletteFaster(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
 	Action paletteSlower(&canvas.getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
 	Action fill(&gen.getParameter("fill"), Action::Type::trigger);
+	Action alphaUp(&canvas.getParameter("clearAlpha"), Action::Type::shift, 0.1);
+	Action alphaDown(&canvas.getParameter("clearAlpha"), Action::Type::shift, -0.1);
 	keyboard.addAction((int)sf::Keyboard::Up, paletteFaster);
 	keyboard.addAction((int)sf::Keyboard::Down, paletteSlower);
 	keyboard.addAction((int)sf::Keyboard::Space, fill);
+	keyboard.addAction((int)sf::Keyboard::Left, alphaDown);
+	keyboard.addAction((int)sf::Keyboard::Right, alphaUp);
 	while (!quit){
 		clock.restart();
 		AC.update(); 
@@ -47,8 +51,8 @@ int main(int argc, char** argv[])
 		window.draw(sprite);
 		window.display();
 
-		canvas.setDrawColour(sf::Color(0,0,0,255));
-		canvas.drawRectangle(0, 0, windowWidth, windowHeight, 0);
+		/*canvas.setDrawColour(sf::Color(0,0,0,255));
+		canvas.drawRectangle(0, 0, windowWidth, windowHeight, 0);*/
 
 		while (window.pollEvent(ev))
 		{

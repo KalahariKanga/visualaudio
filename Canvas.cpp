@@ -2,19 +2,21 @@
 #include "Canvas.h"
 
 
-Canvas::Canvas()
-{
-	
-}
+//Canvas::Canvas()
+//{
+//	
+//}
 
 Canvas::Canvas(int width, int height)
 {
 	drawColour = sf::Color(255, 0, 0);
+	clearColour = sf::Color(0, 0, 0);
 	setDrawAlpha(255);
 	data = new sf::Uint8[width*height*4];
 	this->width = width;
 	this->height = height;
 	
+	addParameter("clearAlpha", 0.5, 0, 1);
 }
 
 Canvas::~Canvas()
@@ -303,4 +305,8 @@ void Canvas::resize(int w, int h)
 void Canvas::update()
 {
 	palette.update();
+	clearColour.a = 255 * getParameter("clearAlpha").getValue();
+	for (int cx = 0; cx < width; cx++)
+		for (int cy = 0; cy < height; cy++)
+			drawPoint(cx, cy, clearColour);
 }
