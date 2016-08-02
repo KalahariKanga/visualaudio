@@ -17,6 +17,8 @@ App::App()
 	keyboard.addAction((int)sf::Keyboard::Space, fill);
 	keyboard.addAction((int)sf::Keyboard::Left, alphaDown);
 	keyboard.addAction((int)sf::Keyboard::Right, alphaUp);
+
+	shader.loadFromFile("shaders/shader", sf::Shader::Fragment);
 }
 
 
@@ -35,7 +37,7 @@ void App::update()
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
 	window.setView(sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight)));
-	window.draw(sprite);
+	window.draw(sprite,&shader);
 	window.display();
 
 	while (window.pollEvent(ev))

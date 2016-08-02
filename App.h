@@ -24,6 +24,7 @@ class App
 
 	KeyboardInput keyboard;
 
+	sf::Shader shader;
 public:
 	App();
 	~App();
