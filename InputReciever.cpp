@@ -26,3 +26,13 @@ Parameter& InputReciever::getParameter(std::string name)
 		std::cout << "Error: Unknown Parameter Name: " << name << "\n";
 	}
 }
+
+std::vector<std::string> InputReciever::getParameterList()
+{
+	std::vector<std::string> list;
+	for (auto &p : parameters)
+	{
+		list.push_back(p.first);
+	}
+	return list;
+}
