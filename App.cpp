@@ -19,6 +19,7 @@ App::App()
 	keyboard.addAction((int)sf::Keyboard::Right, alphaUp);
 
 	shader.loadFromFile("shaders/shader", sf::Shader::Fragment);
+	shader.setParameter("size_f", 4);
 }
 
 
