@@ -66,6 +66,6 @@ void App::update()
 
 	keyboard.update();
 
-	if (clock.getElapsedTime().asSeconds() < 1.0 / fps)
+	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
