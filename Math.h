@@ -1,6 +1,8 @@
 #pragma once
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
+
 class Math
 {
 public:

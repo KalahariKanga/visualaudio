@@ -17,7 +17,8 @@ void InputDevice::update()
 		int code = eventList.front();
 		eventList.pop_front();
 		auto action = inputMap.find(code);
-		(action->second).execute();
+		if (action != inputMap.end())
+			(action->second).execute();
 	}
 }
 
