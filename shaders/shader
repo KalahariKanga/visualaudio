@@ -3,6 +3,7 @@ uniform float size_f;
 
 void main()
 {
+	vec4 newColour;
 	vec4 sum = vec4(0);
 	vec2 texcoord = vec2(gl_TexCoord[0]);
 	int j;

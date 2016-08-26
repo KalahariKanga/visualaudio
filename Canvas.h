@@ -37,6 +37,7 @@ public:
 	void resize(int w, int h);
 
 	void update();
+	void wipe();
 	Palette& getPalette() { return palette; }
 
 };

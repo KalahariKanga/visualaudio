@@ -1,0 +1,19 @@
+uniform sampler2D texture;
+uniform sampler2D lastFrame;
+uniform float size_f;
+uniform float alpha;
+
+void main()
+{
+	vec4 lastColour;
+	vec2 texcoord = vec2(gl_TexCoord[0]);
+	texcoord = vec2(texcoord.s, 1.0 - texcoord.t);
+	gl_FragColor = texture2D(texture,texcoord);
+	
+	lastColour = texture2D(lastFrame, texcoord) * alpha;
+	lastColour.a = 1;
+	
+	//lazy blending
+	if(gl_FragColor.a < 1)
+		gl_FragColor = lastColour;
+}

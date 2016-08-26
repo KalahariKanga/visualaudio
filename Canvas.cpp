@@ -281,6 +281,7 @@ void Canvas::clear(sf::Color c)
 		data[4 * i] = c.r;
 		data[4 * i + 1] = c.g;
 		data[4 * i + 2] = c.b;
+		data[4 * i + 3] = c.a;
 	}
 }
 void Canvas::clear()
@@ -299,6 +300,10 @@ void Canvas::resize(int w, int h)
 void Canvas::update()
 {
 	palette.update();
+}
+
+void Canvas::wipe()
+{
 	clearColour.a = 255 * getParameter("clearAlpha").getValue();
 	for (int cx = 0; cx < width; cx++)
 		for (int cy = 0; cy < height; cy++)
