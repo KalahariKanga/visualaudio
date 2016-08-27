@@ -7,17 +7,19 @@ App::App()
 	lastFrame.create(windowWidth, windowHeight);//!!!!
 	lastFrame.clear();
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
-	gen = std::make_unique<Gen_Swarm>(&AC);
+	gen = std::make_unique<Gen_Waveform>(&AC);
 
 	Action paletteFaster(&canvas->getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
 	Action paletteSlower(&canvas->getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
 	Action fill(&gen->getParameter("fill"), Action::Type::trigger);
+	Action baseUp(&gen->getParameter("yPosition"), Action::Type::shift, 0.05);
+	Action baseDown(&gen->getParameter("yPosition"), Action::Type::shift, -0.05);
 	Action alphaUp(&canvas->getParameter("clearAlpha"), Action::Type::shift, 0.05);
 	Action alphaDown(&canvas->getParameter("clearAlpha"), Action::Type::shift, -0.05);
 	Action nextAi(&gen->getParameter("ai"), Action::Type::shift, 1);
 	Action prevAi(&gen->getParameter("ai"), Action::Type::shift, -1);
-	keyboard.addAction((int)sf::Keyboard::Up, nextAi);
-	keyboard.addAction((int)sf::Keyboard::Down, prevAi);
+	keyboard.addAction((int)sf::Keyboard::Up, baseUp);
+	keyboard.addAction((int)sf::Keyboard::Down, baseDown);
 	keyboard.addAction((int)sf::Keyboard::Space, fill);
 	keyboard.addAction((int)sf::Keyboard::Left, alphaDown);
 	keyboard.addAction((int)sf::Keyboard::Right, alphaUp);
