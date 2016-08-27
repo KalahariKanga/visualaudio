@@ -24,10 +24,6 @@ public:
 	{
 		x += spd*cos(dir);
 		y += spd*sin(dir);
-		if (x > 640)x = 0;
-		if (x < 0)x = 640;
-		if (y > 480)y = 0;
-		if (y < 0)y = 480;
 	}
 
 };

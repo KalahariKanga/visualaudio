@@ -15,6 +15,8 @@ Gen_Swarm::~Gen_Swarm()
 
 void Gen_Swarm::update(Canvas& target)
 {
+	int width = target.getWidth();
+	int height = target.getHeight();
 	//do wrapping here
 	auto param = getParameter("noParts");
 	if (param.hasChanged())
@@ -23,6 +25,11 @@ void Gen_Swarm::update(Canvas& target)
 	}
 	for (auto& p : particles)
 	{
+		if (p.x > width)p.x = 0;
+		if (p.x < 0)p.x = width;
+		if (p.y > height)p.y = 0;
+		if (p.y < 0)p.y = height;
+
 		switch ((int)getParameter("ai").getValue())
 		{
 		case 0:
@@ -37,7 +44,7 @@ void Gen_Swarm::update(Canvas& target)
 			p.spd = 4;
 			{
 				short direction = p.id % 2 == 0 ? 1 : -1;
-				p.dir = Math::point_direction(p.x, p.y, target.getWidth() / 2, target.getHeight() / 2 + ac->getAmplitude() * 5 * direction) + (PI / 2)*direction;
+				p.dir = Math::point_direction(p.x, p.y, width / 2, height / 2 + ac->getAmplitude() * 5 * direction) + (PI / 2)*direction;
 			}
 			break;
 		case 3://this one is awesome
