@@ -6,23 +6,9 @@ App::App()
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
 	lastFrame.create(windowWidth, windowHeight);//!!!!
 	lastFrame.clear();
-	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
-	gen = std::make_unique<Gen_Waveform>(&AC);
 
-	Action paletteFaster(&canvas->getPalette().getParameter("paletteSpeed"), Action::Type::shift, 0.001);
-	Action paletteSlower(&canvas->getPalette().getParameter("paletteSpeed"), Action::Type::shift, -0.001);
-	Action fill(&gen->getParameter("fill"), Action::Type::trigger);
-	Action baseUp(&gen->getParameter("yPosition"), Action::Type::shift, 0.05);
-	Action baseDown(&gen->getParameter("yPosition"), Action::Type::shift, -0.05);
-	Action alphaUp(&canvas->getParameter("clearAlpha"), Action::Type::shift, 0.05);
-	Action alphaDown(&canvas->getParameter("clearAlpha"), Action::Type::shift, -0.05);
-	Action nextAi(&gen->getParameter("ai"), Action::Type::shift, 1);
-	Action prevAi(&gen->getParameter("ai"), Action::Type::shift, -1);
-	keyboard.addAction((int)sf::Keyboard::Up, baseUp);
-	keyboard.addAction((int)sf::Keyboard::Down, baseDown);
-	keyboard.addAction((int)sf::Keyboard::Space, fill);
-	keyboard.addAction((int)sf::Keyboard::Left, alphaDown);
-	keyboard.addAction((int)sf::Keyboard::Right, alphaUp);
+	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
+	scene = std::make_unique<Scene>(&AC);
 
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
@@ -49,7 +35,7 @@ void App::update()
 	else
 		canvas->wipe();//slow
 
-	gen->update(*canvas);
+	scene->update(*canvas);
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
@@ -87,12 +73,10 @@ void App::update()
 				AC.normalise();
 				break;
 			}
-			keyboard.addEvent((int)ev.key.code);
+			scene->addEvent(InputEvent(InputButton(InputButton::Device::Keyboard, (int)ev.key.code)));
 
 		}
 	}
-
-	keyboard.update();
 
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));

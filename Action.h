@@ -15,7 +15,7 @@ public:
 	Action(Parameter* target, Action::Type type, float amount = 0);
 	~Action();
 
-	void execute();
+	void execute(float eventValue = 1);
 	
 };
 

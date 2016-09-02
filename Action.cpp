@@ -13,7 +13,7 @@ Action::~Action()
 {
 }
 
-void Action::execute()
+void Action::execute(float eventValue)
 {
 	switch (type)
 	{

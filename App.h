@@ -1,11 +1,6 @@
 #pragma once
-#include "KeyboardInput.h"
-#include "Gen_Swarm.h"
-#include "Gen_CircleSpectrum.h"
-#include "Gen_Waveform.h"
-#include "Palette.h"
-#include <thread>
-#include <memory>
+
+#include "Scene.h"
 
 class App
 {
@@ -21,9 +16,8 @@ class App
 	const int fps = 30;
 
 	std::unique_ptr<Canvas> canvas;
-	std::unique_ptr<Generator> gen;
 
-	KeyboardInput keyboard;
+	std::unique_ptr<Scene> scene;
 
 	sf::Shader shader, blendShader;
 
