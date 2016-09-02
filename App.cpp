@@ -13,8 +13,9 @@ App::App()
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
 	
-	shader.loadFromFile("shaders/shader", sf::Shader::Fragment);
+	shader.loadFromFile("shaders/bloom", sf::Shader::Fragment);
 	shader.setParameter("size_f", 4);
+	//shader.setParameter("viewAngle", PI / 5);
 
 }
 

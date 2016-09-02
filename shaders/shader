@@ -1,35 +1,29 @@
 uniform sampler2D texture;
-uniform float size_f;
-
-void main()
-{
-	vec4 newColour;
-	vec4 sum = vec4(0);
-	vec2 texcoord = vec2(gl_TexCoord[0]);
-	int j;
-	int i;
-	int size = int(size_f);
-
-	for (i = -size; i < size; i++)
-	{
-		for (j = -size; j < size; j++)
-		{
-			sum += texture2D(texture, texcoord + vec2(j, i)*0.004) * 0.25;
-		}
-	}
-	if (texture2D(texture, texcoord).r < 0.3)
-	{
-		gl_FragColor = sum*sum*0.012 + texture2D(texture, texcoord);
-	}
-	else
-	{
-		if (texture2D(texture, texcoord).r < 0.5)
-		{
-			gl_FragColor = sum*sum*0.009 + texture2D(texture, texcoord);
-		}
-		else
-		{
-			gl_FragColor = sum*sum*0.0075 + texture2D(texture, texcoord);
-		}
-	}
+uniform float viewAngle;
+uniform float rotation;
+ 
+varying vec4 vertColor;
+ 
+void main() {
+    
+    vec2 newPos = vec2(gl_TexCoord[0]) - vec2(0.5);
+     
+   
+    float distance = length(newPos.xy);
+   
+    float angle = atan(newPos.y, newPos.x);
+     
+    
+    angle = abs(mod(angle, viewAngle) - viewAngle/2.0);
+   
+    angle += 0;
+   
+    newPos = distance * vec2(cos(angle), sin(angle));
+    
+    newPos += vec2(0.5);
+    //set gl_FragColor to color of the pixel at newPos 
+    gl_FragColor = texture2D(texture, newPos);
 }
+
+
+
