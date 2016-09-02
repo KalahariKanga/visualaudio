@@ -3,7 +3,7 @@ struct InputButton
 {
 	enum class Device
 	{
-		Keyboard, Mouse, Gamepad, MIDI
+		Keyboard, Mouse, GamepadButton, GamepadAxis, MIDI
 	} device;
 	int button;
 	bool operator<(const InputButton& other) const
@@ -27,6 +27,10 @@ struct InputEvent
 	InputEvent(InputButton _button, float _data = 1) : button(_button), data(_data)
 	{
 
+	};
+	InputEvent(InputButton::Device _device, int _button, float _data = 1) : button(_device, _button), data(_data)
+	{
+		
 	};
 };
 

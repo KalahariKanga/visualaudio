@@ -75,7 +75,14 @@ void App::update()
 				break;
 			}
 			scene->addEvent(InputEvent(InputButton(InputButton::Device::Keyboard, (int)ev.key.code)));
-
+		}
+		if (ev.type == sf::Event::JoystickButtonPressed)
+		{
+			scene->addEvent(InputEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button));
+		}
+		if (ev.type == sf::Event::JoystickMoved)
+		{
+			scene->addEvent(InputEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position/100));
 		}
 	}
 

@@ -18,7 +18,7 @@ void Action::execute(float eventValue)
 	switch (type)
 	{
 	case Type::set:
-		target->setValue(amount);
+		target->setValue(amount*(eventValue+1)/2);
 		break;
 	case Type::shift:
 		target->setValue(target->getValue() + amount);

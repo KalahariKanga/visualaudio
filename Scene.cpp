@@ -5,7 +5,10 @@ Scene::Scene(AudioCapture* ac)
 {
 	gen = std::make_unique<Gen_Waveform>(ac);
 	Action fill(&gen->getParameter("fill"), Action::Type::trigger);
+	Action position(&gen->getParameter("yPosition"), Action::Type::set, 1);
 	addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Space),fill);
+	addAction(InputButton(InputButton::Device::GamepadButton, 1), fill);
+	addAction(InputButton(InputButton::Device::GamepadAxis, 1), position);
 }
 
 
