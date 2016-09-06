@@ -17,11 +17,10 @@ void Gen_Swarm::update(Canvas& target)
 {
 	int width = target.getWidth();
 	int height = target.getHeight();
-	//do wrapping here
 	auto param = getParameter("noParts");
-	if (param.hasChanged())
+	if (param->hasChanged())
 	{
-		particles.resize((int)param.getValue());
+		particles.resize((int)param->getValue());
 	}
 	for (auto& p : particles)
 	{
@@ -30,7 +29,7 @@ void Gen_Swarm::update(Canvas& target)
 		if (p.y > height)p.y = 0;
 		if (p.y < 0)p.y = height;
 
-		switch ((int)getParameter("ai").getValue())
+		switch ((int)getParameter("ai")->getValue())
 		{
 		case 0:
 			p.spd = 8;

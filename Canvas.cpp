@@ -304,7 +304,7 @@ void Canvas::update()
 
 void Canvas::wipe()
 {
-	clearColour.a = 255 * getParameter("clearAlpha").getValue();
+	clearColour.a = 255 * getParameter("clearAlpha")->getValue();
 	for (int cx = 0; cx < width; cx++)
 		for (int cy = 0; cy < height; cy++)
 			drawPoint(cx, cy, clearColour);

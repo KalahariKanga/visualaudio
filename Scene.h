@@ -13,15 +13,18 @@
 class Scene :
 	public InputReciever
 {
+	Canvas* canvas;
 	std::unique_ptr<Generator> gen;
 	using InputMap = std::multimap < InputButton, Action > ;
 	InputMap inputMap;
 	std::list<InputEvent> eventList;
 public:
-	Scene(AudioCapture* ac);
+	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
-	void update(Canvas& target);
+	void update();
 	void addEvent(InputEvent ev);
+	void addEvent(InputButton::Device device, int button, float data = 1);
 	void addAction(InputButton input, Action action);
+	
 };
 

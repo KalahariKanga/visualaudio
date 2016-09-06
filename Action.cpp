@@ -15,6 +15,11 @@ Action::~Action()
 
 void Action::execute(float eventValue)
 {
+	if (!target)
+	{
+		std::cout << "Executing null action\n";
+		return;
+	}
 	switch (type)
 	{
 	case Type::set:

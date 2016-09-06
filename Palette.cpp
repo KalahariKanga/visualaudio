@@ -36,7 +36,7 @@ void Palette::build()
 
 void Palette::update()
 {
-	speed = getParameter("paletteSpeed").getValue();
+	speed = getParameter("paletteSpeed")->getValue();
 	pos += speed * dir;
 	if (pos > 1 || pos < 0)
 		dir *= -1;

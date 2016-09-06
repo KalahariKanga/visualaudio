@@ -11,7 +11,7 @@ public:
 	InputReciever();
 	~InputReciever();
 
-	Parameter& getParameter(std::string name);
+	Parameter* getParameter(std::string name);
 	std::vector<std::string> getParameterList();
 };
 
