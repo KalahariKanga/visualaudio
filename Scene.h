@@ -18,6 +18,7 @@ class Scene :
 	using InputMap = std::multimap < InputButton, Action > ;
 	InputMap inputMap;
 	std::list<InputEvent> eventList;
+	AudioCapture* ac;
 public:
 	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
@@ -25,6 +26,13 @@ public:
 	void addEvent(InputEvent ev);
 	void addEvent(InputButton::Device device, int button, float data = 1);
 	void addAction(InputButton input, Action action);
-	
+	template <class T> void setGenerator();
+
+	Parameter* getParameter(std::string name) override;
 };
 
+template <class T>
+void Scene::setGenerator()
+{
+	gen = std::make_unique<T>(ac);
+}

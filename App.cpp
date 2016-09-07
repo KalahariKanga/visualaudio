@@ -8,7 +8,9 @@ App::App()
 	lastFrame.clear();
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
-	scene = std::make_unique<Scene>(&AC);
+	
+	
+	addParameter("scene", 0, 0, 16, 1);
 
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
@@ -16,6 +18,16 @@ App::App()
 	shader.loadFromFile("shaders/bloom", sf::Shader::Fragment);
 	shader.setParameter("size_f", 4);
 	//shader.setParameter("viewAngle", PI / 5);
+
+	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
+	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
+	
+	auto scene = addScene<Gen_Swarm>();
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	scene = addScene<Gen_Waveform>();
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
 }
 
@@ -26,6 +38,14 @@ App::~App()
 
 void App::update()
 {
+	int sceneID = (int)getParameter("scene")->getValue();
+	if (sceneID >= scenes.size())
+	{
+		sceneID = scenes.size() - 1;
+		getParameter("scene")->setValue(sceneID);
+	}
+	activeScene = scenes[sceneID].get();//try
+
 	sf::Event ev;
 	clock.restart();
 	AC.update();
@@ -36,7 +56,8 @@ void App::update()
 	else
 		canvas->wipe();//slow
 
-	scene->update(*canvas);
+	activeScene->update();
+
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
@@ -44,7 +65,7 @@ void App::update()
 
 	if (1)
 	{
-		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha").getValue());
+		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
 		lastFrame.draw(sprite, &blendShader);
 		lastFrame.display();
 		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
@@ -74,20 +95,19 @@ void App::update()
 				AC.normalise();
 				break;
 			}
-			scene->addEvent(InputEvent(InputButton(InputButton::Device::Keyboard, (int)ev.key.code)));
+			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
 		if (ev.type == sf::Event::JoystickButtonPressed)
 		{
-			scene->addEvent(InputEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button));
+			activeScene->addEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button);
 		}
 		if (ev.type == sf::Event::JoystickMoved)
 		{
-			scene->addEvent(InputEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position/100));
+			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 100);
 		}
 	}
-
+	
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-
 }
+

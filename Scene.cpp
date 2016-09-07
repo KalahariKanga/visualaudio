@@ -1,21 +1,9 @@
 #include "Scene.h"
 
 
-Scene::Scene(AudioCapture* ac, Canvas* _canvas) : canvas(_canvas)
+Scene::Scene(AudioCapture* _ac, Canvas* _canvas) : canvas(_canvas), ac(_ac)
 {
-	gen = std::make_unique<Gen_Swarm>(ac);
-
-	Action fill(gen->getParameter("fill"), Action::Type::trigger);
-	Action position(gen->getParameter("yPosition"), Action::Type::set, 1);
-	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::set, 1);
-	Action aiUp(gen->getParameter("ai"), Action::Type::shift, 1);
-	Action aiDown(gen->getParameter("ai"), Action::Type::shift, -1);
-	addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Space),fill);
-	addAction(InputButton(InputButton::Device::GamepadButton, 1), fill);
-	addAction(InputButton(InputButton::Device::GamepadAxis, 1), position);
-	addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
-	addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up),aiUp);
-	addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down),aiDown);
+	
 }
 
 
@@ -56,4 +44,13 @@ void Scene::addEvent(InputButton::Device device, int button, float data)
 void Scene::addAction(InputButton input, Action action)
 {
 	inputMap.insert(InputMap::value_type(input, action));
+}
+
+Parameter* Scene::getParameter(std::string name)
+{
+	auto p = gen->getParameter(name);
+	if (p) return p;
+	p = canvas->getParameter(name);
+	if (p) return p;
+	return InputReciever::getParameter(name);
 }
