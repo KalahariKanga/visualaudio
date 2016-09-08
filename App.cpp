@@ -21,11 +21,16 @@ App::App()
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
-	
-	auto scene = addScene<Gen_Swarm>();
+	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::set, 1);
+
+	auto scene = addScene<Gen_CircleSpectrum>();
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 	scene = addScene<Gen_Waveform>();
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	scene = addScene<Gen_Spectrum>();
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
