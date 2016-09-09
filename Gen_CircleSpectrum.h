@@ -3,7 +3,7 @@
 class Gen_CircleSpectrum :
 	public Generator
 {
-	int bands = 24;
+	int bands = 8; //24
 	std::vector<float> bandAmount;
 public:
 	Gen_CircleSpectrum(AudioCapture* AC);

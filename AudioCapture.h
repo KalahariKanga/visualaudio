@@ -19,7 +19,8 @@ public:
 	
 	void update();
 	float getWaveform(float i);
-	float getFFT(float i){ return fft[(int)(i*waveformSize/2)].r; }
+	float getFFT(float i);
+	float getFFT(float a, float b);
 	float getAmplitude();
 	
 	void normalise();

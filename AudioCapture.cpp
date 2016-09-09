@@ -8,7 +8,7 @@ static int callback(const void *inputBuffer, void *outputBuffer,
 	void *userData)
 {
 	auto ac = (AudioCapture*)userData;
-	for (int c = 0; c < framesPerBuffer; c+=2)///////////////////////TODO:ASSUMES STEREO
+	for (unsigned c = 0; c < framesPerBuffer; c+=2)///////////////////////TODO:ASSUMES STEREO
 	{
 		float a = ((float*)inputBuffer)[c];
 		float b = ((float*)inputBuffer)[c + 1];
@@ -74,6 +74,24 @@ float AudioCapture::getWaveform(float i)
 	return boost * waveform[(int)(i*waveformSize)].r;
 }
 
+float AudioCapture::getFFT(float i)
+{
+	i *= i;
+	return (i+0.1) * 10 * fft[(int)(i*waveformSize / 2)].r;
+}
+
+float AudioCapture::getFFT(float a, float b)
+{
+	a *= a;
+	b *= b;
+	int lowBand = a*waveformSize / 2;
+	int highBand = b*waveformSize / 2;
+	float sum = 0;
+	for (int c = lowBand; c <= highBand; c++)
+		sum += fft[c].r;
+	return sum;
+}
+
 float AudioCapture::getAmplitude()
 {
 	static float sum;
@@ -95,5 +113,5 @@ float AudioCapture::getAmplitude()
 void AudioCapture::normalise()
 {
 	float amp = getAmplitude()/boost;
-	boost = 20 / amp;
+	boost = (int)(20 / amp);
 }

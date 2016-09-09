@@ -24,8 +24,13 @@ App::App()
 	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::set, 1);
 
 	auto scene = addScene<Gen_CircleSpectrum>();
+	Action decay(scene->getParameter("decay"), Action::Type::set, 1);
+	Action bandsUp(scene->getParameter("bands"), Action::Type::shift, 1);
+	Action bandsDown(scene->getParameter("bands"), Action::Type::shift, -1);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), bandsUp);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), bandsDown);
 	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 	scene = addScene<Gen_Waveform>();
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
