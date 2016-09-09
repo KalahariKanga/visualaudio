@@ -2,6 +2,8 @@ uniform sampler2D texture;
 uniform sampler2D lastFrame;
 uniform float size_f;
 uniform float alpha;
+uniform vec2 drift;
+uniform float zoom;
 
 void main()
 {
@@ -10,10 +12,17 @@ void main()
 	texcoord = vec2(texcoord.s, 1.0 - texcoord.t);
 	gl_FragColor = texture2D(texture,texcoord);
 	
-	lastColour = texture2D(lastFrame, texcoord) * alpha;
+	vec2 newcoord = (texcoord - vec2(0.5,0.5)) * zoom + vec2(0.5,0.5) + drift;
+	
+	lastColour = texture2D(lastFrame, newcoord) * alpha;
 	lastColour.a = 1;
 	
 	//lazy blending
 	if(gl_FragColor.a < 1)
 		gl_FragColor = lastColour;
 }
+
+//if(newcoord.x < 0) newcoord.x = 0;
+//if(newcoord.x > 1) newcoord.x = 1;
+//if(newcoord.y < 0) newcoord.y = 0;
+//if(newcoord.y > 1) newcoord.y = 1;

@@ -71,6 +71,8 @@ void App::update()
 	if (1)
 	{
 		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
+		blendShader.setParameter("drift", sf::Vector2f(0, 0));
+		blendShader.setParameter("zoom", 0.9);
 		lastFrame.draw(sprite, &blendShader);
 		lastFrame.display();
 		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
