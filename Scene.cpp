@@ -28,6 +28,7 @@ void Scene::update()
 		);
 		
 	}
+	canvas->update();
 	gen->update(*canvas);
 }
 

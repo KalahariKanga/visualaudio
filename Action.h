@@ -8,7 +8,7 @@ class Action
 public:
 	enum class Type
 	{
-		set, shift, trigger
+		set, shift, trigger, axis
 	} type;
 	
 	Action();

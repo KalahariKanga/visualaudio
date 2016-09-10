@@ -23,7 +23,7 @@ void Action::execute(float eventValue)
 	switch (type)
 	{
 	case Type::set:
-		target->setValue(amount*(eventValue+1)/2);
+		target->setValue(amount);
 		break;
 	case Type::shift:
 		target->setValue(target->getValue() + amount);
@@ -33,6 +33,9 @@ void Action::execute(float eventValue)
 			target->setValue(0);
 		else
 			target->setValue(1);
+		break;
+	case Type::axis:
+		target->setNormalisedValue(eventValue*amount);
 		break;
 	}
 }

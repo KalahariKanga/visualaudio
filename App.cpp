@@ -20,11 +20,11 @@ App::App()
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
-	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::set, 1);
+	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::axis, 1);
 	
 
 	auto scene = addScene<Gen_CircleSpectrum>();
-	Action decay(scene->getParameter("decay"), Action::Type::set, 1);
+	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action bandsUp(scene->getParameter("bands"), Action::Type::shift, 1);
 	Action bandsDown(scene->getParameter("bands"), Action::Type::shift, -1);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
@@ -84,9 +84,9 @@ void App::update()
 	if (1)
 	{
 		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-		blendShader.setParameter("drift", sf::Vector2f(0.02, 0));
-		blendShader.setParameter("zoom", 0.9);
-		blendShader.setParameter("angle", 0.4);
+		blendShader.setParameter("drift", sf::Vector2f(0, 0));
+		blendShader.setParameter("zoom", 0.99);
+		blendShader.setParameter("angle", 0.1);
 		lastFrame.draw(sprite, &blendShader);
 		lastFrame.display();
 		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
@@ -128,6 +128,7 @@ void App::update()
 		}
 	}
 	
+	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
