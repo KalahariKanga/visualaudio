@@ -17,7 +17,10 @@ void main()
 	rot[1] = vec2(-sin(angle),cos(angle));
 	
 	vec2 newcoord = (texcoord - vec2(0.5,0.5)) * zoom * rot + vec2(0.5,0.5) + drift;
-	newcoord = fract(newcoord);
+	if(newcoord.x > 1) newcoord.x = 2 - newcoord.x;
+	if(newcoord.y > 1) newcoord.y = 2 - newcoord.y;
+	if(newcoord.x < 0) newcoord.x *= -1;
+	if(newcoord.y < 0) newcoord.y *= -1;
 	lastColour = texture2D(lastFrame, newcoord) * alpha;
 	lastColour.a = 1;
 	
