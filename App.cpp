@@ -11,7 +11,6 @@ App::App()
 	
 	
 	addParameter("scene", 0, 0, 16, 1);
-
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
 	
@@ -22,6 +21,7 @@ App::App()
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::set, 1);
+	
 
 	auto scene = addScene<Gen_CircleSpectrum>();
 	Action decay(scene->getParameter("decay"), Action::Type::set, 1);
@@ -32,12 +32,19 @@ App::App()
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), bandsUp);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), bandsDown);
 	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+
 	scene = addScene<Gen_Waveform>();
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
-	scene = addScene<Gen_Spectrum>();
+	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+	scene = addScene<Gen_Swarm>();
+	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
+	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), moreParticles);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), fewerParticles);
+	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 
 }
 
@@ -48,6 +55,7 @@ App::~App()
 
 void App::update()
 {
+
 	int sceneID = (int)getParameter("scene")->getValue();
 	if (sceneID >= scenes.size())
 	{
@@ -76,8 +84,9 @@ void App::update()
 	if (1)
 	{
 		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-		blendShader.setParameter("drift", sf::Vector2f(0, 0));
+		blendShader.setParameter("drift", sf::Vector2f(0.02, 0));
 		blendShader.setParameter("zoom", 0.9);
+		blendShader.setParameter("angle", 0.4);
 		lastFrame.draw(sprite, &blendShader);
 		lastFrame.display();
 		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
