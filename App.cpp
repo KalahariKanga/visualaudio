@@ -11,6 +11,10 @@ App::App()
 	
 	
 	addParameter("scene", 0, 0, 16, 1);
+	addParameter("driftX", 0, -0.1, 0.1);
+	addParameter("driftY", 0, -0.1, 0.1);
+	addParameter("zoom", 1, 0.8, 1.2);
+	addParameter("angle", 0, -0.4, 0.4);
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
 	
@@ -21,30 +25,31 @@ App::App()
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::axis, 1);
-	
+	Action rotation(getParameter("angle"), Action::Type::axis, 1);
+	Action zoom(getParameter("zoom"), Action::Type::axis, 1);
+
+	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
+	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
+	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
+	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
 	auto scene = addScene<Gen_CircleSpectrum>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action bandsUp(scene->getParameter("bands"), Action::Type::shift, 1);
 	Action bandsDown(scene->getParameter("bands"), Action::Type::shift, -1);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), bandsUp);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), bandsDown);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+	
 
 	scene = addScene<Gen_Waveform>();
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), moreParticles);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), fewerParticles);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+
 
 }
 
@@ -75,6 +80,7 @@ void App::update()
 		canvas->wipe();//slow
 
 	activeScene->update();
+	eventHandler.update();
 
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.loadFromImage(image);
@@ -84,9 +90,9 @@ void App::update()
 	if (1)
 	{
 		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-		blendShader.setParameter("drift", sf::Vector2f(0, 0));
-		blendShader.setParameter("zoom", 0.99);
-		blendShader.setParameter("angle", 0.1);
+		blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(),getParameter("driftY")->getValue()));
+		blendShader.setParameter("zoom", getParameter("zoom")->getValue());
+		blendShader.setParameter("angle", getParameter("angle")->getValue());
 		lastFrame.draw(sprite, &blendShader);
 		lastFrame.display();
 		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
@@ -117,14 +123,17 @@ void App::update()
 				break;
 			}
 			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
+			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
 		if (ev.type == sf::Event::JoystickButtonPressed)
 		{
 			activeScene->addEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button);
+			eventHandler.addEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button);
 		}
 		if (ev.type == sf::Event::JoystickMoved)
 		{
-			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 100);
+			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
+			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 		}
 	}
 	

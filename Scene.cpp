@@ -13,38 +13,19 @@ Scene::~Scene()
 
 void Scene::update()
 {
-	while (!eventList.empty())
-	{
-		InputEvent ev = eventList.front();
-		eventList.pop_front();
-
-		auto range = inputMap.equal_range(ev.button);
-		for_each(range.first, range.second,
-			[ev](InputMap::value_type& x)
-			{
-				auto action = x.second;
-				action.execute(ev.data);
-			}
-		);
-		
-	}
+	eventHandler.update();
 	canvas->update();
 	gen->update(*canvas);
 }
 
-void Scene::addEvent(InputEvent ev)
-{
-	eventList.push_back(ev);
-}
-
 void Scene::addEvent(InputButton::Device device, int button, float data)
 {
-	eventList.emplace_back(InputButton(device, button), data);
+	eventHandler.addEvent(device, button, data);
 }
 
 void Scene::addAction(InputButton input, Action action)
 {
-	inputMap.insert(InputMap::value_type(input, action));
+	eventHandler.addAction(input, action);
 }
 
 Parameter* Scene::getParameter(std::string name)

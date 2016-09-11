@@ -20,8 +20,11 @@ class App : public InputReciever
 	std::vector<std::unique_ptr<Scene>> scenes;
 	Scene* activeScene;
 
-	sf::Shader shader, blendShader;
+	
 
+	EventHandler eventHandler;
+
+	sf::Shader shader, blendShader; //has to be last, no idea why
 public:
 	App();
 	~App();
