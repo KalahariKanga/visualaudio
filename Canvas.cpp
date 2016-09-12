@@ -20,10 +20,11 @@ Canvas::~Canvas()
 
 void Canvas::colourToData(int x, int y, sf::Color c)
 {
-	data[4 * (y*width + x)] = c.r;
-	data[4 * (y*width + x) + 1] = c.g;
-	data[4 * (y*width + x) + 2] = c.b;
-	data[4 * (y*width + x) + 3] = c.a;
+	int pos = (y*width + x);
+	data[4 * pos] = c.r;
+	data[4 * pos + 1] = c.g;
+	data[4 * pos + 2] = c.b;
+	data[4 * pos + 3] = c.a;
 }
 
 void Canvas::loadFromFile(std::string fname)
@@ -201,11 +202,16 @@ void Canvas::drawCircle(int x, int y, int r, bool outline)
 	}
 	else
 	{
-		for (int cx = x - r; cx < x + r; cx++)
-			for (int cy = y - r; cy < y + r; cy++)
+		for (int ox = 0; ox <= r; ox++)
+			for (int oy = 0; oy <= r; oy++)
 			{
-				if ((cx - x)*(cx - x) + (cy - y)*(cy - y) < r*r)
-					drawPoint(cx, cy);
+				if (ox*ox + oy*oy < r*r)
+				{
+					drawPoint(x + ox, y + oy);
+					drawPoint(x - ox, y + oy);
+					drawPoint(x + ox, y - oy);
+					drawPoint(x - ox, y - oy);
+				}
 			}
 	}
 }
