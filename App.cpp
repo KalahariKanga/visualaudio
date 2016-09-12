@@ -42,7 +42,7 @@ App::App()
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), bandsDown);
 	
 
-	scene = addScene<Gen_Waveform>();
+	scene = addScene<Gen_Particles>();
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);

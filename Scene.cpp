@@ -36,3 +36,4 @@ Parameter* Scene::getParameter(std::string name)
 	if (p) return p;
 	return InputReciever::getParameter(name);
 }
+

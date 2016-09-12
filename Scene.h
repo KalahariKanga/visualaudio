@@ -6,6 +6,7 @@
 #include "Gen_CircleSpectrum.h"
 #include "Gen_Waveform.h"
 #include "Gen_Spectrum.h"
+#include "Gen_Particles.h"
 #include "Palette.h"
 #include "EventHandler.h"
 
@@ -25,6 +26,7 @@ public:
 	template <class T> void setGenerator();
 
 	Parameter* getParameter(std::string name) override;
+
 };
 
 template <class T>
