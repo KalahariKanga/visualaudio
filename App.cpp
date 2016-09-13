@@ -43,6 +43,8 @@ App::App()
 	
 
 	scene = addScene<Gen_Particles>();
+	Action outline(scene->getParameter("outline"), Action::Type::trigger);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);

@@ -3,6 +3,8 @@
 
 Gen_Particles::Gen_Particles(AudioCapture* AC) : Generator(AC)
 {
+	addParameter("outline", 0, 0, 1);
+	addParameter("pattern", 1, 5, 0);
 }
 
 
@@ -31,19 +33,32 @@ void Gen_Particles::spawnParticle(float x, float y, float direction, float speed
 void Gen_Particles::update(Canvas& target)
 {
 	static int t = 0;
-	static float direction = 0;
+	static float direction = 1;
 	++t;
 	for (auto & p : particles)
 	{
 		if (p.x < -p.size || p.x > target.getWidth()+p.size || p.y < -p.size || p.y > target.getHeight()+p.size)
 			p.active = 0;
-		p.update();
-		p.direction += 0.01;
-		target.setDrawColour(p.direction / (2 * PI));
-		target.drawCircle(p.x, p.y, p.size, 0);
+		if (p.active)
+		{
+			p.update();
+			p.direction += 0.01;
+			target.setDrawColour(p.direction / (2 * PI));
+			target.drawCircle(p.x, p.y, p.size, (int)getParameter("outline")->getValue());
+		}
 	}
-	direction += ac->getAmplitude() / 100;
-	spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 3, ac->getAmplitude());
-	spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 3, ac->getAmplitude());
+
+	switch ((int)getParameter("pattern")->getValue())
+	{
+	case 0:
+		direction += (ac->getAmplitude() / 100) * (ac->getAmplitude() / 100);
+		spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() / 2);
+		spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() / 2);
+		break;
+	case 1:
+		direction += sin((float)t / 100);
+		spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 2 + ac->getAmplitude() / 5, ac->getAmplitude() / 2);
+		spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 2 + ac->getAmplitude() / 5, ac->getAmplitude() / 2);
+	}
 
 }
