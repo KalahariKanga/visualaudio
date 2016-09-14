@@ -5,6 +5,7 @@ Gen_Particles::Gen_Particles(AudioCapture* AC) : Generator(AC)
 {
 	addParameter("outline", 0, 0, 1);
 	addParameter("pattern", 1, 5, 0);
+	addParameter("directionChange", 0, -0.1, 0.1);
 }
 
 
@@ -42,7 +43,7 @@ void Gen_Particles::update(Canvas& target)
 		if (p.active)
 		{
 			p.update();
-			p.direction += 0.01;
+			p.direction += getParameter("directionChange")->getValue();
 			target.setDrawColour(p.direction / (2 * PI));
 			target.drawCircle(p.x, p.y, p.size, (int)getParameter("outline")->getValue());
 		}

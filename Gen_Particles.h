@@ -8,9 +8,12 @@ class Gen_Particles :
 		Particle(float _x, float _y, float _direction, float _speed, float _size) :
 			x(_x), y(_y), direction(_direction), speed(_speed), size(_size){ };
 		float x, y, direction, speed, size;
+		float directionChange = 0, speedChange = 0;
 		bool active = 1;
 		void update()
 		{
+			direction += directionChange;
+			speedChange += speedChange;
 			x += speed * cos(direction);
 			y += speed * sin(direction);
 		}
