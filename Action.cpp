@@ -25,6 +25,9 @@ void Action::execute(float eventValue)
 	case Type::set:
 		target->setValue(amount);
 		break;
+	case Type::setNormalised:
+		target->setNormalisedValue(amount);
+		break;
 	case Type::shift:
 		target->setValue(target->getValue() + amount);
 		break;

@@ -8,7 +8,8 @@ App::App()
 	lastFrame.clear();
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
-	
+	midiIn = std::make_unique<RtMidiIn>();
+	midiIn->openPort(3);
 	
 	addParameter("scene", 0, 0, 16, 1);
 	addParameter("driftX", 0, -0.1, 0.1);
@@ -27,6 +28,16 @@ App::App()
 	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::axis, 1);
 	Action rotation(getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(getParameter("zoom"), Action::Type::axis, 1);
+	
+	for (int c = 0; c < 9; c++)
+	{
+		auto a = Action(canvas->getParameter("clearAlpha"), Action::Type::setNormalised, (float)c / 9);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c), a);
+		a = Action(getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c+16), a);
+		a = Action(getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c+32), a);
+	}
 
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
@@ -44,15 +55,15 @@ App::App()
 
 	scene = addScene<Gen_Particles>();
 	Action outline(scene->getParameter("outline"), Action::Type::trigger);
+	Action dirChange(scene->getParameter("directionChange"), Action::Type::axis, 1);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
+	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 1), dirChange);
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), moreParticles);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), fewerParticles);
-
-
+	scene->addAction(InputButton(InputButton::Device::MIDI, 0), moreParticles);
+	scene->addAction(InputButton(InputButton::Device::MIDI, 1), fewerParticles);
 }
 
 
@@ -136,6 +147,19 @@ void App::update()
 		{
 			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
+		}
+	}
+	std::vector<unsigned char> message;
+	while (1)
+	{
+		midiIn->getMessage(&message);
+		if (message.empty())
+			break;
+		if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
+		{
+			activeScene->addEvent(InputButton::Device::MIDI, (int)message[1]);
+			eventHandler.addEvent(InputButton::Device::MIDI, (int)message[1]);
+			std::cout << (int)message[1] << "\n";
 		}
 	}
 	

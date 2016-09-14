@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "RtMidi.h"
 
 class App : public InputReciever
 {
@@ -20,7 +21,7 @@ class App : public InputReciever
 	std::vector<std::unique_ptr<Scene>> scenes;
 	Scene* activeScene;
 
-	
+	std::unique_ptr<RtMidiIn> midiIn;
 
 	EventHandler eventHandler;
 
