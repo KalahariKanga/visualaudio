@@ -9,7 +9,15 @@ App::App()
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
 	midiIn = std::make_unique<RtMidiIn>();
-	midiIn->openPort(3);
+	try
+	{
+		midiIn->openPort(3);
+	}
+	catch (...)
+	{
+		std::cout << "Cannot open MIDI port\n";
+	}
+
 	
 	addParameter("scene", 0, 0, 16, 1);
 	addParameter("driftX", 0, -0.1, 0.1);
@@ -150,7 +158,7 @@ void App::update()
 		}
 	}
 	std::vector<unsigned char> message;
-	while (1)
+	while (midiIn->isPortOpen())
 	{
 		midiIn->getMessage(&message);
 		if (message.empty())
