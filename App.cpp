@@ -63,9 +63,13 @@ App::App()
 
 	scene = addScene<Gen_Particles>();
 	Action outline(scene->getParameter("outline"), Action::Type::trigger);
-	Action dirChange(scene->getParameter("directionChange"), Action::Type::axis, 1);
+	Action probability(scene->getParameter("spawnProbability"), Action::Type::axis, 1);
+	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
+	Action split(scene->getParameter("split"), Action::Type::trigger);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 1), dirChange);
+	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
