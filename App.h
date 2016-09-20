@@ -26,6 +26,8 @@ class App : public InputReciever
 	EventHandler eventHandler;
 
 	sf::Shader shader, blendShader; //has to be last, no idea why
+
+	void processEvents();
 public:
 	App();
 	~App();
@@ -33,7 +35,6 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
-
 
 };
 

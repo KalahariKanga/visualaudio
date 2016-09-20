@@ -1,5 +1,5 @@
 #include "App.h"
-
+#include <fstream>
 
 App::App()
 {
@@ -24,6 +24,7 @@ App::App()
 	addParameter("driftY", 0, -0.1, 0.1);
 	addParameter("zoom", 1, 0.8, 1.2);
 	addParameter("angle", 0, -0.4, 0.4);
+
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", lastFrame.getTexture());
 	
@@ -94,7 +95,6 @@ void App::update()
 	}
 	activeScene = scenes[sceneID].get();//try
 
-	sf::Event ev;
 	clock.restart();
 	AC.update();
 	canvas->update();
@@ -129,6 +129,16 @@ void App::update()
 
 	window.display();
 
+	processEvents();
+	
+	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
+	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
+
+void App::processEvents()
+{
+	sf::Event ev;
 	while (window.pollEvent(ev))
 	{
 		if (ev.type == sf::Event::Closed)
@@ -174,9 +184,4 @@ void App::update()
 			std::cout << (int)message[1] << "\n";
 		}
 	}
-	
-	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
-	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
-
