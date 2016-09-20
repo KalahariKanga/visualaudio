@@ -36,6 +36,11 @@ public:
 		value = Math::clamp(value - interval, min, max);
 		changed = 1;
 	}
-	bool hasChanged(){ return changed; }
+	bool hasChanged()
+	{
+		bool v = changed;
+		changed = 0;
+		return v;
+	}
 };
 
