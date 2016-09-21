@@ -4,8 +4,8 @@
 App::App()
 {
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
-	lastFrame.create(windowWidth, windowHeight);//!!!!
-	lastFrame.clear();
+	renderTexture[0].create(windowWidth, windowHeight);
+	renderTexture[1].create(windowWidth, windowHeight);
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
 	midiIn = std::make_unique<RtMidiIn>();
@@ -26,11 +26,10 @@ App::App()
 	addParameter("angle", 0, -0.4, 0.4);
 
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
-	blendShader.setParameter("lastFrame", lastFrame.getTexture());
-	
-	shader.loadFromFile("shaders/bloom", sf::Shader::Fragment);
-	shader.setParameter("size_f", 4);
-	//shader.setParameter("viewAngle", PI / 5);
+	blendShader.setParameter("lastFrame", renderTexture[0].getTexture());
+
+	shaders.emplace_back("shaders/bloom");
+	shaders.back().getShader()->setParameter("size_f", 5);
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -114,13 +113,7 @@ void App::update()
 
 	if (1)
 	{
-		blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-		blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(),getParameter("driftY")->getValue()));
-		blendShader.setParameter("zoom", getParameter("zoom")->getValue());
-		blendShader.setParameter("angle", getParameter("angle")->getValue());
-		lastFrame.draw(sprite, &blendShader);
-		lastFrame.display();
-		window.draw(sf::Sprite(lastFrame.getTexture()), &shader);
+		applyShaders();
 	}
 	else
 	{
@@ -184,4 +177,23 @@ void App::processEvents()
 			std::cout << (int)message[1] << "\n";
 		}
 	}
+}
+
+void App::applyShaders()
+{
+	
+	blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
+	blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(), getParameter("driftY")->getValue()));
+	blendShader.setParameter("zoom", getParameter("zoom")->getValue());
+	blendShader.setParameter("angle", getParameter("angle")->getValue());
+	renderTexture[0].draw(sprite, &blendShader);
+	renderTexture[0].display();
+	int t = 0;
+	for (auto & sh : shaders)
+	{
+		++t;
+		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t+1)%2].getTexture()), sh.getShader());
+		renderTexture[t % 2].display();
+	}
+	window.draw(sf::Sprite(renderTexture[t % 2].getTexture()));
 }

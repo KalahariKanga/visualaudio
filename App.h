@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "RtMidi.h"
+#include "Shader.h"
 
 class App : public InputReciever
 {
@@ -9,7 +10,7 @@ class App : public InputReciever
 	sf::Sprite sprite;
 	sf::Texture texture;
 	sf::Image image;
-	sf::RenderTexture lastFrame;
+	sf::RenderTexture renderTexture[2];
 	sf::Clock clock;
 	AudioCapture AC;
 
@@ -24,10 +25,14 @@ class App : public InputReciever
 	std::unique_ptr<RtMidiIn> midiIn;
 
 	EventHandler eventHandler;
-
+	
+	std::vector<Shader> shaders;
 	sf::Shader shader, blendShader; //has to be last, no idea why
+	
 
 	void processEvents();
+	void applyShaders();
+
 public:
 	App();
 	~App();
