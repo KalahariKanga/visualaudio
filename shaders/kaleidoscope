@@ -1,0 +1,32 @@
+#define PI 3.141592653
+
+uniform sampler2D texture;
+uniform float reflections_f;
+
+ 
+varying vec4 vertColor;
+ 
+void main() {
+    
+    vec2 newPos = vec2(gl_TexCoord[0]) - vec2(0.5);
+     
+	int reflections = int(reflections_f);
+
+	float distance = length(newPos.xy);
+    float angle = atan(newPos.y, newPos.x);
+
+	vec4 col = vec4(0,0,0,0);
+	int c;
+	for(c = 0; c < reflections; c += 1)
+	{
+		float targetAngle = angle + (2 * c * PI) / reflections;
+		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
+		if(target.x > 1) target.x = 2 - target.x;
+		if(target.y > 1) target.y = 2 - target.y;
+		if(target.x < 0) target.x *= -1;
+		if(target.y < 0) target.y *= -1;
+		col += texture2D(texture, target + vec2(0.5));
+	}
+	 
+    gl_FragColor = col;
+}

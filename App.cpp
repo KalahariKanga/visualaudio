@@ -25,17 +25,24 @@ App::App()
 	addParameter("zoom", 1, 0.8, 1.2);
 	addParameter("angle", 0, -0.4, 0.4);
 
+	addParameter("reflections", 1, 1, 16);
+
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", renderTexture[0].getTexture());
 
-	shaders.emplace_back("shaders/bloom");
-	shaders.back().getShader()->setParameter("size_f", 5);
+	shaders.emplace_back("shaders/kaleidoscope");
+	/*shaders.emplace_back("shaders/bloom");
+
+	shaders.back().getShader()->setParameter("size_f", 4);*/
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::axis, 1);
 	Action rotation(getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(getParameter("zoom"), Action::Type::axis, 1);
+
+	Action moreMirrors(getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(getParameter("reflections"), Action::Type::shift, -1);
 	
 	for (int c = 0; c < 9; c++)
 	{
@@ -52,6 +59,9 @@ App::App()
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
 
 	auto scene = addScene<Gen_CircleSpectrum>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
@@ -186,6 +196,7 @@ void App::applyShaders()
 	blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(), getParameter("driftY")->getValue()));
 	blendShader.setParameter("zoom", getParameter("zoom")->getValue());
 	blendShader.setParameter("angle", getParameter("angle")->getValue());
+	shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
 	renderTexture[0].draw(sprite, &blendShader);
 	renderTexture[0].display();
 	int t = 0;
