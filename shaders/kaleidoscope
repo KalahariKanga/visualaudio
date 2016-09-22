@@ -21,11 +21,12 @@ void main() {
 	{
 		float targetAngle = angle + (2 * c * PI) / reflections;
 		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
+		target += vec2(0.5);
 		if(target.x > 1) target.x = 2 - target.x;
 		if(target.y > 1) target.y = 2 - target.y;
 		if(target.x < 0) target.x *= -1;
 		if(target.y < 0) target.y *= -1;
-		col += texture2D(texture, target + vec2(0.5));
+		col += texture2D(texture, target);
 	}
 	 
     gl_FragColor = col;
