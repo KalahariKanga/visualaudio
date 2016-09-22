@@ -199,7 +199,11 @@ void App::applyShaders()
 	blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(), getParameter("driftY")->getValue()));
 	blendShader.setParameter("zoom", getParameter("zoom")->getValue());
 	blendShader.setParameter("angle", getParameter("angle")->getValue());
+
 	shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
+	shaders.back().getShader()->setParameter("xpos", 0.4);
+	shaders.back().getShader()->setParameter("ypos", 0.3);
+
 	renderTexture[0].draw(sprite, &blendShader);
 	renderTexture[0].display();
 	int t = 0;
