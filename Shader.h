@@ -9,7 +9,7 @@ class Shader :
 public:
 	Shader(std::string filename);
 	Shader& operator=(Shader&& other);
-	Shader(const Shader &&); //need move to emplace
+	Shader(Shader &&); //need move to emplace
 	~Shader();
 	void load(std::string filename);
 	sf::Shader* getShader() { return shader; }

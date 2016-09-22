@@ -30,10 +30,13 @@ App::App()
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", renderTexture[0].getTexture());
 
-	shaders.emplace_back("shaders/kaleidoscope");
-	/*shaders.emplace_back("shaders/bloom");
+	shaders.emplace_back("shaders/bloom");
 
-	shaders.back().getShader()->setParameter("size_f", 4);*/
+	shaders.back().getShader()->setParameter("size_f", 2);
+	
+	shaders.emplace_back("shaders/kaleidoscope");
+
+	
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);

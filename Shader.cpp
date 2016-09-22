@@ -14,9 +14,10 @@ Shader& Shader::operator=(Shader&& other)
 	return *this;
 }
 
-Shader::Shader(const Shader && other)
+Shader::Shader(Shader && other)
 {
 	shader = other.shader;
+	other.shader = nullptr;
 }
 
 
