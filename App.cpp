@@ -50,11 +50,11 @@ App::App()
 	for (int c = 0; c < 9; c++)
 	{
 		auto a = Action(canvas->getParameter("clearAlpha"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c), a);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c), a);
 		a = Action(getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c+16), a);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+16), a);
 		a = Action(getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDI, c+32), a);
+		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
 	}
 
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
@@ -62,6 +62,10 @@ App::App()
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+
+	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 74), alpha);
+	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 71), zoom);
+	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 81), rotation);
 
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
@@ -87,8 +91,8 @@ App::App()
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	scene->addAction(InputButton(InputButton::Device::MIDI, 0), moreParticles);
-	scene->addAction(InputButton(InputButton::Device::MIDI, 1), fewerParticles);
+	scene->addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
+	scene->addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
 }
 
 
@@ -139,7 +143,7 @@ void App::update()
 	
 	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
 void App::processEvents()
@@ -185,8 +189,14 @@ void App::processEvents()
 			break;
 		if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
 		{
-			activeScene->addEvent(InputButton::Device::MIDI, (int)message[1]);
-			eventHandler.addEvent(InputButton::Device::MIDI, (int)message[1]);
+			activeScene->addEvent(InputButton::Device::MIDINote, (int)message[1]);
+			eventHandler.addEvent(InputButton::Device::MIDINote, (int)message[1]);
+			std::cout << (int)message[1] << "\n";
+		}
+		if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
+		{
+			activeScene->addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
+			eventHandler.addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
 			std::cout << (int)message[1] << "\n";
 		}
 	}
