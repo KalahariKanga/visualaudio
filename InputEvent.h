@@ -3,7 +3,7 @@ struct InputButton
 {
 	enum class Device
 	{
-		Keyboard, Mouse, GamepadButton, GamepadAxis, MIDINote, MIDICV
+		None, Keyboard, Mouse, GamepadButton, GamepadAxis, MIDINote, MIDICV
 	} device;
 	int button;
 	bool operator<(const InputButton& other) const

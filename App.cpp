@@ -166,6 +166,13 @@ void App::processEvents()
 			case sf::Keyboard::N:
 				AC.normalise();
 				break;
+			case sf::Keyboard::Space:
+				detectNextInput();
+				for (auto& i : getParameterList())
+					std::cout << i << std::endl;
+				for (auto& i : activeScene->getParameterList())
+					std::cout << i << std::endl;
+				break;
 			}
 			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
@@ -224,4 +231,61 @@ void App::applyShaders()
 		renderTexture[t % 2].display();
 	}
 	window.draw(sf::Sprite(renderTexture[t % 2].getTexture()));
+}
+
+InputButton App::detectNextInput()
+{
+	InputButton input(InputButton::Device::None, 0);
+	bool detected = 0;
+	while (!detected)
+	{
+		sf::Event ev;
+		while (window.pollEvent(ev))
+		{
+			if (ev.type == sf::Event::KeyPressed)
+			{
+				input.device = InputButton::Device::Keyboard;
+				input.button = (int)ev.key.code;
+				detected = 1;
+				break;
+			}
+			if (ev.type == sf::Event::JoystickButtonPressed)
+			{
+				input.device = InputButton::Device::GamepadButton;
+				input.button = (int)ev.joystickButton.button;
+				detected = 1;
+				break;
+			}
+			if (ev.type == sf::Event::JoystickMoved)
+			{
+				input.device = InputButton::Device::GamepadAxis;
+				input.button = (int)ev.joystickMove.axis;
+				detected = 1;
+				break;
+			}
+		}
+		std::vector<unsigned char> message;
+		while (midiIn->isPortOpen())
+		{
+			midiIn->getMessage(&message);
+			if (message.empty())
+				break;
+			if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
+			{
+				input.device = InputButton::Device::MIDINote;
+				input.button = (int)message[1];
+				detected = 1;
+				break;
+			}
+			if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
+			{
+				input.device = InputButton::Device::MIDICV;
+				input.button = (int)message[1];
+				detected = 1;
+				break;
+			}
+		}
+	}
+	std::cout << (int)input.device << ": " << input.button << "\n";
+	return input;
 }

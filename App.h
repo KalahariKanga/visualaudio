@@ -32,6 +32,7 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
+	InputButton detectNextInput();
 
 public:
 	App();
