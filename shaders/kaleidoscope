@@ -26,7 +26,7 @@ void main() {
 		if(target.y > 1) target.y = 2 - target.y;
 		if(target.x < 0) target.x *= -1;
 		if(target.y < 0) target.y *= -1;
-		col += texture2D(texture, target);
+		col = max(col,texture2D(texture, target));
 	}
 	 
     gl_FragColor = col;
