@@ -70,6 +70,8 @@ App::App()
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
 
+	eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
+
 	auto scene = addScene<Gen_CircleSpectrum>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action bandsUp(scene->getParameter("bands"), Action::Type::shift, 1);
@@ -149,6 +151,8 @@ void App::update()
 void App::processEvents()
 {
 	sf::Event ev;
+	eventHandler.addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/10);
+	activeScene->addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/10);
 	while (window.pollEvent(ev))
 	{
 		if (ev.type == sf::Event::Closed)
