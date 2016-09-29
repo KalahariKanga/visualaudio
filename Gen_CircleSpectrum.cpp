@@ -6,6 +6,8 @@ Gen_CircleSpectrum::Gen_CircleSpectrum(AudioCapture* AC) : Generator(AC)
 	bandAmount.resize(bands,0);
 	addParameter("decay", 0.04, 0, 1);
 	addParameter("bands", 24, 1, 256);
+	
+	addParameter("burst", 0, 0, 0);
 }
 
 
@@ -22,17 +24,17 @@ void Gen_CircleSpectrum::update(Canvas& target)
 	}
 	for (int b = 0; b < bands; b++)
 	{
-		/*if (abs(ac->getFFT((float)b / bands) > bandAmount[b]))
-			bandAmount[b] = abs(ac->getFFT((float)b / bands));
-		else
-			bandAmount[b] -= getParameter("decay")->getValue();*/
-
 		if (abs(ac->getFFT((float)b / bands,(float)(b+1)/bands)) > bandAmount[b])
 			bandAmount[b] = abs(ac->getFFT((float)b / bands, (float)(b + 1) / bands));
 		else
 			bandAmount[b] -= getParameter("decay")->getValue();
 
 		bandAmount[b] = Math::clamp(bandAmount[b], 0, 1);
+	}
+	if (getParameter("burst")->hasChanged())
+	{
+		for (int b = 0; b < bands; b++)
+			bandAmount[b] = 1;
 	}
 	float innerRadius = ac->getAmplitude();
 	for (int b = 0; b < bands-1; b++)
