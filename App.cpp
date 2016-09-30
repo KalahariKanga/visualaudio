@@ -25,8 +25,6 @@ App::App()
 	addParameter("zoom", 1, 0.8, 1.2);
 	addParameter("angle", 0, -0.4, 0.4);
 
-	addParameter("reflections", 1, 1, 16);
-
 	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
 	blendShader.setParameter("lastFrame", renderTexture[0].getTexture());
 
@@ -45,8 +43,8 @@ App::App()
 	Action rotation(getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(getParameter("reflections"), Action::Type::shift, -1);
+	Action moreMirrors(shaders.back().getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(shaders.back().getParameter("reflections"), Action::Type::shift, -1);
 	
 	for (int c = 0; c < 9; c++)
 	{
@@ -216,13 +214,15 @@ void App::applyShaders()
 {
 	
 	blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-	blendShader.setParameter("drift", sf::Vector2f(getParameter("driftX")->getValue(), getParameter("driftY")->getValue()));
+	blendShader.setParameter("driftX", getParameter("driftX")->getValue());
+	blendShader.setParameter("driftY", getParameter("driftY")->getValue());
 	blendShader.setParameter("zoom", getParameter("zoom")->getValue());
 	blendShader.setParameter("angle", getParameter("angle")->getValue());
 
-	shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
-	shaders.back().getShader()->setParameter("xpos", 0.4);
-	shaders.back().getShader()->setParameter("ypos", 0.3);
+	//shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
+	//shaders.back().getShader()->setParameter("xpos", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::U)/200+0.5);
+	//shaders.back().getShader()->setParameter("ypos", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::V)/200+0.5);
+	
 	shaders.back().getShader()->setParameter("amount", AC.getAmplitude(1)/200);
 	shaders.back().getShader()->setParameter("length", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::U) / 200 + 0.5);
 
@@ -232,6 +232,7 @@ void App::applyShaders()
 	for (auto & sh : shaders)
 	{
 		++t;
+		sh.update();
 		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t+1)%2].getTexture()), sh.getShader());
 		renderTexture[t % 2].display();
 	}

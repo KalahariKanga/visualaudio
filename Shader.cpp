@@ -20,8 +20,6 @@ Shader::Shader(Shader && other)
 	other.shader = nullptr;
 }
 
-
-
 Shader::~Shader()
 {
 	delete shader;
@@ -30,4 +28,33 @@ Shader::~Shader()
 void Shader::load(std::string filename)
 {
 	shader->loadFromFile(filename, sf::Shader::Type::Fragment);
+	parameters.clear();
+	std::fstream params(filename + ".params");
+	std::string name;
+	float def, min, max;
+	if (params.is_open())
+	{
+		while (!params.eof())
+		{
+			try
+			{
+				params >> name >> def >> min >> max;
+			}
+			catch (...)
+			{
+				std::cout << "Error reading .params file for shader " << filename << std::endl;
+			}
+			addParameter(name, def, min, max);
+		}
+	}
+	else
+		std::cout << "Could not find " << filename << ".params\n";
+}
+
+void Shader::update()
+{
+	for (auto p : parameters)
+	{
+		shader->setParameter(p.first, p.second.getValue());
+	}
 }

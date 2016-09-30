@@ -1,8 +1,9 @@
 uniform sampler2D texture;
 uniform sampler2D lastFrame;
-uniform float size_f;
+
 uniform float alpha;
-uniform vec2 drift;
+uniform float driftX;
+uniform float driftY;
 uniform float zoom;
 uniform float angle;
 
@@ -10,6 +11,7 @@ void main()
 {
 	vec4 lastColour;
 	vec2 texcoord = vec2(gl_TexCoord[0]);
+	vec2 drift = vec2(driftX,driftY);
 	texcoord = vec2(texcoord.s, 1.0 - texcoord.t);
 	gl_FragColor = texture2D(texture,texcoord);
 	mat2 rot;

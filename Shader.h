@@ -1,6 +1,7 @@
 #pragma once
 #include "InputReciever.h"
 #include <memory>
+#include <fstream>
 
 class Shader :
 	public InputReciever
@@ -13,5 +14,6 @@ public:
 	~Shader();
 	void load(std::string filename);
 	sf::Shader* getShader() { return shader; }
+	void update();
 };
 
