@@ -26,7 +26,7 @@ class App : public InputReciever
 
 	EventHandler eventHandler;
 	
-	std::vector<Shader> shaders;
+	std::vector<Shader*> shaders;
 	sf::Shader shader, blendShader; //has to be last, no idea why
 	
 

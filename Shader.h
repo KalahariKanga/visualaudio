@@ -9,6 +9,8 @@ class Shader :
 	sf::Shader* shader;
 public:
 	Shader(std::string filename);
+	Shader& operator=(Shader& other) = delete;
+	Shader(Shader&) = delete;
 	Shader& operator=(Shader&& other);
 	Shader(Shader &&); //need move to emplace
 	~Shader();

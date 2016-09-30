@@ -20,39 +20,35 @@ App::App()
 
 	
 	addParameter("scene", 0, 0, 16, 1);
-	addParameter("driftX", 0, -0.1, 0.1);
-	addParameter("driftY", 0, -0.1, 0.1);
-	addParameter("zoom", 1, 0.8, 1.2);
-	addParameter("angle", 0, -0.4, 0.4);
 
-	blendShader.loadFromFile("shaders/blend", sf::Shader::Fragment);
-	blendShader.setParameter("lastFrame", renderTexture[0].getTexture());
+	shaders.push_back(new Shader("shaders/blend"));
+	shaders[0]->getShader()->setParameter("lastFrame", renderTexture[0].getTexture());
 
-	shaders.emplace_back("shaders/bloom");
+	shaders.push_back(new Shader("shaders/bloom"));
 
-	shaders.back().getShader()->setParameter("size_f", 2);
+	shaders.back()->getShader()->setParameter("size_f", 2);
 	
-	shaders.emplace_back("shaders/kaleidoscope");
-	//shaders.emplace_back("shaders/bend");
+	shaders.push_back(new Shader("shaders/kaleidoscope"));
+	shaders.push_back(new Shader("shaders/bend"));
 
 	
-
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
-	Action alpha(canvas->getParameter("clearAlpha"), Action::Type::axis, 1);
-	Action rotation(getParameter("angle"), Action::Type::axis, 1);
-	Action zoom(getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(shaders.back().getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(shaders.back().getParameter("reflections"), Action::Type::shift, -1);
+	Action alpha(shaders.front()->getParameter("alpha"), Action::Type::axis, 1);
+	Action rotation(shaders.front()->getParameter("angle"), Action::Type::axis, 1);
+	Action zoom(shaders.front()->getParameter("zoom"), Action::Type::axis, 1);
+
+	Action moreMirrors(shaders[2]->getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(shaders[2]->getParameter("reflections"), Action::Type::shift, -1);
 	
 	for (int c = 0; c < 9; c++)
 	{
-		auto a = Action(canvas->getParameter("clearAlpha"), Action::Type::setNormalised, (float)c / 9);
+		auto a = Action(shaders[0]->getParameter("alpha"), Action::Type::setNormalised, (float)c / 9);
 		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c), a);
-		a = Action(getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
+		a = Action(shaders[0]->getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
 		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+16), a);
-		a = Action(getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
+		a = Action(shaders[0]->getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
 		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
 	}
 
@@ -212,28 +208,15 @@ void App::processEvents()
 
 void App::applyShaders()
 {
-	
-	blendShader.setParameter("alpha", canvas->getParameter("clearAlpha")->getValue());
-	blendShader.setParameter("driftX", getParameter("driftX")->getValue());
-	blendShader.setParameter("driftY", getParameter("driftY")->getValue());
-	blendShader.setParameter("zoom", getParameter("zoom")->getValue());
-	blendShader.setParameter("angle", getParameter("angle")->getValue());
-
-	//shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
-	//shaders.back().getShader()->setParameter("xpos", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::U)/200+0.5);
-	//shaders.back().getShader()->setParameter("ypos", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::V)/200+0.5);
-	
-	shaders.back().getShader()->setParameter("amount", AC.getAmplitude(1)/200);
-	shaders.back().getShader()->setParameter("length", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::U) / 200 + 0.5);
-
-	renderTexture[0].draw(sprite, &blendShader);
+	//probably could be simpler
+	shaders[0]->update();
+	renderTexture[0].draw(sprite, shaders[0]->getShader());
 	renderTexture[0].display();
-	int t = 0;
-	for (auto & sh : shaders)
+	int t = 1;
+	for (; t < shaders.size(); t++)
 	{
-		++t;
-		sh.update();
-		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t+1)%2].getTexture()), sh.getShader());
+		shaders[t]->update();
+		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaders[t]->getShader());
 		renderTexture[t % 2].display();
 	}
 	window.draw(sf::Sprite(renderTexture[t % 2].getTexture()));
