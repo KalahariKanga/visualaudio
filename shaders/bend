@@ -1,0 +1,21 @@
+
+
+uniform sampler2D texture;
+uniform float amount;
+uniform float length;
+void main()
+{
+	
+	vec2 texcoord = vec2(gl_TexCoord[0]);
+	float xs;
+	float ys;
+	xs = amount * sin(texcoord.y*16*length) / 4;
+	ys = amount * cos(texcoord.x*16*length) / 4;
+	texcoord.x += xs;
+	texcoord.y += ys;
+	if(texcoord.x > 1) texcoord.x = 2 - texcoord.x;
+	if(texcoord.y > 1) texcoord.y = 2 - texcoord.y;
+	if(texcoord.x < 0) texcoord.x *= -1;
+	if(texcoord.y < 0) texcoord.y *= -1;
+	gl_FragColor = texture2D(texture, texcoord);
+}

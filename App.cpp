@@ -35,6 +35,7 @@ App::App()
 	shaders.back().getShader()->setParameter("size_f", 2);
 	
 	shaders.emplace_back("shaders/kaleidoscope");
+	//shaders.emplace_back("shaders/bend");
 
 	
 
@@ -222,6 +223,8 @@ void App::applyShaders()
 	shaders.back().getShader()->setParameter("reflections_f", getParameter("reflections")->getValue());
 	shaders.back().getShader()->setParameter("xpos", 0.4);
 	shaders.back().getShader()->setParameter("ypos", 0.3);
+	shaders.back().getShader()->setParameter("amount", AC.getAmplitude(1)/200);
+	shaders.back().getShader()->setParameter("length", sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::U) / 200 + 0.5);
 
 	renderTexture[0].draw(sprite, &blendShader);
 	renderTexture[0].display();
