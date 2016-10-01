@@ -22,14 +22,14 @@ App::App()
 	addParameter("scene", 0, 0, 16, 1);
 
 	shaders.push_back(new Shader("shaders/blend"));
-	shaders[0]->getShader()->setParameter("lastFrame", renderTexture[0].getTexture());
+	shaders.back()->getShader()->setParameter("lastFrame", renderTexture[0].getTexture());
 
 	shaders.push_back(new Shader("shaders/bloom"));
-
-	shaders.back()->getShader()->setParameter("size_f", 2);
+	shaders.back()->getShader()->setParameter("size_f", 0);
 	
-	shaders.push_back(new Shader("shaders/kaleidoscope"));
 	shaders.push_back(new Shader("shaders/bend"));
+	shaders.push_back(new Shader("shaders/kaleidoscope"));
+	
 
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
@@ -39,8 +39,8 @@ App::App()
 	Action rotation(shaders.front()->getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(shaders.front()->getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(shaders[2]->getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(shaders[2]->getParameter("reflections"), Action::Type::shift, -1);
+	Action moreMirrors(shaders[3]->getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(shaders[3]->getParameter("reflections"), Action::Type::shift, -1);
 	
 	for (int c = 0; c < 9; c++)
 	{
@@ -109,11 +109,7 @@ void App::update()
 	clock.restart();
 	AC.update();
 	canvas->update();
-
-	if (1)
-		canvas->clear(sf::Color(0, 0, 0, 0));
-	else
-		canvas->wipe();//slow
+	canvas->clear(sf::Color(0, 0, 0, 0));
 
 	activeScene->update();
 	eventHandler.update();
@@ -123,14 +119,9 @@ void App::update()
 	sprite.setTexture(texture);
 	window.setView(sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight)));
 
-	if (1)
-	{
-		applyShaders();
-	}
-	else
-	{
-		window.draw(sprite, &shader);
-	}
+	
+	applyShaders();
+	
 
 	window.display();
 
@@ -219,7 +210,7 @@ void App::applyShaders()
 		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaders[t]->getShader());
 		renderTexture[t % 2].display();
 	}
-	window.draw(sf::Sprite(renderTexture[t % 2].getTexture()));
+	window.draw(sf::Sprite(renderTexture[(t+1) % 2].getTexture()));
 }
 
 InputButton App::detectNextInput()
