@@ -7,7 +7,7 @@ App::App()
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 
-	canvas = std::make_unique<Canvas>(windowWidth, windowHeight);
+	canvas = std::make_unique<Canvas>(windowWidth, windowHeight, &palette);
 	midiIn = std::make_unique<RtMidiIn>();
 	try
 	{
@@ -108,8 +108,9 @@ void App::update()
 
 	clock.restart();
 	AC.update();
-	canvas->update();
+	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
+	
 
 	activeScene->update();
 	eventHandler.update();

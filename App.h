@@ -18,7 +18,7 @@ class App : public InputReciever
 	const int fps = 60;
 
 	std::unique_ptr<Canvas> canvas;
-
+	Palette palette;
 	std::vector<std::unique_ptr<Scene>> scenes;
 	Scene* activeScene;
 

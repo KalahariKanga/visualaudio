@@ -2,14 +2,14 @@
 #include "Palette.h"
 
 #define PI 3.14159265
-class Canvas : public InputReciever
+class Canvas
 {
 	sf::Color drawColour, clearColour;
-	Palette palette;
+	Palette* palette;
 	int width, height;
 public:
 	Canvas() = delete;
-	Canvas(int, int);
+	Canvas(int, int, Palette* pal);
 	~Canvas();
 	sf::Uint8* data = nullptr;
 	void colourToData(int x, int y, sf::Color c);
@@ -35,10 +35,5 @@ public:
 	int getWidth(){ return width; }
 	int getHeight(){ return height; }
 	void resize(int w, int h);
-
-	void update();
-	void wipe();
-	Palette& getPalette() { return palette; }
-
 };
 

@@ -1,7 +1,7 @@
 
 #include "Canvas.h"
 
-Canvas::Canvas(int width, int height)
+Canvas::Canvas(int width, int height, Palette* pal)
 {
 	drawColour = sf::Color(255, 0, 0);
 	clearColour = sf::Color(0, 0, 0);
@@ -9,8 +9,7 @@ Canvas::Canvas(int width, int height)
 	data = new sf::Uint8[width*height*4];
 	this->width = width;
 	this->height = height;
-	
-	addParameter("clearAlpha", 0.5, 0, 1);
+	palette = pal;
 }
 
 Canvas::~Canvas()
@@ -57,7 +56,7 @@ void Canvas::setDrawColour(sf::Color c)
 
 void Canvas::setDrawColour(float a)
 {
-	drawColour = palette.getColour(a);
+	drawColour = palette->getColour(a);
 }
 
 void Canvas::setDrawAlpha(float a)
@@ -301,17 +300,4 @@ void Canvas::resize(int w, int h)
 	data = new sf::Uint8[w*h * 4];
 	width = w;
 	height = h;
-}
-
-void Canvas::update()
-{
-	palette.update();
-}
-
-void Canvas::wipe()
-{
-	clearColour.a = 255 * getParameter("clearAlpha")->getValue();
-	for (int cx = 0; cx < width; cx++)
-		for (int cy = 0; cy < height; cy++)
-			drawPoint(cx, cy, clearColour);
 }

@@ -14,7 +14,6 @@ Scene::~Scene()
 void Scene::update()
 {
 	eventHandler.update();
-	canvas->update();
 	gen->update(*canvas);
 }
 
@@ -32,8 +31,6 @@ Parameter* Scene::getParameter(std::string name)
 {
 	auto p = gen->getParameter(name);
 	if (p) return p;
-	p = canvas->getParameter(name);
-	if (p) return p;
 	return InputReciever::getParameter(name);
 }
 
@@ -41,9 +38,6 @@ std::vector<std::string> Scene::getParameterList()
 {
 	auto list = InputReciever::getParameterList();
 	auto genList = gen->getParameterList();
-	auto canvasList = canvas->getParameterList();
-
-	std::copy(canvasList.begin(), canvasList.end(), std::back_inserter(list));
 	std::copy(genList.begin(), genList.end(), std::back_inserter(list));
 	return list;
 }
