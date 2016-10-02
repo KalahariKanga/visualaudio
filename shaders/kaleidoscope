@@ -4,6 +4,8 @@ uniform sampler2D texture;
 uniform float reflections;
 uniform float xpos;
 uniform float ypos;
+uniform float angle;
+uniform float flip;
  
 void main() {
     
@@ -13,13 +15,19 @@ void main() {
 	int ireflections = int(reflections);
 
 	float distance = length(newPos.xy);
-    float angle = atan(newPos.y, newPos.x);
+    float theta = atan(newPos.y, newPos.x);
 
 	vec4 col = vec4(0,0,0,0);
 	int c;
+	int sign = -1;
 	for(c = 0; c < ireflections; c += 1)
 	{
-		float targetAngle = angle + (2 * c * PI) / ireflections;
+		sign *= -1;
+		float targetAngle;
+		if(flip > 0 && sign == -1)
+			targetAngle = sign*theta + (2 * (c+1) * PI) / ireflections;
+		else
+			targetAngle = theta + (2 * c * PI) / ireflections;
 		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
 		target += offset;
 		if(target.x > 1) target.x = 2 - target.x;

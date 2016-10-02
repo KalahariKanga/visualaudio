@@ -1,5 +1,5 @@
 uniform sampler2D texture;
-uniform float size_f;
+uniform float size;
 
 void main()
 {
@@ -8,11 +8,11 @@ void main()
 	vec2 texcoord = vec2(gl_TexCoord[0]);
 	int j;
 	int i;
-	int size = int(size_f);
+	int isize = int(size);
 
-	for (i = -size; i < size; i++)
+	for (i = -isize; i < isize; i++)
 	{
-		for (j = -size; j < size; j++)
+		for (j = -isize; j < isize; j++)
 		{
 			sum += texture2D(texture, texcoord + vec2(j, i)*0.004) * 0.25;
 		}

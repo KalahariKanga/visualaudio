@@ -24,10 +24,10 @@ App::App()
 	shaders.push_back(new Shader("shaders/blend"));
 	shaders.back()->getShader()->setParameter("lastFrame", renderTexture[0].getTexture());
 
-	shaders.push_back(new Shader("shaders/bloom"));
-	shaders.back()->getShader()->setParameter("size_f", 0);
+	/*shaders.push_back(new Shader("shaders/bloom"));
+	shaders.back()->getShader()->setParameter("size", 2);
 	
-	shaders.push_back(new Shader("shaders/bend"));
+	shaders.push_back(new Shader("shaders/bend"));*/
 	shaders.push_back(new Shader("shaders/kaleidoscope"));
 	
 
@@ -39,8 +39,9 @@ App::App()
 	Action rotation(shaders.front()->getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(shaders.front()->getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(shaders[3]->getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(shaders[3]->getParameter("reflections"), Action::Type::shift, -1);
+	Action moreMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, -1);
+	Action flip(shaders[1]->getParameter("flip"), Action::Type::trigger);
 	
 	for (int c = 0; c < 9; c++)
 	{
@@ -64,6 +65,7 @@ App::App()
 
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::F), flip);
 
 	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
 
@@ -88,6 +90,10 @@ App::App()
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
 	scene->addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
 	scene->addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
+
+	scene = addScene<Gen_Waveform>();
+	Action fill(scene->getParameter("fill"), Action::Type::trigger);
+	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
 }
 
 
