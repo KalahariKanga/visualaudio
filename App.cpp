@@ -122,8 +122,9 @@ void App::update()
 	eventHandler.update();
 
 	image.create(windowWidth, windowHeight, canvas->data);
+	texture.create(windowWidth, windowHeight);
 	texture.loadFromImage(image);
-	sprite.setTexture(texture);
+	sprite.setTexture(texture, 1);
 	window.setView(sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight)));
 
 	
@@ -152,7 +153,10 @@ void App::processEvents()
 		{
 			windowWidth = ev.size.width;
 			windowHeight = ev.size.height;
+			renderTexture[0].create(windowWidth, windowHeight);
+			renderTexture[1].create(windowWidth, windowHeight);
 			canvas->resize(windowWidth, windowHeight);
+			break;//avoid double delete on snap resize
 		}
 		if (ev.type == sf::Event::KeyPressed)
 		{
