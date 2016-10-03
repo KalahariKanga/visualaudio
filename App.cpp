@@ -138,6 +138,7 @@ void App::update()
 	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
 }
 
 void App::processEvents()
@@ -170,6 +171,9 @@ void App::processEvents()
 				break;
 			case sf::Keyboard::F4:
 				toggleFullscreen();
+				break;
+			case sf::Keyboard::Escape:
+				quit = 1;
 				break;
 			}
 			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);

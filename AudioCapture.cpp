@@ -57,6 +57,8 @@ AudioCapture::AudioCapture()
 
 AudioCapture::~AudioCapture()
 {
+	Pa_StopStream(stream);
+	Pa_CloseStream(stream);
 	Pa_Terminate();
 	delete[] waveform;
 	delete[] fft;

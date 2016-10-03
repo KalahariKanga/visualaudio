@@ -7,7 +7,7 @@
 int main(int argc, char** argv[])
 {	
 	App app;
-	while (1){
+	while (!app.quit){
 		app.update();
 	};
 	return 0;
