@@ -151,11 +151,7 @@ void App::processEvents()
 			quit = 1;
 		if (ev.type == sf::Event::Resized)
 		{
-			windowWidth = ev.size.width;
-			windowHeight = ev.size.height;
-			renderTexture[0].create(windowWidth, windowHeight);
-			renderTexture[1].create(windowWidth, windowHeight);
-			canvas->resize(windowWidth, windowHeight);
+			resize(ev.size.width, ev.size.width);
 			break;//avoid double delete on snap resize
 		}
 		if (ev.type == sf::Event::KeyPressed)
@@ -171,6 +167,9 @@ void App::processEvents()
 					std::cout << i << std::endl;
 				for (auto& i : activeScene->getParameterList())
 					std::cout << i << std::endl;
+				break;
+			case sf::Keyboard::F4:
+				toggleFullscreen();
 				break;
 			}
 			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
@@ -279,4 +278,30 @@ InputButton App::detectNextInput()
 	}
 	std::cout << (int)input.device << ": " << input.button << "\n";
 	return input;
+}
+
+void App::toggleFullscreen()
+{
+	if (fullscreen)
+	{
+		fullscreen = 0;
+		resize(800, 600);
+		window.create(sf::VideoMode(800, 600), "Window");
+	}
+	else
+	{
+		fullscreen = 1;
+		auto mode = sf::VideoMode::getFullscreenModes().front();
+		resize(mode.width, mode.height);
+		window.create(mode, "Window", sf::Style::Fullscreen);
+	}
+}
+
+void App::resize(int width, int height)
+{
+	windowWidth = width;
+	windowHeight = height;
+	renderTexture[0].create(windowWidth, windowHeight);
+	renderTexture[1].create(windowWidth, windowHeight);
+	canvas->resize(windowWidth, windowHeight);
 }

@@ -15,6 +15,7 @@ class App : public InputReciever
 	AudioCapture AC;
 
 	int windowWidth = 800, windowHeight = 600;
+	bool fullscreen = 0;
 	const int fps = 60;
 
 	std::unique_ptr<Canvas> canvas;
@@ -32,6 +33,8 @@ class App : public InputReciever
 	void processEvents();
 	void applyShaders();
 	InputButton detectNextInput();
+	void toggleFullscreen();
+	void resize(int width, int height);
 
 public:
 	App();
