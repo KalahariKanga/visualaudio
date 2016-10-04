@@ -30,7 +30,7 @@ App::App()
 	shaders.push_back(new Shader("shaders/bend"));*/
 	shaders.push_back(new Shader("shaders/kaleidoscope"));
 	
-
+	shaders.push_back(new Shader("shaders/mosaic"));
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -41,6 +41,10 @@ App::App()
 
 	Action moreMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, 1);
 	Action lessMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, -1);
+	Action kalUp(shaders[1]->getParameter("ypos"), Action::Type::shift, 0.1);
+	Action kalDown(shaders[1]->getParameter("ypos"), Action::Type::shift, -0.1);
+	Action kalLeft(shaders[1]->getParameter("xpos"), Action::Type::shift, 0.1);
+	Action kalRight(shaders[1]->getParameter("xpos"), Action::Type::shift, -0.1);
 	Action flip(shaders[1]->getParameter("flip"), Action::Type::trigger);
 	
 	for (int c = 0; c < 9; c++)
@@ -65,6 +69,10 @@ App::App()
 
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::W), kalUp);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::S), kalDown);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::A), kalLeft);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::D), kalRight);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::F), flip);
 
 	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
@@ -103,7 +111,7 @@ App::~App()
 
 void App::update()
 {
-
+	clock.restart();
 	int sceneID = (int)getParameter("scene")->getValue();
 	if (sceneID >= scenes.size())
 	{
@@ -112,12 +120,11 @@ void App::update()
 	}
 	activeScene = scenes[sceneID].get();//try
 
-	clock.restart();
+
 	AC.update();
 	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
 	
-
 	activeScene->update();
 	eventHandler.update();
 
@@ -127,18 +134,17 @@ void App::update()
 	sprite.setTexture(texture, 1);
 	window.setView(sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight)));
 
-	
+
 	applyShaders();
-	
+
 
 	window.display();
 
 	processEvents();
-	
+
 	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
-
 }
 
 void App::processEvents()

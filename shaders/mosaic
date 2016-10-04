@@ -1,0 +1,15 @@
+uniform sampler2D texture;
+uniform float xsize;
+uniform float ysize;
+ 
+void main() {
+
+	vec2 coord = gl_TexCoord[0].xy;
+	float dx = xsize*(1./512.);
+	float dy = ysize*(1./512.);
+	vec2 newCoord = vec2(dx * floor(coord.x / dx), dy * floor(coord.y / dy));
+	gl_FragColor = texture2D(texture, newCoord);
+}
+
+
+
