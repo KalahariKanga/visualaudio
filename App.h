@@ -35,6 +35,7 @@ class App : public InputReciever
 	InputButton detectNextInput();
 	void toggleFullscreen();
 	void resize(int width, int height);
+	std::vector<Parameter*> getParameterList() override;
 
 public:
 	App();

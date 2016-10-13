@@ -6,11 +6,16 @@
 
 class Parameter
 {
+	std::string name;
 	float value, min, max, interval;
 	bool changed = 1;
 public:
-	Parameter(float v, float min, float max, float interval = -1);
+	Parameter(std::string name, float v, float min, float max, float interval = -1);
 	~Parameter();
+	std::string getName()
+	{
+		return name;
+	}
 	float getValue()
 	{
 		changed = 0;

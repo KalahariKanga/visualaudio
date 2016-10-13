@@ -26,7 +26,7 @@ public:
 	template <class T> void setGenerator();
 
 	Parameter* getParameter(std::string name) override;
-	std::vector<std::string> getParameterList() override;
+	std::vector<Parameter*> getParameterList() override;
 
 };
 

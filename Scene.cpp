@@ -34,7 +34,7 @@ Parameter* Scene::getParameter(std::string name)
 	return InputReciever::getParameter(name);
 }
 
-std::vector<std::string> Scene::getParameterList()
+std::vector<Parameter*> Scene::getParameterList()
 {
 	auto list = InputReciever::getParameterList();
 	auto genList = gen->getParameterList();

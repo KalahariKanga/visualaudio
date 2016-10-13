@@ -315,3 +315,17 @@ void App::resize(int width, int height)
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
 }
+std::vector<Parameter*> App::getParameterList()
+{
+	std::vector<Parameter*> list;
+	auto localList = InputReciever::getParameterList();
+	std::copy(localList.begin(), localList.end(), std::back_inserter(list));
+	auto sceneList = activeScene->getParameterList();
+	std::copy(sceneList.begin(), sceneList.end(), std::back_inserter(list));
+	for (auto & s : shaders)
+	{
+		auto shaderList = s->getParameterList();
+		std::copy(shaderList.begin(), shaderList.end(), std::back_inserter(list));
+	}
+	return list;
+}

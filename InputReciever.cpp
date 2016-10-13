@@ -12,7 +12,7 @@ InputReciever::~InputReciever()
 
 void InputReciever::addParameter(std::string name, float value, float min, float max, float interval)
 {
-	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(value, min, max, interval)));
+	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(name, value, min, max, interval)));
 }
 
 Parameter* InputReciever::getParameter(std::string name)
@@ -28,12 +28,12 @@ Parameter* InputReciever::getParameter(std::string name)
 	}
 }
 
-std::vector<std::string> InputReciever::getParameterList()
+std::vector<Parameter*> InputReciever::getParameterList()
 {
-	std::vector<std::string> list;
+	std::vector<Parameter*> list;
 	for (auto &p : parameters)
 	{
-		list.push_back(p.first);
+		list.push_back(&(p.second));
 	}
 	return list;
 }
