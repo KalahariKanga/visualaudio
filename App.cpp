@@ -30,7 +30,7 @@ App::App()
 	shaders.push_back(new Shader("shaders/bend"));*/
 	shaders.push_back(new Shader("shaders/kaleidoscope"));
 	
-	shaders.push_back(new Shader("shaders/mosaic"));
+	//shaders.push_back(new Shader("shaders/mosaic"));
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -158,7 +158,7 @@ void App::processEvents()
 			quit = 1;
 		if (ev.type == sf::Event::Resized)
 		{
-			resize(ev.size.width, ev.size.width);
+			resize(ev.size.width, ev.size.height);
 			break;//avoid double delete on snap resize
 		}
 		if (ev.type == sf::Event::KeyPressed)
