@@ -55,6 +55,6 @@ void Shader::update()
 {
 	for (auto p : parameters)
 	{
-		shader->setParameter(p.first, p.second.getValue());
+		shader->setUniform(p.first, p.second.getValue());
 	}
 }

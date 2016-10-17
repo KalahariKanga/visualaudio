@@ -22,7 +22,7 @@ App::App()
 	addParameter("scene", 0, 0, 16, 1);
 
 	shaders.push_back(new Shader("shaders/blend"));
-	shaders.back()->getShader()->setParameter("lastFrame", renderTexture[0].getTexture());
+	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
 
 	/*shaders.push_back(new Shader("shaders/bloom"));
 	shaders.back()->getShader()->setParameter("size", 2);
