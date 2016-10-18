@@ -1,0 +1,23 @@
+uniform sampler2D texture;
+uniform float scale;
+uniform float mirror;
+ 
+void main() {
+    
+    vec2 newPos = vec2(gl_TexCoord[0]);
+    newPos *= scale;
+	int oddx = int(mod(int(newPos.x),2.));
+	int oddy = int(mod(int(newPos.y),2.));
+	newPos = mod(newPos,vec2(1,1));
+	if(mirror > 0)
+	{
+		if(oddx > 0)
+			newPos.x = 1 - newPos.x;
+		if(oddy > 0)
+			newPos.y = 1 - newPos.y;
+	}
+    gl_FragColor = texture2D(texture, newPos);
+}
+
+
+

@@ -4,7 +4,6 @@ uniform sampler2D texture;
 uniform float reflections;
 uniform float xpos;
 uniform float ypos;
-uniform float angle;
 uniform float flip;
  
 void main() {
