@@ -26,6 +26,10 @@ public:
 		changed = 1; //check if it's actually different?
 		value = Math::clamp(v, min, max);
 	}
+	float getNormalisedValue()
+	{
+		return (value - min) / (max - min);
+	}
 	void setNormalisedValue(float v)
 	{
 		v = Math::clamp(v, 0, 1);

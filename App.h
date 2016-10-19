@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "RtMidi.h"
 #include "Shader.h"
+#include "ParameterListView.h"
 
 class App : public InputReciever
 {
@@ -16,6 +17,7 @@ class App : public InputReciever
 
 	int windowWidth = 800, windowHeight = 600;
 	bool fullscreen = 0;
+	bool showUI = 0;
 	const int fps = 60;
 
 	std::unique_ptr<Canvas> canvas;
@@ -29,6 +31,7 @@ class App : public InputReciever
 	
 	std::vector<Shader*> shaders;
 
+	std::unique_ptr<ParameterListView> pv;
 
 	void processEvents();
 	void applyShaders();

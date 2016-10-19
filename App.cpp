@@ -19,6 +19,8 @@ App::App()
 	}
 
 	
+	pv = std::make_unique<ParameterListView>(0, 0, 128, 600);
+
 	addParameter("scene", 0, 0, 16, 1);
 
 	shaders.push_back(new Shader("shaders/blend"));
@@ -30,7 +32,7 @@ App::App()
 	shaders.push_back(new Shader("shaders/bend"));*/
 	shaders.push_back(new Shader("shaders/kaleidoscope"));
 	
-	//shaders.push_back(new Shader("shaders/mosaic"));
+	//shaders.push_back(new Shader("shaders/tile"));
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -134,9 +136,13 @@ void App::update()
 	sprite.setTexture(texture, 1);
 	window.setView(sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight)));
 
-
 	applyShaders();
 
+	if (showUI)
+	{
+		pv->update();
+		window.draw(sf::Sprite(pv->getTexture()));
+	}
 
 	window.display();
 
@@ -168,12 +174,11 @@ void App::processEvents()
 			case sf::Keyboard::N:
 				AC.normalise();
 				break;
-			case sf::Keyboard::Space:
-				detectNextInput();
-				for (auto& i : getParameterList())
-					std::cout << i << std::endl;
-				for (auto& i : activeScene->getParameterList())
-					std::cout << i << std::endl;
+			case sf::Keyboard::R:
+				pv->refresh(getParameterList());
+				break;
+			case sf::Keyboard::Tab:
+				showUI = !showUI;
 				break;
 			case sf::Keyboard::F4:
 				toggleFullscreen();
@@ -315,6 +320,7 @@ void App::resize(int width, int height)
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
 }
+
 std::vector<Parameter*> App::getParameterList()
 {
 	std::vector<Parameter*> list;
