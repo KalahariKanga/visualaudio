@@ -34,3 +34,17 @@ sf::Font* UIElement::getFont()
 	}
 	return &font;
 }
+
+void UIElement::processEvent(sf::Event ev)
+{
+	//assert
+}
+
+void UIElement::distributeEvent(sf::Event ev)
+{
+	for (auto& c : children)
+	{
+		c->distributeEvent(ev);
+	}
+	processEvent(ev);
+}

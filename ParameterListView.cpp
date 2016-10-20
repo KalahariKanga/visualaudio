@@ -34,3 +34,8 @@ void ParameterListView::refresh(std::vector<Parameter*> list)
 		++i;
 	}
 }
+
+void ParameterListView::processEvent(sf::Event ev)
+{
+	
+}

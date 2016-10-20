@@ -200,6 +200,7 @@ void App::processEvents()
 			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 		}
+		pv->distributeEvent(ev);
 	}
 	std::vector<unsigned char> message;
 	while (midiIn->isPortOpen())

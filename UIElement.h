@@ -16,11 +16,14 @@ public:
 	UIElement(int x, int y, int w, int h);
 	virtual ~UIElement();
 	virtual void update() = 0;
+	virtual void processEvent(sf::Event ev);
+	void distributeEvent(sf::Event ev);
 	sf::Texture getTexture() { return texture->getTexture(); }
 	int getX() { return x; }
 	int getY() { return y; }
 	void setPosition(int _x, int _y){ x = _x; y = _y; }
 	void setSize(int _w, int _h){ w = _w; h = _h; }
 	void resize(int _w, int _h);
+	
 	sf::Font* getFont();
 };

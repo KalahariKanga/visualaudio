@@ -49,3 +49,16 @@ void ParameterView::resize(int _w, int _h)
 	
 	value.setPosition(x + _w / 2, y + paddingY);
 }
+
+void ParameterView::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			if (ev.mouseMove.x > x && ev.mouseMove.x < x+w)
+				if (ev.mouseMove.y > y && ev.mouseMove.y < y + h)
+				{
+					parameter->setNormalisedValue((float)(ev.mouseMove.x - x) / w);
+				}
+	}
+}
