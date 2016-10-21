@@ -4,7 +4,7 @@
 Gen_Swarm::Gen_Swarm(AudioCapture* AC) : Generator(AC)
 {
 	addParameter("noParts", 30, 0, 300);
-	addParameter("ai", 0, 0, 5, 1);
+	addParameter("ai", 0, 0, 5);
 	particles.resize(noParts);
 }
 

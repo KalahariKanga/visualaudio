@@ -21,7 +21,7 @@ App::App()
 	
 	pv = std::make_unique<ParameterListView>(0, 0, 128, 600);
 
-	addParameter("scene", 0, 0, 16, 1);
+	addParameter("scene", 0, 0, 16);
 
 	addShader("shaders/blend");
 	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());

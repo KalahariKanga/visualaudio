@@ -7,10 +7,10 @@
 class Parameter
 {
 	std::string name;
-	float value, min, max, interval;
+	float value, min, max;
 	bool changed = 1;
 public:
-	Parameter(std::string name, float v, float min, float max, float interval = -1);
+	Parameter(std::string name, float v, float min, float max);
 	~Parameter();
 	std::string getName()
 	{
@@ -34,16 +34,6 @@ public:
 	{
 		v = Math::clamp(v, 0, 1);
 		value = min + v*(max - min);
-	}
-	void increment()
-	{
-		value = Math::clamp(value + interval, min, max);
-		changed = 1;
-	}
-	void decrement()
-	{
-		value = Math::clamp(value - interval, min, max);
-		changed = 1;
 	}
 	bool hasChanged()
 	{
