@@ -29,7 +29,7 @@ class App : public InputReciever
 
 	EventHandler eventHandler;
 	
-	std::vector<Shader*> shaders;
+	std::vector<std::unique_ptr<Shader>> shaders;
 
 	std::unique_ptr<ParameterListView> pv;
 
@@ -47,7 +47,7 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
-
+	void addShader(std::string filename);
 };
 
 template <class T>

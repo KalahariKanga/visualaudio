@@ -23,16 +23,9 @@ App::App()
 
 	addParameter("scene", 0, 0, 16, 1);
 
-	shaders.push_back(new Shader("shaders/blend"));
+	addShader("shaders/blend");
 	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-
-	/*shaders.push_back(new Shader("shaders/bloom"));
-	shaders.back()->getShader()->setParameter("size", 2);
-	
-	shaders.push_back(new Shader("shaders/bend"));*/
-	shaders.push_back(new Shader("shaders/kaleidoscope"));
-	
-	//shaders.push_back(new Shader("shaders/tile"));
+	addShader("shaders/kaleidoscope");
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -335,4 +328,9 @@ std::vector<Parameter*> App::getParameterList()
 		std::copy(shaderList.begin(), shaderList.end(), std::back_inserter(list));
 	}
 	return list;
+}
+
+void App::addShader(std::string filename)
+{
+	shaders.push_back(std::make_unique<Shader>(filename));
 }
