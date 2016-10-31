@@ -40,6 +40,11 @@ void UIElement::processEvent(sf::Event ev)
 	//assert
 }
 
+void UIElement::refresh()
+{
+
+}
+
 void UIElement::distributeEvent(sf::Event ev)
 {
 	for (auto& c : children)
@@ -47,4 +52,60 @@ void UIElement::distributeEvent(sf::Event ev)
 		c->distributeEvent(ev);
 	}
 	processEvent(ev);
+}
+
+void UIElement::doUpdate()
+{
+	for (auto& c : children)
+	{
+		c->doUpdate();
+	}
+	update();
+}
+
+void UIElement::setPosition(int _x, int _y)
+{
+	offsetPosition(_x - x, _y - y);
+}
+
+void UIElement::offsetPosition(int dx, int dy)
+{
+	for (auto& ch : children)
+	{
+		ch->offsetPosition(dx, dy);
+	}
+	x += dx;
+	y += dy;
+}
+
+int UIElement::getH()
+{
+	if (children.empty())
+		return h;
+	int min = y;
+	int max = std::numeric_limits<int>().min();
+	for (auto& ch : children)
+	{
+		int bottom = ch->getY() + ch->getH();
+		if (bottom > max)
+			max = bottom;
+	}
+	h = max - min;
+	return h;
+}
+
+int UIElement::getW()
+{
+	if (children.empty())
+		return w;
+	int min = x;
+	int max = std::numeric_limits<int>().min();
+	for (auto& ch : children)
+	{
+		int right = ch->getX() + ch->getW();
+		if (right > max)
+			max = right;
+	}
+	w = max - min;
+	return w;
 }

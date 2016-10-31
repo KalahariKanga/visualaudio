@@ -3,13 +3,13 @@
 class ParameterListView :
 	public UIElement
 {
-	std::vector<std::unique_ptr<ParameterView>> parameters;
+	std::vector<Parameter*>* parameters;
 	int parameterHeight = 48;
 public:
-	ParameterListView(int x, int y, int w, int h);
+	ParameterListView(int x, int y, int w, int h, std::vector<Parameter*>* params);
 	~ParameterListView();
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
-	void refresh(std::vector<Parameter*> list);
+	void refresh();
 };
 

@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "RtMidi.h"
 #include "Shader.h"
-#include "ParameterListView.h"
+#include "UIPanel.h"
 
 class App : public InputReciever
 {
@@ -31,7 +31,8 @@ class App : public InputReciever
 	
 	std::vector<std::unique_ptr<Shader>> shaders;
 
-	std::unique_ptr<ParameterListView> pv;
+	std::unique_ptr<UIPanel> panel;
+	sf::RenderTexture UITexture;
 
 	void processEvents();
 	void applyShaders();

@@ -1,10 +1,11 @@
 #include "Shader.h"
 
 
-Shader::Shader(std::string filename)
+Shader::Shader(std::string fname)
 {
 	shader = new sf::Shader();
-	load(filename);
+	filename = fname;
+	load(fname);
 }
 
 Shader& Shader::operator=(Shader&& other)
