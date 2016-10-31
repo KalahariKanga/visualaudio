@@ -3,7 +3,7 @@
 
 Palette::Palette()
 {
-	addParameter("paletteSpeed", 0.002, 0, 0.1, 0.001);
+	addParameter("paletteSpeed", 0.002, 0, 0.1);
 	l0 = sf::Color::Red;
 	h0 = sf::Color::Green;
 	l1 = sf::Color::Blue;
