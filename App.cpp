@@ -72,7 +72,7 @@ App::App()
 
 	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
 
-	auto scene = addScene<Gen_CircleSpectrum>();
+	auto scene = addScene<Gen_Spirograph>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
@@ -141,7 +141,7 @@ void App::update()
 
 	processEvents();
 
-	//std::cout << clock.getElapsedTime().asSeconds() << "\n";
+	//std::cout << 1/clock.getElapsedTime().asSeconds() << "\n";
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }

@@ -7,6 +7,7 @@
 #include "Gen_Waveform.h"
 #include "Gen_Spectrum.h"
 #include "Gen_Particles.h"
+#include "Gen_Spirograph.h"
 #include "Palette.h"
 #include "EventHandler.h"
 
