@@ -15,7 +15,9 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	name.setCharacterSize(12);
 	value.setCharacterSize(12);
 	sliderFill.setFillColor(sf::Color::Red);
-	sliderOutline.setFillColor(sf::Color::Blue);
+	sliderOutline.setFillColor(sf::Color(0,0,0,0));
+	sliderOutline.setOutlineColor(sf::Color::White);
+	sliderOutline.setOutlineThickness(1);
 }
 
 
@@ -32,17 +34,16 @@ void ParameterView::update()
 	sf::Vector2f sz(parameter->getNormalisedValue() * (w - 2 * paddingY), sliderH);
 	sliderFill.setSize(sz);
 	
-	//texture->draw(sliderOutline);
+	texture->draw(sliderOutline);
 	texture->draw(sliderFill);
 	texture->draw(name);
 	texture->draw(value);
-	std::cout << "ParameterView.y: " << y << "\n";
 }
 
 void ParameterView::refresh()
 {
-	//sliderOutline.setPosition(paddingX, h - paddingY - sliderH);
-	//sliderOutline.setSize(sf::Vector2f(w - 2 * paddingY, sliderH));
+	sliderOutline.setPosition(x + paddingX, y + h - paddingY - sliderH);
+	sliderOutline.setSize(sf::Vector2f(w - 2 * paddingY, sliderH));
 	sliderFill.setPosition(x + paddingX, y + h - paddingY - sliderH);
 
 	name.setPosition(x + paddingX, y + paddingY);
