@@ -12,7 +12,6 @@ protected:
 	void addChild(std::unique_ptr<UIElement> child);
 	int x, y;
 	int w, h;
-
 	
 public:
 	UIElement(int x, int y, int w, int h);
@@ -24,6 +23,7 @@ public:
 
 	void distributeEvent(sf::Event ev);
 	void doUpdate();
+	void doRefresh();
 
 	sf::Texture getTexture() { return texture->getTexture(); }
 	int getX() { return x; }

@@ -17,6 +17,7 @@ void UIElement::addChild(std::unique_ptr<UIElement> child)
 	children.emplace_back(std::move(child));
 	children.back()->parent = this;
 	children.back()->texture = texture;
+	children.back()->doRefresh();
 }
 
 void UIElement::resize(int _w, int _h)
@@ -61,6 +62,15 @@ void UIElement::doUpdate()
 		c->doUpdate();
 	}
 	update();
+}
+
+void UIElement::doRefresh()
+{
+	refresh();
+	for (auto& c : children)
+	{
+		c->doRefresh();
+	}
 }
 
 void UIElement::setPosition(int _x, int _y)

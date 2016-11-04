@@ -10,6 +10,6 @@ public:
 	~ParameterListView();
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
-	void refresh();
+	virtual void refresh();
 };
 

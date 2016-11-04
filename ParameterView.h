@@ -17,6 +17,6 @@ public:
 	~ParameterView();
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
-	void resize(int w, int h);
+	virtual void refresh();
 };
 

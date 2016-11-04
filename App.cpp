@@ -176,7 +176,7 @@ void App::processEvents()
 				AC.normalise();
 				break;
 			case sf::Keyboard::R:
-				panel->refresh();
+				panel->doRefresh();
 				break;
 			case sf::Keyboard::Tab:
 				showUI = !showUI;

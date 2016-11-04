@@ -25,5 +25,4 @@ void ShaderView::refresh()
 	children.clear();
 	list = shader->getParameterList();
 	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 200, &list));
-	children.back()->refresh();
 }

@@ -32,22 +32,22 @@ void ParameterView::update()
 	sf::Vector2f sz(parameter->getNormalisedValue() * (w - 2 * paddingY), sliderH);
 	sliderFill.setSize(sz);
 	
-	texture->draw(sliderOutline);
+	//texture->draw(sliderOutline);
 	texture->draw(sliderFill);
 	texture->draw(name);
 	texture->draw(value);
+	std::cout << "ParameterView.y: " << y << "\n";
 }
 
-void ParameterView::resize(int _w, int _h)
+void ParameterView::refresh()
 {
-	UIElement::resize(_w, _h);
-	sliderOutline.setPosition(paddingX, h - paddingY - sliderH);
-	sliderOutline.setSize(sf::Vector2f(w - 2 * paddingY, sliderH));
+	//sliderOutline.setPosition(paddingX, h - paddingY - sliderH);
+	//sliderOutline.setSize(sf::Vector2f(w - 2 * paddingY, sliderH));
 	sliderFill.setPosition(x + paddingX, y + h - paddingY - sliderH);
 
 	name.setPosition(x + paddingX, y + paddingY);
 	
-	value.setPosition(x + _w / 2, y + paddingY);
+	value.setPosition(x + w / 2, y + paddingY);
 }
 
 void ParameterView::processEvent(sf::Event ev)
