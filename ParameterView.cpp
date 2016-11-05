@@ -15,7 +15,9 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	name.setCharacterSize(12);
 	value.setCharacterSize(12);
 	sliderFill.setFillColor(sf::Color::Red);
-	sliderOutline.setFillColor(sf::Color::Blue);
+	sliderOutline.setFillColor(sf::Color(0,0,0,0));
+	sliderOutline.setOutlineColor(sf::Color::White);
+	sliderOutline.setOutlineThickness(1);
 }
 
 
@@ -38,16 +40,15 @@ void ParameterView::update()
 	texture->draw(value);
 }
 
-void ParameterView::resize(int _w, int _h)
+void ParameterView::refresh()
 {
-	UIElement::resize(_w, _h);
-	sliderOutline.setPosition(paddingX, h - paddingY - sliderH);
+	sliderOutline.setPosition(x + paddingX, y + h - paddingY - sliderH);
 	sliderOutline.setSize(sf::Vector2f(w - 2 * paddingY, sliderH));
 	sliderFill.setPosition(x + paddingX, y + h - paddingY - sliderH);
 
 	name.setPosition(x + paddingX, y + paddingY);
 	
-	value.setPosition(x + _w / 2, y + paddingY);
+	value.setPosition(x + w / 2, y + paddingY);
 }
 
 void ParameterView::processEvent(sf::Event ev)

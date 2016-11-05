@@ -19,13 +19,19 @@ App::App()
 	}
 
 	
-	pv = std::make_unique<ParameterListView>(0, 0, 128, 600);
+	panel = std::make_unique<UIPanel>(0, 0, 128, 600);
+	panel->shaders = &shaders;
+	UITexture.create(128, 600);
+	panel->texture = &UITexture;
+
+
 
 	addParameter("scene", 0, 0, 16);
 
 	addShader("shaders/blend");
 	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	addShader("shaders/kaleidoscope");
+	//addShader("shaders/kaleidoscope");
+	addShader("shaders/bend");
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -115,6 +121,7 @@ void App::update()
 	}
 	activeScene = scenes[sceneID].get();//try
 
+	panel->generator = activeScene->getGenerator();//stupid why is this here ew
 
 	AC.update();
 	palette.update();
@@ -133,8 +140,10 @@ void App::update()
 
 	if (showUI)
 	{
-		pv->update();
-		window.draw(sf::Sprite(pv->getTexture()));
+		UITexture.clear(sf::Color(0, 0, 0, 128));
+		panel->doUpdate();
+		UITexture.display();
+		window.draw(sf::Sprite(panel->getTexture()));
 	}
 
 	window.display();
@@ -168,7 +177,7 @@ void App::processEvents()
 				AC.normalise();
 				break;
 			case sf::Keyboard::R:
-				pv->refresh(getParameterList());
+				panel->doRefresh();
 				break;
 			case sf::Keyboard::Tab:
 				showUI = !showUI;
@@ -193,7 +202,7 @@ void App::processEvents()
 			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 		}
-		pv->distributeEvent(ev);
+		panel->distributeEvent(ev);
 	}
 	std::vector<unsigned char> message;
 	while (midiIn->isPortOpen())

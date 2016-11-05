@@ -7,6 +7,7 @@ class Shader :
 	public InputReciever
 {
 	sf::Shader* shader;
+	std::string filename;
 public:
 	Shader(std::string filename);
 	Shader& operator=(Shader& other) = delete;
@@ -16,6 +17,7 @@ public:
 	~Shader();
 	void load(std::string filename);
 	sf::Shader* getShader() { return shader; }
+	std::string getName() { return filename; }
 	void update();
 };
 

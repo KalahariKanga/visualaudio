@@ -28,7 +28,7 @@ public:
 
 	Parameter* getParameter(std::string name) override;
 	std::vector<Parameter*> getParameterList() override;
-
+	Generator* getGenerator() { return gen.get(); } ///nonono
 };
 
 template <class T>
