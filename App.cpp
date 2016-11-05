@@ -121,6 +121,7 @@ void App::update()
 	}
 	activeScene = scenes[sceneID].get();//try
 
+	panel->generator = activeScene->getGenerator();//stupid why is this here ew
 
 	AC.update();
 	palette.update();

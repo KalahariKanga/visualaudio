@@ -23,7 +23,7 @@ void UIPanel::refresh()
 	if (!shaders)
 		return;//look at how shaders is initialized
 
-
+	addChild(std::make_unique<GeneratorView>(x, y, w, 100, generator));
 	for (int i = 0; i < shaders->size(); ++i)
 	{
 		addChild(std::make_unique<ShaderView>(x, y, w, 100, (*shaders)[i].get()));
