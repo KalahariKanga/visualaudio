@@ -18,20 +18,16 @@ App::App()
 		std::cout << "Cannot open MIDI port\n";
 	}
 
-	
-	panel = std::make_unique<UIPanel>(0, 0, 128, 600);
-	panel->shaders = &shaders;
-	UITexture.create(128, 600);
-	panel->texture = &UITexture;
-
-
+	UITexture.create(128, windowHeight);
+	UIElement::texture = &UITexture;
+	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, nullptr);
 
 	addParameter("scene", 0, 0, 16);
 
 	addShader("shaders/blend");
 	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	//addShader("shaders/kaleidoscope");
-	addShader("shaders/bend");
+	addShader("shaders/kaleidoscope");
+	//addShader("shaders/bend");
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -57,6 +53,9 @@ App::App()
 		a = Action(shaders[0]->getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
 		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
 	}
+
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
+	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
 
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
@@ -119,9 +118,14 @@ void App::update()
 		sceneID = scenes.size() - 1;
 		getParameter("scene")->setValue(sceneID);
 	}
-	activeScene = scenes[sceneID].get();//try
 
-	panel->generator = activeScene->getGenerator();//stupid why is this here ew
+	if (activeScene != scenes[sceneID].get())
+	{
+		activeScene = scenes[sceneID].get();//try
+		panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, activeScene->getGenerator());
+		panel->doRefresh();
+	}
+
 
 	AC.update();
 	palette.update();
@@ -151,6 +155,7 @@ void App::update()
 	processEvents();
 
 	//std::cout << 1/clock.getElapsedTime().asSeconds() << "\n";
+
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
@@ -322,6 +327,7 @@ void App::resize(int width, int height)
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
+	UITexture.create(128, windowHeight);
 }
 
 std::vector<Parameter*> App::getParameterList()

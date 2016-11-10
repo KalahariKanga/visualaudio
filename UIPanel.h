@@ -5,12 +5,12 @@
 class UIPanel :
 	public UIElement
 {
+	std::vector<std::unique_ptr<Shader>>* shaders;
 public:
-	UIPanel(int x, int y, int w, int h);
+	UIPanel(int x, int y, int w, int h, std::vector<std::unique_ptr<Shader>>* shaders, Generator* gen);
 	~UIPanel();
 	virtual void update();
-	std::vector<std::unique_ptr<Shader>>* shaders;//like no
-	Generator* generator;//really no
 	virtual void refresh();
+	Generator* generator;
 };
 

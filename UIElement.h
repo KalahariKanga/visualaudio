@@ -37,5 +37,5 @@ public:
 	
 	sf::Font* getFont();
 
-	sf::RenderTexture* texture;//protect
+	static sf::RenderTexture* texture;//protect
 };
