@@ -7,7 +7,7 @@
 class Parameter
 {
 	std::string name;
-	float value, min, max;
+	float value, min, max, def;
 	bool changed = 1;
 public:
 	Parameter(std::string name, float v, float min, float max);
@@ -15,6 +15,10 @@ public:
 	std::string getName()
 	{
 		return name;
+	}
+	float getDefaultValue()
+	{
+		return def;
 	}
 	float getValue()
 	{

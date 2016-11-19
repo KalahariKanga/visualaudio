@@ -55,11 +55,17 @@ void ParameterView::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::MouseMoved)
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			if (ev.mouseMove.x > x && ev.mouseMove.x < x+w)
-				if (ev.mouseMove.y > y && ev.mouseMove.y < y + h)
-				{
-					parameter->setNormalisedValue((float)(ev.mouseMove.x - x) / w);
-				}
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x+w, y+h))
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			{
+				parameter->setNormalisedValue((float)(ev.mouseMove.x - x) / w);
+			}
+		
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+			{
+				parameter->setValue(parameter->getDefaultValue());
+			}
+		}
 	}
 }
