@@ -33,5 +33,15 @@ public:
 	{
 		return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 	}
+	static bool pointInRect(float px, float py, float x1, float y1, float x2, float y2)
+	{
+		if (x1 > x2) std::swap(x1, x2);
+		if (y1 > y2) std::swap(y1, y2);
+		if (px < x1) return 0;
+		if (px > x2) return 0;
+		if (py < y1) return 0;
+		if (py > y2) return 0;
+		return 1;
+	}
 };
 

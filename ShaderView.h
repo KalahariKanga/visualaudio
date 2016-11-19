@@ -7,6 +7,7 @@ class ShaderView :
 	Shader* shader;
 	std::vector<Parameter*> list;
 	sf::Text name;
+	bool collapsed = 0;
 public:
 	ShaderView(int x, int y, int w, int h, Shader* shader);
 	~ShaderView();

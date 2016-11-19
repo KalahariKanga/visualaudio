@@ -5,10 +5,10 @@ UIPanel::UIPanel(int x, int y, int w, int h, std::vector<std::unique_ptr<Shader>
 {
 	this->shaders = shaders;
 	this->generator = gen;
-	addChild(std::make_unique<GeneratorView>(x, y, w, 100, generator));
+	addChild(std::make_unique<GeneratorView>(x, y, w, 16, generator));
 	for (int i = 0; i < shaders->size(); ++i)
 	{
-		addChild(std::make_unique<ShaderView>(x, y, w, 100, (*shaders)[i].get()));
+		addChild(std::make_unique<ShaderView>(x, y, w, 16, (*shaders)[i].get()));
 	}
 }
 

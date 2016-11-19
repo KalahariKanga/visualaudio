@@ -12,6 +12,7 @@ protected:
 	void addChild(std::unique_ptr<UIElement> child);
 	int x, y;
 	int w, h;
+	bool active = 1;
 	
 public:
 	UIElement(int x, int y, int w, int h);
@@ -30,10 +31,18 @@ public:
 	int getY() { return y; }
 	int getH();
 	int getW();
+	bool isActive() { return active; }
+	void setActive(bool a) { active = a; }
 	void setPosition(int _x, int _y);
 	void offsetPosition(int dx, int dy);
 	void setSize(int _w, int _h){ w = _w; h = _h; }
 	void resize(int _w, int _h);
+	void requestRefresh(){
+		if (parent)
+			parent->requestRefresh();
+		else
+			doRefresh();
+	}
 	
 	sf::Font* getFont();
 

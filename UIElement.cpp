@@ -61,7 +61,8 @@ void UIElement::doUpdate()
 	update();
 	for (auto& c : children)
 	{
-		c->doUpdate();
+		if (c->isActive())
+			c->doUpdate();
 	}
 	
 }
@@ -94,16 +95,18 @@ int UIElement::getH()
 {
 	if (children.empty())
 		return h;
-	int min = y;
-	int max = std::numeric_limits<int>().min();
+	int min = y, max = y + h;
 	for (auto& ch : children)
 	{
-		int bottom = ch->getY() + ch->getH();
-		if (bottom > max)
-			max = bottom;
+		if (ch->isActive())
+		{
+			int bottom = ch->getY() + ch->getH();
+			if (bottom > max)
+				max = bottom;
+		}
 	}
-	h = max - min;
-	return h;
+	
+	return max - min;;
 }
 
 int UIElement::getW()
