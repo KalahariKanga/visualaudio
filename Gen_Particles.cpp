@@ -4,7 +4,7 @@
 Gen_Particles::Gen_Particles(AudioCapture* AC) : Generator(AC)
 {
 	addParameter("outline", 0, 0, 1);
-	addParameter("pattern", 3, 5, 0);
+	addParameter("pattern", 3, 0, 5);
 	addParameter("directionChange", 0, -0.1, 0.1);
 	addParameter("spawnProbability", 1, 0, 1);
 	//triggers
