@@ -1,15 +1,12 @@
 #include "UIPanel.h"
 
 
-UIPanel::UIPanel(int x, int y, int w, int h, std::vector<std::unique_ptr<Shader>>* shaders, Generator* gen) : UIElement(x, y, w, h)
+UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders, Generator* gen) : UIElement(x, y, w, h)
 {
 	this->shaders = shaders;
 	this->generator = gen;
-	addChild(std::make_unique<GeneratorView>(x, y, w, 16, generator));
-	for (int i = 0; i < shaders->size(); ++i)
-	{
-		addChild(std::make_unique<ShaderView>(x, y, w, 16, (*shaders)[i].get()));
-	}
+	addChild(std::make_unique<GeneratorView>(x, y, w, 16, generator)); 
+	addChild(std::make_unique<ShaderListView>(x, y, w, 16, shaders));
 }
 
 

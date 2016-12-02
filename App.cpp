@@ -20,35 +20,35 @@ App::App()
 
 	addParameter("scene", 0, 0, 16);
 
-	addShader("shaders/blend");
-	shaders.back()->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	addShader("shaders/kaleidoscope");
+	shaderList.addShader("shaders/blend");
+	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+	shaderList.addShader("shaders/kaleidoscope");
 	//addShader("shaders/bend");
 	
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 
-	Action alpha(shaders.front()->getParameter("alpha"), Action::Type::axis, 1);
-	Action rotation(shaders.front()->getParameter("angle"), Action::Type::axis, 1);
-	Action zoom(shaders.front()->getParameter("zoom"), Action::Type::axis, 1);
+	Action alpha(shaderList.getShader(0)->getParameter("alpha"), Action::Type::axis, 1);
+	Action rotation(shaderList.getShader(0)->getParameter("angle"), Action::Type::axis, 1);
+	Action zoom(shaderList.getShader(0)->getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(shaders[1]->getParameter("reflections"), Action::Type::shift, -1);
-	Action kalUp(shaders[1]->getParameter("ypos"), Action::Type::shift, 0.1);
-	Action kalDown(shaders[1]->getParameter("ypos"), Action::Type::shift, -0.1);
-	Action kalLeft(shaders[1]->getParameter("xpos"), Action::Type::shift, 0.1);
-	Action kalRight(shaders[1]->getParameter("xpos"), Action::Type::shift, -0.1);
-	Action flip(shaders[1]->getParameter("flip"), Action::Type::trigger);
+	Action moreMirrors(shaderList.getShader(1)->getParameter("reflections"), Action::Type::shift, 1);
+	Action lessMirrors(shaderList.getShader(1)->getParameter("reflections"), Action::Type::shift, -1);
+	Action kalUp(shaderList.getShader(1)->getParameter("ypos"), Action::Type::shift, 0.1);
+	Action kalDown(shaderList.getShader(1)->getParameter("ypos"), Action::Type::shift, -0.1);
+	Action kalLeft(shaderList.getShader(1)->getParameter("xpos"), Action::Type::shift, 0.1);
+	Action kalRight(shaderList.getShader(1)->getParameter("xpos"), Action::Type::shift, -0.1);
+	Action flip(shaderList.getShader(1)->getParameter("flip"), Action::Type::trigger);
 	
-	for (int c = 0; c < 9; c++)
-	{
-		auto a = Action(shaders[0]->getParameter("alpha"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c), a);
-		a = Action(shaders[0]->getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+16), a);
-		a = Action(shaders[0]->getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
-		eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
-	}
+	//for (int c = 0; c < 9; c++)
+	//{
+	//	auto a = Action(shaders[0]->getParameter("alpha"), Action::Type::setNormalised, (float)c / 9);
+	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c), a);
+	//	a = Action(shaders[0]->getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
+	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+16), a);
+	//	a = Action(shaders[0]->getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
+	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
+	//}
 
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
 	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
@@ -101,7 +101,7 @@ App::App()
 
 	UITexture.create(128, windowHeight);
 	UIElement::texture = &UITexture;
-	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, scenes[0]->getGenerator());
+	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaderList, scenes[0]->getGenerator());
 }
 
 
@@ -122,7 +122,7 @@ void App::update()
 	if (activeScene != scenes[sceneID].get())
 	{
 		activeScene = scenes[sceneID].get();//try
-		panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, activeScene->getGenerator());
+		panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaderList, activeScene->getGenerator());
 		panel->doRefresh();
 	}
 
@@ -233,14 +233,14 @@ void App::processEvents()
 void App::applyShaders()
 {
 	//probably could be simpler
-	shaders[0]->update();
-	renderTexture[0].draw(sprite, shaders[0]->getShader());
+	shaderList.getShader(0)->update();
+	renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
 	renderTexture[0].display();
 	int t = 1;
-	for (; t < shaders.size(); t++)
+	for (; t < shaderList.size(); t++)
 	{
-		shaders[t]->update();
-		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaders[t]->getShader());
+		shaderList.getShader(t)->update();
+		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
 		renderTexture[t % 2].display();
 	}
 	window.draw(sf::Sprite(renderTexture[(t+1) % 2].getTexture()));
@@ -330,22 +330,22 @@ void App::resize(int width, int height)
 	UITexture.create(128, windowHeight);
 }
 
-std::vector<Parameter*> App::getParameterList()
-{
-	std::vector<Parameter*> list;
-	auto localList = InputReciever::getParameterList();
-	std::copy(localList.begin(), localList.end(), std::back_inserter(list));
-	auto sceneList = activeScene->getParameterList();
-	std::copy(sceneList.begin(), sceneList.end(), std::back_inserter(list));
-	for (auto & s : shaders)
-	{
-		auto shaderList = s->getParameterList();
-		std::copy(shaderList.begin(), shaderList.end(), std::back_inserter(list));
-	}
-	return list;
-}
+//std::vector<Parameter*> App::getParameterList()
+//{
+//	std::vector<Parameter*> list;
+//	auto localList = InputReciever::getParameterList();
+//	std::copy(localList.begin(), localList.end(), std::back_inserter(list));
+//	auto sceneList = activeScene->getParameterList();
+//	std::copy(sceneList.begin(), sceneList.end(), std::back_inserter(list));
+//	for (auto & s : shaders)
+//	{
+//		auto shaderList = s->getParameterList();
+//		std::copy(shaderList.begin(), shaderList.end(), std::back_inserter(list));
+//	}
+//	return list;
+//}
 
-void App::addShader(std::string filename)
-{
-	shaders.push_back(std::make_unique<Shader>(filename));
-}
+//void App::addShader(std::string filename)
+//{
+//	shaders.push_back(std::make_unique<Shader>(filename));
+//}
