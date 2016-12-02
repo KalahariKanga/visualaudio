@@ -51,7 +51,8 @@ void UIElement::distributeEvent(sf::Event ev)
 {
 	for (auto& c : children)
 	{
-		c->distributeEvent(ev);
+		if (c->isActive())
+			c->distributeEvent(ev);
 	}
 	processEvent(ev);
 }
