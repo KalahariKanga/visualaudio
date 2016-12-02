@@ -6,6 +6,9 @@ GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIEle
 	name.setFont(*UIElement::getFont());
 	name.setCharacterSize(12);
 	name.setFillColor(sf::Color::White);
+
+	list = generator->getParameterList();
+	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 200, &list));
 }
 
 
@@ -23,8 +26,20 @@ void GeneratorView::update()
 
 void GeneratorView::refresh()
 {
-	children.clear();
-	if (!generator) return;
-	list = generator->getParameterList();
-	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 200, &list));
+	if (generator)
+		list = generator->getParameterList();
+}
+
+void GeneratorView::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::MouseButtonReleased)
+	{
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + 16))
+		{
+			collapsed = !collapsed;
+			for (auto &c : children)
+				c->setActive(!collapsed);
+			requestRefresh();
+		}
+	}
 }

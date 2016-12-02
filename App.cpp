@@ -18,10 +18,6 @@ App::App()
 		std::cout << "Cannot open MIDI port\n";
 	}
 
-	UITexture.create(128, windowHeight);
-	UIElement::texture = &UITexture;
-	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, nullptr);
-
 	addParameter("scene", 0, 0, 16);
 
 	addShader("shaders/blend");
@@ -102,6 +98,10 @@ App::App()
 	scene = addScene<Gen_Waveform>();
 	Action fill(scene->getParameter("fill"), Action::Type::trigger);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
+
+	UITexture.create(128, windowHeight);
+	UIElement::texture = &UITexture;
+	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaders, scenes[0]->getGenerator());
 }
 
 

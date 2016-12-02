@@ -38,7 +38,6 @@ void ShaderView::processEvent(sf::Event ev)
 			for (auto &c : children)
 				c->setActive(!collapsed);
 			requestRefresh();
-			//requestRefresh();
 		}
 	}
 }
