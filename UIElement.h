@@ -1,6 +1,7 @@
 #pragma once
 #include "Parameter.h"
 #include <memory>
+#include <functional>
 class UIElement
 {
 	static bool loadedFont;
@@ -13,7 +14,7 @@ protected:
 	int x, y;
 	int w, h;
 	bool active = 1;
-	
+	bool collapsed = 0;
 public:
 	UIElement(int x, int y, int w, int h);
 	virtual ~UIElement();
@@ -43,7 +44,7 @@ public:
 		else
 			doRefresh();
 	}
-	
+	virtual void triggerCollapse();
 	sf::Font* getFont();
 
 	static sf::RenderTexture* texture;//protect

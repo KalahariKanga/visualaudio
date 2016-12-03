@@ -125,3 +125,11 @@ int UIElement::getW()
 	w = max - min;
 	return w;
 }
+
+void UIElement::triggerCollapse()
+{
+	collapsed = !collapsed;
+	for (auto &c : children)
+		c->setActive(!collapsed);
+	requestRefresh();
+}
