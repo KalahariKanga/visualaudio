@@ -73,7 +73,10 @@ App::App()
 
 	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
 
-	auto scene = addScene<Gen_Spirograph>();
+	auto scene = addScene<Gen_Julia>();
+
+
+	scene = addScene<Gen_Spirograph>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);

@@ -8,6 +8,7 @@
 #include "Gen_Spectrum.h"
 #include "Gen_Particles.h"
 #include "Gen_Spirograph.h"
+#include "Gen_Julia.h"
 #include "Palette.h"
 #include "EventHandler.h"
 
