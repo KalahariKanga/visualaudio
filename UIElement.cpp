@@ -59,23 +59,15 @@ void UIElement::distributeEvent(sf::Event ev)
 	processEvent(ev);
 	for (int c = 0; c < children.size(); c++)
 	{
-		std::cout << c << "/" << children.size() << "\n";
 		if (c >= children.size()) break;
+		
 		if (children[c]->isActive())
 			children[c]->distributeEvent(ev);
 	}
-	
 }
 
 void UIElement::doUpdate()
 {
-	update();
-	for (auto& c : children)
-	{
-		if (c->isActive())
-			c->doUpdate();
-	}
-
 	//remove deferred deletions
 	for (auto &toRem : toRemove)
 	{
@@ -84,6 +76,19 @@ void UIElement::doUpdate()
 		children.erase(it);
 	}
 	toRemove.clear();
+
+	update();
+	for (auto& c : children)
+	{
+		if (c->isActive())
+			c->doUpdate();
+	}
+	
+	if (needRefresh)
+	{
+		doRefresh();
+		needRefresh = 0;
+	}
 }
 
 void UIElement::doRefresh()

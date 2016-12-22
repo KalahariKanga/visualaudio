@@ -45,8 +45,6 @@ void ShaderListView::addShader(std::string filename)
 void ShaderListView::removeShader(ShaderView* sh)
 {
 	shaderList->removeShader(sh->getShader());
-	auto it = std::find_if(children.begin(), children.end(),
-		[sh](std::unique_ptr<UIElement>& elem){ return (elem.get() == (UIElement*)sh); });
-	children.erase(it);//defer	
+	removeChild((UIElement*)sh);
 	requestRefresh();
 }

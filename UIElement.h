@@ -17,6 +17,7 @@ protected:
 	int w, h;
 	bool active = 1;
 	bool collapsed = 0;
+	bool needRefresh = 0;
 public:
 	UIElement(int x, int y, int w, int h);
 	virtual ~UIElement();
@@ -44,7 +45,7 @@ public:
 		if (parent)
 			parent->requestRefresh();
 		else
-			doRefresh();
+			needRefresh = 1;
 	}
 	virtual void triggerCollapse();
 	sf::Font* getFont();
