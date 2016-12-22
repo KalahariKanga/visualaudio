@@ -9,6 +9,7 @@ public:
 
 	void addShader(std::string filename);
 	void removeShader(int pos);
+	void removeShader(Shader* sh);
 	void moveShader(int pos, int delta);
 	Shader* getShader(int pos);
 	int size();

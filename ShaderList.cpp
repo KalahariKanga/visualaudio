@@ -22,6 +22,14 @@ void ShaderList::removeShader(int pos)
 	shaders.erase(shaders.begin() + pos);
 }
 
+void ShaderList::removeShader(Shader* sh)
+{
+	auto it = std::find_if(shaders.begin(), shaders.end(), 
+		[sh](std::unique_ptr<Shader>& elem){return (elem.get() == sh); });
+	if (it != shaders.end())
+		shaders.erase(it);
+}
+
 void ShaderList::moveShader(int pos, int delta)
 {
 	if (pos < 0 || pos + delta < 0 || pos >= size() || pos + delta >= size())

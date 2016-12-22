@@ -1,12 +1,13 @@
 #pragma once
 #include "ParameterListView.h"
-#include "Shader.h"
+#include "ShaderList.h"
 class ShaderView :
 	public UIElement
 {
 	Shader* shader;
 	std::vector<Parameter*> list;
 	sf::Text name;
+	void remove();
 public:
 	ShaderView(int x, int y, int w, int h, Shader* shader);
 	~ShaderView();
@@ -14,5 +15,7 @@ public:
 	virtual void refresh();
 	virtual void processEvent(sf::Event ev);
 	virtual void triggerCollapse() override;
+
+	Shader* const getShader(){ return shader; }
 };
 

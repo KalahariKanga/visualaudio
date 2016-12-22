@@ -18,7 +18,7 @@ static int callback(const void *inputBuffer, void *outputBuffer,
 	}
 	ac->amplitudeRecalc = 1;
 	
-	kiss_fft(ac->cfg, ac->waveform, ac->fft);
+	//kiss_fft(ac->cfg, ac->waveform, ac->fft);
 
 	return paContinue;
 }

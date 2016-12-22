@@ -1,5 +1,6 @@
 #include "ShaderView.h"
 #include "UIButton.h"
+#include "ShaderListView.h"
 
 ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y, w, h), shader(sh)
 { 
@@ -10,6 +11,7 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	list = shader->getParameterList();
 	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 0, &list));
 	addChild(std::make_unique<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); }));
+	addChild(std::make_unique<UIButton>(4, y + 20, 8, 8, [=](){ remove(); }));
 }
 
 
@@ -39,4 +41,13 @@ void ShaderView::triggerCollapse()
 	collapsed = !collapsed;
 	children[0]->triggerCollapse();
 	requestRefresh();
+}
+
+void ShaderView::remove()
+{
+	auto p = dynamic_cast<ShaderListView*>(parent);
+	if (p)
+	{
+		p->removeShader(this);
+	}
 }
