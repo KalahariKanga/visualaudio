@@ -21,6 +21,11 @@ void UIElement::addChild(std::unique_ptr<UIElement> child)
 	children.back()->doRefresh();
 }
 
+void UIElement::removeChild(UIElement* elem)
+{
+	toRemove.push_back(elem);
+}
+
 void UIElement::resize(int _w, int _h)
 {
 	w = _w;
@@ -49,12 +54,17 @@ void UIElement::refresh()
 
 void UIElement::distributeEvent(sf::Event ev)
 {
-	for (auto& c : children)
-	{
-		if (c->isActive())
-			c->distributeEvent(ev);
-	}
+	//initially was rangefor, but iterator got 
+	//invalidated after adding new shaders on the fly
 	processEvent(ev);
+	for (int c = 0; c < children.size(); c++)
+	{
+		std::cout << c << "/" << children.size() << "\n";
+		if (c >= children.size()) break;
+		if (children[c]->isActive())
+			children[c]->distributeEvent(ev);
+	}
+	
 }
 
 void UIElement::doUpdate()
@@ -65,7 +75,15 @@ void UIElement::doUpdate()
 		if (c->isActive())
 			c->doUpdate();
 	}
-	
+
+	//remove deferred deletions
+	for (auto &toRem : toRemove)
+	{
+		auto it = std::find_if(children.begin(), children.end(),
+			[toRem](std::unique_ptr<UIElement>& elem){ return (elem.get() == (UIElement*)toRem); });
+		children.erase(it);
+	}
+	toRemove.clear();
 }
 
 void UIElement::doRefresh()

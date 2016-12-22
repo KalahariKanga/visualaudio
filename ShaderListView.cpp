@@ -1,5 +1,5 @@
 #include "ShaderListView.h"
-
+#include "UIButton.h"
 
 ShaderListView::ShaderListView(int x, int y, int w, int h, ShaderList* shaders) : UIElement(x,y,w,h)
 {
@@ -8,6 +8,7 @@ ShaderListView::ShaderListView(int x, int y, int w, int h, ShaderList* shaders) 
 	{
 		addChild(std::make_unique<ShaderView>(x, y, w, 16, shaderList->getShader(i)));
 	}
+	//addChild(std::make_unique<UIButton>(x, y, 8, 8, [this](){addShader("shaders/bend"); }));
 }
 
 
@@ -32,4 +33,20 @@ void ShaderListView::refresh()
 void ShaderListView::processEvent(sf::Event ev)
 {
 
+}
+
+void ShaderListView::addShader(std::string filename)
+{
+	shaderList->addShader(filename);
+	addChild(std::make_unique<ShaderView>(x, y, w, 16, shaderList->getShader(shaderList->size()-1)));
+	requestRefresh();
+}
+
+void ShaderListView::removeShader(ShaderView* sh)
+{
+	shaderList->removeShader(sh->getShader());
+	auto it = std::find_if(children.begin(), children.end(),
+		[sh](std::unique_ptr<UIElement>& elem){ return (elem.get() == (UIElement*)sh); });
+	children.erase(it);//defer	
+	requestRefresh();
 }

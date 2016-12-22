@@ -7,10 +7,12 @@ class UIElement
 	static bool loadedFont;
 	static sf::Font font;
 protected:
-	
-	std::vector<std::unique_ptr<UIElement>> children;
+	using ElementVector = std::vector < std::unique_ptr<UIElement> > ;
+	ElementVector children;
+	std::vector<UIElement*> toRemove;
 	UIElement* parent;
 	void addChild(std::unique_ptr<UIElement> child);
+	void removeChild(UIElement* elem);
 	int x, y;
 	int w, h;
 	bool active = 1;

@@ -22,9 +22,9 @@ App::App()
 
 	shaderList.addShader("shaders/blend");
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+	shaderList.addShader("shaders/tile");
 	shaderList.addShader("shaders/kaleidoscope");
-	//addShader("shaders/bend");
-	
+
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 
@@ -101,6 +101,8 @@ App::App()
 	scene = addScene<Gen_Waveform>();
 	Action fill(scene->getParameter("fill"), Action::Type::trigger);
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
+
+	addScene<Gen_Spectrum>();
 
 	UITexture.create(128, windowHeight);
 	UIElement::texture = &UITexture;
@@ -237,6 +239,7 @@ void App::processEvents()
 void App::applyShaders()
 {
 	//probably could be simpler
+	if (shaderList.size() == 0) return;
 	shaderList.getShader(0)->update();
 	renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
 	renderTexture[0].display();
