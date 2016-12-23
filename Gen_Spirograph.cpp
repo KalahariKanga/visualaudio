@@ -32,7 +32,7 @@ void Gen_Spirograph::update(Canvas& target)
 			float y = scale * ((1 - k)*sin(t) - l * k * sin(((1 - k) / k)*t));
 		
 			target.setDrawColour((float)c / points);
-			float size = abs(ac->getAmplitude());
+			float size = abs(ac->getWaveform((float)timeOffset / speed));
 			target.drawCircle(target.getWidth() / 2 + x, target.getHeight() / 2 + y, size, 0);
 		}
 	}
