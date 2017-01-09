@@ -8,6 +8,7 @@ class Shader :
 {
 	sf::Shader* shader;
 	std::string filename;
+	bool active = 1;
 public:
 	Shader(std::string filename);
 	Shader& operator=(Shader& other) = delete;
@@ -19,5 +20,7 @@ public:
 	sf::Shader* getShader() { return shader; }
 	std::string getName() { return filename; }
 	void update();
+	void setActive(bool ac) { active = ac; }
+	bool isActive() { return active; }
 };
 

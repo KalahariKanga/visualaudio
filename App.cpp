@@ -24,6 +24,7 @@ App::App()
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
 	shaderList.addShader("shaders/tile");
 	shaderList.addShader("shaders/kaleidoscope");
+	shaderList.addShader("shaders/mosaic");
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -241,13 +242,20 @@ void App::applyShaders()
 	//probably could be simpler
 	if (shaderList.size() == 0) return;
 	shaderList.getShader(0)->update();
-	renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
+	if (shaderList.getShader(0)->isActive())
+		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
+	else
+		renderTexture[0].draw(sprite);
+
 	renderTexture[0].display();
 	int t = 1;
 	for (; t < shaderList.size(); t++)
 	{
 		shaderList.getShader(t)->update();
-		renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
+		if (shaderList.getShader(t)->isActive())
+			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
+		else
+			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 		renderTexture[t % 2].display();
 	}
 	window.draw(sf::Sprite(renderTexture[(t+1) % 2].getTexture()));

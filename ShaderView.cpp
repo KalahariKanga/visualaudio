@@ -12,6 +12,7 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 0, &list));
 	addChild(std::make_unique<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); }));
 	addChild(std::make_unique<UIButton>(4, y + 20, 8, 8, [=](){ remove(); }, "x"));
+	addChild(std::make_unique<UIButton>(20, y + 8, 8, 8, [=](){ shader->setActive(!shader->isActive()); }, "b"));
 }
 
 
