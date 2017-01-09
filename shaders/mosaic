@@ -8,6 +8,10 @@ void main() {
 	float dx = xsize*(1./512.);
 	float dy = ysize*(1./512.);
 	vec2 newCoord = vec2(dx * floor(coord.x / dx), dy * floor(coord.y / dy));
+	if(newCoord.x > 1) newCoord.x = 2 - newCoord.x;
+	if(newCoord.y > 1) newCoord.y = 2 - newCoord.y;
+	if(newCoord.x < 0) newCoord.x *= -1;
+	if(newCoord.y < 0) newCoord.y *= -1;
 	gl_FragColor = texture2D(texture, newCoord);
 }
 
