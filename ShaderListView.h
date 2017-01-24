@@ -14,5 +14,6 @@ public:
 	virtual void refresh();
 	void addShader(std::string filename);
 	void removeShader(ShaderView* sh);
+	void moveShader(ShaderView* sh, int delta);
 };
 

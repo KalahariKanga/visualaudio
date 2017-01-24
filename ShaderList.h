@@ -11,6 +11,7 @@ public:
 	void removeShader(int pos);
 	void removeShader(Shader* sh);
 	void moveShader(int pos, int delta);
+	void moveShader(Shader* sh, int delta);
 	Shader* getShader(int pos);
 	int size();
 };

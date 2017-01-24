@@ -48,3 +48,25 @@ void ShaderListView::removeShader(ShaderView* sh)
 	removeChild((UIElement*)sh);
 	requestRefresh();
 }
+
+void ShaderListView::moveShader(ShaderView* sh, int delta)
+{
+	shaderList->moveShader(sh->getShader(), delta);
+	
+	
+	auto it = std::find_if(children.begin(), children.end(),
+		[sh](std::unique_ptr<UIElement>& elem){return (elem.get() == sh); });
+	if (it != children.end())
+	{
+		int index = it - children.begin();
+		try
+		{
+			std::swap(children.at(index), children.at(index + delta));
+		}
+		catch (...)
+		{
+			//im dreadful
+		}
+	}
+	requestRefresh();
+}

@@ -37,6 +37,24 @@ void ShaderList::moveShader(int pos, int delta)
 	std::iter_swap(shaders.begin() + pos, shaders.begin() + pos + delta);
 }
 
+void ShaderList::moveShader(Shader* sh, int delta)
+{
+	auto it = std::find_if(shaders.begin(), shaders.end(),
+		[sh](std::unique_ptr<Shader>& elem){return (elem.get() == sh); });
+	if (it != shaders.end())
+	{
+		int index = it - shaders.begin();
+		try
+		{
+			std::swap(shaders.at(index), shaders.at(index + delta));
+		}
+		catch (...)
+		{
+			//really though
+		}
+	}
+}
+
 Shader* ShaderList::getShader(int pos)
 {
 	try

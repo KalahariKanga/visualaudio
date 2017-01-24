@@ -8,6 +8,7 @@ class ShaderView :
 	std::vector<Parameter*> list;
 	sf::Text name;
 	void remove();
+	void move(int delta);
 public:
 	ShaderView(int x, int y, int w, int h, Shader* shader);
 	~ShaderView();
