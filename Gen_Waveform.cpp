@@ -25,6 +25,10 @@ void Gen_Waveform::update(Canvas& target)
 		if (getParameter("fill")->getValue() > 0)
 			target.drawLine(cx, baseHeight, cx, y1 + baseHeight);
 		else
-			target.drawLine(cx, y1 + baseHeight, cx + 1, y2 + baseHeight);
+		{
+			int ny1 = Math::clamp(y1 + baseHeight, 0, target.getHeight());
+			int ny2 = Math::clamp(y2 + baseHeight, 0, target.getHeight());
+			target.drawLine(cx, ny1, cx + 1, ny2);
+		}
 	}
 }
