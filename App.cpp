@@ -105,9 +105,9 @@ App::App()
 
 	addScene<Gen_Spectrum>();
 
-	UITexture.create(128, windowHeight);
+	UITexture.create(UIWidth, windowHeight);
 	UIElement::texture = &UITexture;
-	panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaderList, scenes[0]->getGenerator());
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator());
 }
 
 
@@ -128,7 +128,7 @@ void App::update()
 	if (activeScene != scenes[sceneID].get())
 	{
 		activeScene = scenes[sceneID].get();//try
-		panel = std::make_unique<UIPanel>(0, 0, 128, windowHeight, &shaderList, activeScene->getGenerator());
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator());
 		panel->doRefresh();
 	}
 
@@ -342,25 +342,5 @@ void App::resize(int width, int height)
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
-	UITexture.create(128, windowHeight);
+	UITexture.create(UIWidth, windowHeight);
 }
-
-//std::vector<Parameter*> App::getParameterList()
-//{
-//	std::vector<Parameter*> list;
-//	auto localList = InputReciever::getParameterList();
-//	std::copy(localList.begin(), localList.end(), std::back_inserter(list));
-//	auto sceneList = activeScene->getParameterList();
-//	std::copy(sceneList.begin(), sceneList.end(), std::back_inserter(list));
-//	for (auto & s : shaders)
-//	{
-//		auto shaderList = s->getParameterList();
-//		std::copy(shaderList.begin(), shaderList.end(), std::back_inserter(list));
-//	}
-//	return list;
-//}
-
-//void App::addShader(std::string filename)
-//{
-//	shaders.push_back(std::make_unique<Shader>(filename));
-//}

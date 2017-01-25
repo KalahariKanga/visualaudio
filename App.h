@@ -17,6 +17,7 @@ class App : public InputReciever
 	AudioCapture AC;
 
 	int windowWidth = 800, windowHeight = 600;
+	int UIWidth = 192;
 	bool fullscreen = 0;
 	bool showUI = 0;
 	const int fps = 60;
