@@ -18,10 +18,9 @@ void Gen_Swarm::update(Canvas& target)
 	int width = target.getWidth();
 	int height = target.getHeight();
 	auto param = getParameter("noParts");
-	if (param->hasChanged())
-	{
-		particles.resize((int)param->getValue());
-	}
+	
+	particles.resize((int)param->getValue());
+	
 	for (auto& p : particles)
 	{
 		if (p.x > width)p.x = 0;

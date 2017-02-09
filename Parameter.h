@@ -8,7 +8,6 @@ class Parameter
 {
 	std::string name;
 	float value, min, max, def;
-	bool changed = 1;
 public:
 	Parameter(std::string name, float v, float min, float max);
 	~Parameter();
@@ -22,12 +21,10 @@ public:
 	}
 	float getValue()
 	{
-		changed = 0;
 		return value;
 	}
 	void setValue(float v)
 	{
-		changed = 1; //check if it's actually different?
 		value = Math::clamp(v, min, max);
 	}
 	float getNormalisedValue()
@@ -38,12 +35,6 @@ public:
 	{
 		v = Math::clamp(v, 0, 1);
 		value = min + v*(max - min);
-	}
-	bool hasChanged()
-	{
-		bool v = changed;
-		changed = 0;
-		return v;
 	}
 };
 

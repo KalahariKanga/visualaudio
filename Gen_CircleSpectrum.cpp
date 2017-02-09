@@ -17,11 +17,9 @@ Gen_CircleSpectrum::~Gen_CircleSpectrum()
 
 void Gen_CircleSpectrum::update(Canvas& target)
 {
-	if (getParameter("bands")->hasChanged())
-	{
-		bands = (int)getParameter("bands")->getValue();
-		bandAmount.resize(bands);
-	}
+	bands = (int)getParameter("bands")->getValue();
+	bandAmount.resize(bands);
+
 	for (int b = 0; b < bands; b++)
 	{
 		if (abs(ac->getFFT((float)b / bands,(float)(b+1)/bands)) > bandAmount[b])
@@ -31,11 +29,11 @@ void Gen_CircleSpectrum::update(Canvas& target)
 
 		bandAmount[b] = Math::clamp(bandAmount[b], 0, 1);
 	}
-	if (getParameter("burst")->hasChanged())
+	/*if (getParameter("burst")->hasChanged())
 	{
 		for (int b = 0; b < bands; b++)
 			bandAmount[b] = 1;
-	}
+	}*/
 	float innerRadius = ac->getAmplitude();
 	for (int b = 0; b < bands-1; b++)
 	{
