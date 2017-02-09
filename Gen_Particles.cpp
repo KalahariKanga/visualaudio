@@ -6,7 +6,7 @@ Gen_Particles::Gen_Particles(AudioCapture* AC) : Generator(AC)
 	addParameter("outline", 0, 0, 1);
 	addParameter("pattern", 3, 0, 5);
 	addParameter("directionChange", 0, -0.1, 0.1);
-	addParameter("spawnProbability", 1, 0, 1);
+	addParameter("spawnRate", 1, 0.1, 1);
 	//triggers
 	addParameter("reverse", 0, 0, 0);
 	addParameter("split", 0, 0, 0);
@@ -62,7 +62,8 @@ void Gen_Particles::update(Canvas& target)
 		}
 	}
 
-	if (Math::random(0, 1) < getParameter("spawnProbability")->getValue())
+	float rate = getParameter("spawnRate")->getValue();
+	if (t % (int)((1/rate)) == 0)
 	{
 		switch ((int)getParameter("pattern")->getValue())
 		{
