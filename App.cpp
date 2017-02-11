@@ -25,6 +25,7 @@ App::App()
 	shaderList.addShader("shaders/tile");
 	shaderList.addShader("shaders/kaleidoscope");
 	shaderList.addShader("shaders/mosaic");
+	shaderList.addShader("shaders/polar");
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -104,6 +105,7 @@ App::App()
 	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
 
 	addScene<Gen_Spectrum>();
+	addScene<Gen_CircleSpectrum>();
 
 	UITexture.create(UIWidth, windowHeight);
 	UIElement::texture = &UITexture;

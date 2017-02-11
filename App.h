@@ -31,7 +31,6 @@ class App : public InputReciever
 
 	EventHandler eventHandler;
 	
-	//std::vector<std::unique_ptr<Shader>> shaders;
 	ShaderList shaderList;
 
 	std::unique_ptr<UIPanel> panel;
@@ -42,7 +41,7 @@ class App : public InputReciever
 	InputButton detectNextInput();
 	void toggleFullscreen();
 	void resize(int width, int height);
-//	std::vector<Parameter*> getParameterList() override;
+
 
 public:
 	App();
@@ -51,7 +50,6 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
-//	void addShader(std::string filename);
 };
 
 template <class T>
