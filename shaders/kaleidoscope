@@ -5,6 +5,7 @@ uniform float reflections;
 uniform float xpos;
 uniform float ypos;
 uniform float flip;
+uniform float initRotation;
  
 void main() {
     
@@ -24,9 +25,9 @@ void main() {
 		sign *= -1;
 		float targetAngle;
 		if(flip > 0 && sign == -1)
-			targetAngle = sign*theta + (2 * (c+1) * PI) / ireflections;
+			targetAngle = sign*theta + (2 * (c+1) * PI) / ireflections + initRotation;
 		else
-			targetAngle = theta + (2 * c * PI) / ireflections;
+			targetAngle = theta + (2 * c * PI) / ireflections + initRotation;
 		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
 		target += offset;
 		if(target.x > 1) target.x = 2 - target.x;
