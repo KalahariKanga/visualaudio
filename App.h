@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "UIPanel.h"
 #include "ShaderList.h"
+#include "ParameterActionWindow.h"
 
 class App : public InputReciever
 {
@@ -21,6 +22,8 @@ class App : public InputReciever
 	bool fullscreen = 0;
 	bool showUI = 0;
 	const int fps = 60;
+
+	std::unique_ptr<PopupWindow> popup;
 
 	std::unique_ptr<Canvas> canvas;
 	Palette palette;
@@ -50,6 +53,7 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
+	template <class T, class... Args> bool openPopup(Args&&... args);
 };
 
 template <class T>
@@ -60,3 +64,15 @@ Scene* App::addScene()
 	scenes.push_back(std::move(scene));
 	return scenes.back().get();
 }
+
+template <class T, class... Args>
+bool App::openPopup(Args&&... args)
+{
+	if (!popup.get())
+	{
+		popup = std::make_unique<T>(std::forward<Args>(args)...);
+		return 1;
+	}
+	return 0;
+}
+

@@ -134,6 +134,14 @@ void App::update()
 		panel->doRefresh();
 	}
 
+	if (popup.get())
+	{
+		popup->update();
+		if (popup->toQuit())
+		{
+			popup.reset(nullptr);
+		}
+	}
 
 	AC.update();
 	palette.update();
@@ -200,6 +208,9 @@ void App::processEvents()
 				break;
 			case sf::Keyboard::Escape:
 				quit = 1;
+				break;
+			case sf::Keyboard::W:
+				openPopup<ParameterActionWindow>(nullptr);
 				break;
 			}
 			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
