@@ -13,18 +13,12 @@ Scene::~Scene()
 
 void Scene::update()
 {
-	eventHandler.update();
 	gen->update(*canvas);
-}
-
-void Scene::addEvent(InputButton::Device device, int button, float data)
-{
-	eventHandler.addEvent(device, button, data);
 }
 
 void Scene::addAction(InputButton input, Action action)
 {
-	eventHandler.addAction(input, action);
+	inputMap.addAction(input, action);
 }
 
 Parameter* Scene::getParameter(std::string name)

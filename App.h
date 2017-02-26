@@ -32,6 +32,7 @@ class App : public InputReciever
 
 	std::unique_ptr<RtMidiIn> midiIn;
 
+	InputMap inputMap;
 	EventHandler eventHandler;
 	
 	ShaderList shaderList;
@@ -44,7 +45,6 @@ class App : public InputReciever
 	InputButton detectNextInput();
 	void toggleFullscreen();
 	void resize(int width, int height);
-
 
 public:
 	App();
