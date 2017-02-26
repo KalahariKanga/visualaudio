@@ -108,8 +108,7 @@ App::App()
 	addScene<Gen_CircleSpectrum>();
 
 	UITexture.create(UIWidth, windowHeight);
-	UIElement::texture = &UITexture;
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator());
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator(), &UITexture);
 }
 
 
@@ -130,7 +129,7 @@ void App::update()
 	if (activeScene != scenes[sceneID].get())
 	{
 		activeScene = scenes[sceneID].get();//try
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator());
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
 
 		eventHandler.setInputMaps({ inputMap, activeScene->getInputMap() });

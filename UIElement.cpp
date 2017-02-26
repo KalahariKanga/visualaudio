@@ -2,10 +2,10 @@
 
 bool UIElement::loadedFont = 0;
 sf::Font UIElement::font;
-sf::RenderTexture* UIElement::texture;
 
 UIElement::UIElement(int _x, int _y, int _w, int _h) : x(_x), y(_y), w(_w), h(_h)
 {
+
 }
 
 
@@ -17,7 +17,7 @@ void UIElement::addChild(std::unique_ptr<UIElement> child)
 {
 	children.emplace_back(std::move(child));
 	children.back()->parent = this;
-	//children.back()->texture = texture;
+//	children.back()->texture = texture;
 	children.back()->doRefresh();
 }
 
@@ -98,6 +98,21 @@ void UIElement::doRefresh()
 	{
 		c->doRefresh();
 	}
+}
+
+sf::Texture UIElement::getTexture()
+{
+	if (!parent)
+		return texture->getTexture();//could be null
+	return parent->getTexture();
+}
+
+void UIElement::draw(const sf::Drawable& src)
+{
+	if (!parent)
+		texture->draw(src);
+	else
+		parent->draw(src);
 }
 
 void UIElement::setPosition(int _x, int _y)

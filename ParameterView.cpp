@@ -34,10 +34,10 @@ void ParameterView::update()
 	sf::Vector2f sz(parameter->getNormalisedValue() * (w - 2 * paddingY), sliderH);
 	sliderFill.setSize(sz);
 	
-	texture->draw(sliderOutline);
-	texture->draw(sliderFill);
-	texture->draw(name);
-	texture->draw(value);
+	draw(sliderOutline);
+	draw(sliderFill);
+	draw(name);
+	draw(value);
 }
 
 void ParameterView::refresh()

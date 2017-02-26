@@ -7,7 +7,7 @@ class UIPanel :
 {
 	ShaderList* shaders;
 public:
-	UIPanel(int x, int y, int w, int h, ShaderList* shaders, Generator* gen);
+	UIPanel(int x, int y, int w, int h, ShaderList* shaders, Generator* gen, sf::RenderTexture* texture);
 	~UIPanel();
 	virtual void update();
 	virtual void refresh();

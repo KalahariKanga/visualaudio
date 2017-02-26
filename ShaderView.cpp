@@ -30,7 +30,7 @@ void ShaderView::update()
 		name.setFillColor(sf::Color(92, 92, 92));
 	name.setPosition(x + 16, y + 4);
 	name.setString(shader->getName());
-	texture->draw(name);
+	draw(name);
 }
 
 void ShaderView::refresh()
