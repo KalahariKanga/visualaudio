@@ -138,7 +138,8 @@ void App::update()
 
 	if (popup.get())
 	{
-		popup->update();
+		popup->doRefresh();
+		popup->doUpdate();
 		if (popup->toQuit())
 		{
 			popup.reset(nullptr);
@@ -211,7 +212,7 @@ void App::processEvents()
 				quit = 1;
 				break;
 			case sf::Keyboard::W:
-				openPopup<ParameterActionWindow>(nullptr);
+				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), eventHandler.getInputMap());
 				break;
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);

@@ -16,5 +16,6 @@ public:
 	void merge(InputMap other);
 
 	void recieveEvent(InputEvent ev);
+	InputMap::MapType findParameterActions(Parameter* p);
 };
 

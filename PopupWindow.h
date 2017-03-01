@@ -1,17 +1,17 @@
 #pragma once
 #include "UIPanel.h"
 
-class PopupWindow
+class PopupWindow : public UIElement
 {
 protected:
 	sf::RenderWindow window;
 	bool quit = 0;
 public:
-	PopupWindow();
+	PopupWindow(int w, int h);
 	~PopupWindow();
 
 	bool toQuit(){ return quit; }
 
-	virtual void update();
+	void update() override;
 };
 

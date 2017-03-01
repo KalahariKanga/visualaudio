@@ -11,7 +11,7 @@ class Parameter
 public:
 	Parameter(std::string name, float v, float min, float max);
 	~Parameter();
-	std::string getName()
+	std::string getName() const
 	{
 		return name;
 	}

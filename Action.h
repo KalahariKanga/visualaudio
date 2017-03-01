@@ -16,6 +16,7 @@ public:
 	~Action();
 
 	void execute(float eventValue = 1);
-	
+	bool usesParameter(Parameter* p){ return (p == target); }
+	const Parameter getTarget(){ return *target; }
 };
 

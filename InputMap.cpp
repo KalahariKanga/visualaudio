@@ -40,3 +40,14 @@ void InputMap::recieveEvent(InputEvent ev)
 		}
 	);
 }
+
+InputMap::MapType InputMap::findParameterActions(Parameter* p)
+{
+	MapType actions;
+	for (auto &i : map)
+	{
+		if (i.second.usesParameter(p))
+			actions.insert(i);
+	}
+	return actions;
+}
