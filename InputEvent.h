@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 struct InputButton
 {
 	enum class Device
@@ -18,6 +19,7 @@ struct InputButton
 	{
 
 	};
+	std::string getDeviceName();
 };
 
 struct InputEvent
