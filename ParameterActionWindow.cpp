@@ -10,7 +10,7 @@ ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, Inp
 	auto actions = inputMap.findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild((std::make_unique<ActionView>(x, y, w, 16, a.first, a.second)));
+		addChild((std::make_unique<LinkView>(x, y, w, 16, a.first, a.second)));
 	}
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "PopupWindow.h"
 #include "InputMap.h"
-#include "ActionView.h"
+#include "LinkView.h"
 
 class ParameterActionWindow :
 	public PopupWindow

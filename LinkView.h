@@ -5,18 +5,18 @@
 #include "UIElement.h"
 
 
-class ActionView :
+class LinkView :
 	public UIElement
 {
 	InputButton button;
 	Action action;
 
-	sf::Text deviceName, buttonName;
+	sf::Text deviceName;
 	sf::Text actionType;
 
 public:
-	ActionView(int x, int y, int w, int h, InputButton button, Action action);
-	~ActionView();
+	LinkView(int x, int y, int w, int h, InputButton button, Action action);
+	~LinkView();
 
 	virtual void update();
 	/*virtual void processEvent(sf::Event ev);*/
