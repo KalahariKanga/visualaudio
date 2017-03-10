@@ -49,8 +49,11 @@ void LinkView::processEvent(sf::Event ev)
 		{
 			if (ev.mouseButton.button == sf::Mouse::Button::Right)
 			{
-				deviceName.setString("Waiting for input...");
-				waitingForEvent = 1;
+				if (!waitingForEvent)
+				{
+					deviceName.setString("Waiting for input...");
+					waitingForEvent = 1;
+				}
 			}
 		}
 	}
@@ -64,6 +67,12 @@ void LinkView::refresh()
 InputButton LinkView::sfEventToInputButton(sf::Event ev)
 {
 	InputButton input(InputButton::Device::None, 0);
+	if (ev.type == sf::Event::JoystickMoved && abs(ev.joystickMove.position) > 20)//deadzone
+	{
+		std::cout << ev.joystickMove.position << " ";
+		input.device = InputButton::Device::GamepadAxis;
+		input.button = (int)ev.joystickMove.axis;
+	}
 	if (ev.type == sf::Event::KeyPressed)
 	{
 		input.device = InputButton::Device::Keyboard;
@@ -74,10 +83,6 @@ InputButton LinkView::sfEventToInputButton(sf::Event ev)
 		input.device = InputButton::Device::GamepadButton;
 		input.button = (int)ev.joystickButton.button;
 	}
-	if (ev.type == sf::Event::JoystickMoved)
-	{
-		input.device = InputButton::Device::GamepadAxis;
-		input.button = (int)ev.joystickMove.axis;
-	}
+	
 	return input;
 }

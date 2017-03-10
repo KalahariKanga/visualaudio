@@ -6,13 +6,21 @@ ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, std
 	window.create(sf::VideoMode(128, 386), "ParameterActionWindow");
 	texture = new sf::RenderTexture();
 	texture->create(128, 386);
+
+	title.setString(param->getName());
+	title.setFillColor(sf::Color::White);
+	title.setFont(*UIElement::getFont());
+	title.setCharacterSize(12);
+
+
+
 	//find all input/action pairs using p
 	for (auto &m : inputMaps)
 	{
 		auto actions = m->findParameterActions(p);
 		for (auto &a : actions)
 		{
-			addChild((std::make_unique<LinkView>(x, y, w, 16, a.first, a.second)));
+			addChild((std::make_unique<LinkView>(x, y+20, w, 16, a.first, a.second)));
 		}
 	}
 }
@@ -36,7 +44,7 @@ void ParameterActionWindow::update()
 	}
 
 	
-
+	draw(title);
 
 
 	PopupWindow::update();
@@ -45,6 +53,7 @@ void ParameterActionWindow::update()
 
 void ParameterActionWindow::refresh()
 {
+	title.setPosition(x + 4, y + 4);
 	for (int i = 1; i < children.size(); i++)
 	{
 		int newY = children[i - 1]->getY() + children[i - 1]->getH();

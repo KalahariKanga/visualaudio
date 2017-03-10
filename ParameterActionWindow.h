@@ -9,7 +9,7 @@ class ParameterActionWindow :
 	Parameter* p;
 	std::vector<InputMap*> inputMaps;
 
-	sf::Text tmp;
+	sf::Text title;
 public:
 	ParameterActionWindow(int w, int h, Parameter* param, std::vector<InputMap*> maps);
 	~ParameterActionWindow();
