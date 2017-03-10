@@ -29,7 +29,7 @@ public:
 	Parameter* getParameter(std::string name) override;
 	std::vector<Parameter*> getParameterList() override;
 	Generator* getGenerator() { return gen.get(); } ///nonono
-	InputMap getInputMap(){ return inputMap; }
+	InputMap* getInputMap(){ return &inputMap; }
 };
 
 template <class T>

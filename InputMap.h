@@ -11,9 +11,10 @@ public:
 	InputMap();
 	~InputMap();
 
-	void addAction(InputButton input, Action action);
+	void addAction(InputButton input, Action action);//s/action/link?
 	void clear();
 	void merge(InputMap other);
+	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
 
 	void recieveEvent(InputEvent ev);
 	InputMap::MapType findParameterActions(Parameter* p);

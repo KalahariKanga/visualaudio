@@ -7,14 +7,18 @@ class ParameterActionWindow :
 	public PopupWindow
 {
 	Parameter* p;
-	InputMap inputMap;//use a ptr one day plz
+	std::vector<InputMap*> inputMaps;
 
 	sf::Text tmp;
 public:
-	ParameterActionWindow(int w, int h, Parameter* param, InputMap map);
+	ParameterActionWindow(int w, int h, Parameter* param, std::vector<InputMap*> maps);
 	~ParameterActionWindow();
 
 	void update();
 	void refresh();
+	InputEvent detectNextEvent();//probably need an rtmidi ptr :/
+
+	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
+
 };
 

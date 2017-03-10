@@ -42,7 +42,7 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
-	InputButton detectNextInput();
+	InputButton detectNextInput();//potentially useless
 	void toggleFullscreen();
 	void resize(int width, int height);
 

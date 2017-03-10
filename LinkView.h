@@ -14,12 +14,15 @@ class LinkView :
 	sf::Text deviceName;
 	sf::Text actionType;
 
+	bool waitingForEvent = 0;
+	InputButton sfEventToInputButton(sf::Event ev);
 public:
 	LinkView(int x, int y, int w, int h, InputButton button, Action action);
 	~LinkView();
 
 	virtual void update();
-	/*virtual void processEvent(sf::Event ev);*/
+	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
+
 };
 

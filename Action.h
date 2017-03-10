@@ -17,7 +17,7 @@ public:
 
 	void execute(float eventValue = 1);
 	bool usesParameter(Parameter* p){ return (p == target); }
-	const Parameter getTarget(){ return *target; }
+	const Parameter* getTarget(){ return target; }
 	float getAmount(){ return amount; }
 };
 

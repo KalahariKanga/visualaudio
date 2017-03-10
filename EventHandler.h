@@ -15,7 +15,7 @@ public:
 	void update();
 	void addEvent(InputEvent ev);
 	void addEvent(InputButton::Device device, int button, float data = 1);
-	InputMap getInputMap(){ return inputMap; }
+	InputMap* getInputMap(){ return &inputMap; }
 	void setInputMaps(std::vector<InputMap> maps);
 };
 

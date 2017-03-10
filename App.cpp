@@ -132,7 +132,7 @@ void App::update()
 		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
 
-		eventHandler.setInputMaps({ inputMap, activeScene->getInputMap() });
+		eventHandler.setInputMaps({ inputMap, *activeScene->getInputMap() });
 
 	}
 
@@ -212,7 +212,7 @@ void App::processEvents()
 				quit = 1;
 				break;
 			case sf::Keyboard::W:
-				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), eventHandler.getInputMap());
+				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), std::vector<InputMap*>{ &inputMap, activeScene->getInputMap() });
 				break;
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
