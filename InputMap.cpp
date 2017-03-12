@@ -43,9 +43,11 @@ void InputMap::updateLink(std::pair<InputButton, Action> from, std::pair<InputBu
 			toDelete.push_back(i);
 		}
 	}
+	if (!toDelete.empty())
+		map.insert(to);//dont insert into both maps
 	for (auto i : toDelete)
 		map.erase(i);
-	map.insert(to);
+	
 }
 
 void InputMap::recieveEvent(InputEvent ev)
