@@ -5,6 +5,7 @@ class ParameterView :
 	public UIElement
 {
 	Parameter* parameter;
+
 	sf::RectangleShape sliderFill;
 	sf::RectangleShape sliderOutline;
 	
@@ -18,5 +19,8 @@ public:
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
+
+	//this is bad
+	static std::function<void(Parameter*)> popupCall;
 };
 

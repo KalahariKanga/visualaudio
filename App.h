@@ -54,6 +54,8 @@ public:
 
 	template <class T> Scene* addScene();
 	template <class T, class... Args> bool openPopup(Args&&... args);
+
+	void requestParameterActionWindow(Parameter* param);//pass down to parameterview somehow
 };
 
 template <class T>

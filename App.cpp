@@ -1,4 +1,5 @@
 #include "App.h"
+#include "ParameterView.h"
 #include <fstream>
 
 App::App()
@@ -17,6 +18,8 @@ App::App()
 	{
 		std::cout << "Cannot open MIDI port\n";
 	}
+
+	ParameterView::popupCall = [this](Parameter* p){requestParameterActionWindow(p); };
 
 	addParameter("scene", 0, 0, 16);
 
@@ -353,4 +356,9 @@ void App::resize(int width, int height)
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
 	UITexture.create(UIWidth, windowHeight);
+}
+
+void App::requestParameterActionWindow(Parameter* param)
+{
+	openPopup<ParameterActionWindow>(256, 256, param, std::vector<InputMap*>{ &inputMap, activeScene->getInputMap() });
 }
