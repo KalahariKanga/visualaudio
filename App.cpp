@@ -118,11 +118,7 @@ App::App()
 	//lock all scene parameters
 	for (auto &s : scenes)
 	{
-		auto params = s->getParameterList();
-		for (auto p : params)
-		{
-			p->setLock(true);
-		}
+		s->setParameterLock(true);
 	}
 }
 
@@ -145,18 +141,10 @@ void App::update()
 	{
 		if (activeScene)
 		{
-			auto params = activeScene->getParameterList();
-			for (auto p : params)
-			{
-				p->setLock(true);
-			}
+			activeScene->setParameterLock(true);
 		}
 		activeScene = scenes[sceneID].get();//try
-		auto params = activeScene->getParameterList();
-		for (auto p : params)
-		{
-			p->setLock(false);
-		}
+		activeScene->setParameterLock(false);
 		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
 	}

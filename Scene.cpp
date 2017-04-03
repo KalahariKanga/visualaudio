@@ -30,3 +30,12 @@ std::vector<Parameter*> Scene::getParameterList()
 	std::copy(genList.begin(), genList.end(), std::back_inserter(list));
 	return list;
 }
+
+void Scene::setParameterLock(bool lock)
+{
+	auto params = getParameterList();
+	for (auto &p : params)
+	{
+		p->setLock(lock);
+	}
+}
