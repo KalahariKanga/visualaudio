@@ -21,6 +21,8 @@ App::App()
 
 	ParameterView::popupCall = [this](Parameter* p){requestParameterActionWindow(p); };
 
+	eventHandler.setInputMap(&inputMap);
+
 	addParameter("scene", 0, 0, 16);
 
 	shaderList.addShader("shaders/blend");
@@ -84,7 +86,7 @@ App::App()
 	scene = addScene<Gen_Spirograph>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
 	
 
 	scene = addScene<Gen_Particles>();
@@ -92,26 +94,36 @@ App::App()
 	Action probability(scene->getParameter("spawnProbability"), Action::Type::axis, 1);
 	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
 	Action split(scene->getParameter("split"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	scene->addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
-	scene->addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
+	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
+	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
 
 	scene = addScene<Gen_Waveform>();
 	Action fill(scene->getParameter("fill"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
 
 	addScene<Gen_Spectrum>();
 	addScene<Gen_CircleSpectrum>();
 
 	UITexture.create(UIWidth, windowHeight);
 	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator(), &UITexture);
+
+	//lock all scene parameters
+	for (auto &s : scenes)
+	{
+		auto params = s->getParameterList();
+		for (auto p : params)
+		{
+			p->setLock(true);
+		}
+	}
 }
 
 
@@ -131,12 +143,22 @@ void App::update()
 
 	if (activeScene != scenes[sceneID].get())
 	{
+		if (activeScene)
+		{
+			auto params = activeScene->getParameterList();
+			for (auto p : params)
+			{
+				p->setLock(true);
+			}
+		}
 		activeScene = scenes[sceneID].get();//try
+		auto params = activeScene->getParameterList();
+		for (auto p : params)
+		{
+			p->setLock(false);
+		}
 		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
-
-		eventHandler.setInputMaps({ inputMap, *activeScene->getInputMap() });
-
 	}
 
 	if (popup.get())
@@ -215,7 +237,7 @@ void App::processEvents()
 				quit = 1;
 				break;
 			case sf::Keyboard::W:
-				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), std::vector<InputMap*>{ &inputMap, activeScene->getInputMap() });
+				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), &inputMap);
 				break;
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
@@ -360,5 +382,5 @@ void App::resize(int width, int height)
 
 void App::requestParameterActionWindow(Parameter* param)
 {
-	openPopup<ParameterActionWindow>(256, 256, param, std::vector<InputMap*>{ &inputMap, activeScene->getInputMap() });
+	openPopup<ParameterActionWindow>(256, 256, param, &inputMap);
 }

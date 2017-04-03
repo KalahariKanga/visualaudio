@@ -16,11 +16,6 @@ void Scene::update()
 	gen->update(*canvas);
 }
 
-void Scene::addAction(InputButton input, Action action)
-{
-	inputMap.addAction(input, action);
-}
-
 Parameter* Scene::getParameter(std::string name)
 {
 	auto p = gen->getParameter(name);

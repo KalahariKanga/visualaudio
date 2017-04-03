@@ -1,7 +1,7 @@
 #include "ParameterActionWindow.h"
 
 
-ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, std::vector<InputMap*> maps) : PopupWindow(w, h), p(param), inputMaps(maps)
+ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, InputMap* map) : PopupWindow(w, h), p(param), inputMap(map)
 {
 	window.create(sf::VideoMode(128, 386), "ParameterActionWindow");
 	texture = new sf::RenderTexture();
@@ -15,14 +15,13 @@ ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, std
 
 
 	//find all input/action pairs using p
-	for (auto &m : inputMaps)
+
+	auto actions = inputMap->findParameterActions(p);
+	for (auto &a : actions)
 	{
-		auto actions = m->findParameterActions(p);
-		for (auto &a : actions)
-		{
-			addChild((std::make_unique<LinkView>(x, y+20, w, 16, a.first, a.second)));
-		}
+		addChild((std::make_unique<LinkView>(x, y+20, w, 16, a.first, a.second)));
 	}
+	
 }
 
 
@@ -49,6 +48,18 @@ void ParameterActionWindow::update()
 
 	PopupWindow::update();
 	texture->clear();
+}
+
+void ParameterActionWindow::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::KeyPressed)
+	{
+		if (ev.key.code == sf::Keyboard::Space)
+		{
+			addChild(std::make_unique<LinkView>(x, y + 20, w, 16, InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set)));
+			inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
+		}
+	}
 }
 
 void ParameterActionWindow::refresh()
@@ -119,6 +130,5 @@ InputEvent ParameterActionWindow::detectNextEvent()
 
 void ParameterActionWindow::updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to)
 {
-	for (auto &m : inputMaps)
-		m->updateLink(from, to);
+	inputMap->updateLink(from, to);
 }

@@ -7,15 +7,16 @@ class ParameterActionWindow :
 	public PopupWindow
 {
 	Parameter* p;
-	std::vector<InputMap*> inputMaps;
+	InputMap* inputMap;
 
 	sf::Text title;
 public:
-	ParameterActionWindow(int w, int h, Parameter* param, std::vector<InputMap*> maps);
+	ParameterActionWindow(int w, int h, Parameter* param, InputMap* map);
 	~ParameterActionWindow();
 
-	void update();
-	void refresh();
+	virtual void update();
+	virtual void processEvent(sf::Event ev);
+	virtual void refresh();
 	InputEvent detectNextEvent();//probably need an rtmidi ptr :/
 
 	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
