@@ -16,14 +16,10 @@ public:
 	{
 		return name;
 	}
-	float getDefaultValue()
-	{
-		return def;
-	}
-	float getValue()
-	{
-		return value;
-	}
+	float getDefaultValue(){ return def; }
+	float getValue(){ return value;	}
+	float getMin() const { return min; }
+	float getMax() const { return max; }
 	void setValue(float v)
 	{
 		if (!lock)

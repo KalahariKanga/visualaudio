@@ -370,5 +370,5 @@ void App::resize(int width, int height)
 
 void App::requestParameterActionWindow(Parameter* param)
 {
-	openPopup<ParameterActionWindow>(256, 256, param, &inputMap);
+	openPopup<ParameterActionWindow>(128, 256, param, &inputMap);
 }

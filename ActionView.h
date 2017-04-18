@@ -6,7 +6,7 @@ class ActionView :
 	public UIElement
 {
 	Action* action;
-	sf::Text actionType, actionAmount;
+	sf::Text actionType;
 
 	std::string getActionTypeString();
 public:
