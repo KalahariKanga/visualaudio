@@ -1,7 +1,7 @@
 #include "ActionView.h"
+#include "UISlider.h"
 
-
-ActionView::ActionView(int x, int y, int w, int h, Action act) : UIElement(x, y, w, h), action(act)
+ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y, w, h), action(act)
 {
 	
 	actionType.setString(getActionTypeString());
@@ -9,10 +9,12 @@ ActionView::ActionView(int x, int y, int w, int h, Action act) : UIElement(x, y,
 	actionType.setFont(*UIElement::getFont());
 	actionType.setCharacterSize(12);
 	
-	actionAmount.setString(std::to_string(action.getAmount()));
+	actionAmount.setString(std::to_string(action->getAmount()));
 	actionAmount.setFillColor(sf::Color::White);
 	actionAmount.setFont(*UIElement::getFont());
 	actionAmount.setCharacterSize(12);
+
+	addChild(std::make_unique<UISlider>(x, y + 24, w, 8, action->getAmount(), 0, 2));//
 }
 
 
@@ -22,6 +24,12 @@ ActionView::~ActionView()
 
 void ActionView::update()
 {
+	auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
+	action->setAmount(slider->getValue());
+
+	actionAmount.setString(std::to_string(action->getAmount()));
+
+
 	draw(actionType);
 	draw(actionAmount);
 }
@@ -35,7 +43,7 @@ void ActionView::refresh()
 std::string ActionView::getActionTypeString()
 {
 	std::string ret;
-	switch (action.type)
+	switch (action->type)
 	{
 	case Action::Type::set:
 		return "Set to";

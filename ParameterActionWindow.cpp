@@ -56,9 +56,19 @@ void ParameterActionWindow::processEvent(sf::Event ev)
 	{
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			addChild(std::make_unique<LinkView>(x, y + 20, w, 16, InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set)));
 			inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
+			rebuildChildren();
 		}
+	}
+}
+
+void ParameterActionWindow::rebuildChildren()
+{
+	children.clear();
+	auto actions = inputMap->findParameterActions(p);
+	for (auto &a : actions)
+	{
+		addChild((std::make_unique<LinkView>(x, y + 20, w, 16, a.first, a.second)));
 	}
 }
 

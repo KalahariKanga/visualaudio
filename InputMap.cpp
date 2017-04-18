@@ -52,24 +52,26 @@ void InputMap::updateLink(std::pair<InputButton, Action> from, std::pair<InputBu
 
 void InputMap::recieveEvent(InputEvent ev)
 {
-	auto range = map.equal_range(ev.button);
-
-	for_each(range.first, range.second,
-		[ev](MapType::value_type& x)
+	for (auto& a : map)
+	{
+		if (a.first.button == ev.button.button && a.first.device == ev.button.device)
 		{
-			auto action = x.second;
+			auto action = a.second;
 			action.execute(ev.data);
 		}
-	);
+	}
 }
 
-InputMap::MapType InputMap::findParameterActions(Parameter* p)
+std::vector<std::pair<InputButton*, Action*>> InputMap::findParameterActions(Parameter* p)
 {
-	MapType actions;
+	std::vector<std::pair<InputButton*, Action*>> actions;
 	for (auto &i : map)
 	{
 		if (i.second.usesParameter(p))
-			actions.insert(i);
+		{
+			auto item = std::make_pair(const_cast<InputButton*>(&i.first), &i.second);
+			actions.push_back(item);
+		}
 	}
 	return actions;
 }

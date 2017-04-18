@@ -2,9 +2,9 @@
 #include "ActionView.h"
 #include "ParameterActionWindow.h"
 
-LinkView::LinkView(int x, int y, int w, int h, InputButton button, Action action) : UIElement(x, y, w, h), button(button), action(action)
+LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* action) : UIElement(x, y, w, h), button(button), action(action)
 {
-	deviceName.setString(button.getDeviceName()+" "+std::to_string((int)button.button));
+	deviceName.setString(button->getDeviceName() + " " + std::to_string((int)button->button));
 	deviceName.setFillColor(sf::Color::White);
 	deviceName.setFont(*UIElement::getFont());
 	deviceName.setCharacterSize(12);
@@ -32,14 +32,7 @@ void LinkView::processEvent(sf::Event ev)
 		{
 			waitingForEvent = 0;
 			deviceName.setString(newButton.getDeviceName() + " " + std::to_string((int)newButton.button));
-			auto p = dynamic_cast<ParameterActionWindow*>(parent);
-			if (p)
-			{
-				p->updateLink(std::make_pair(button, action), std::make_pair(newButton, action));
-			}
-			else
-				throw std::exception("LinkView's parent must be a ParameterActionWindow!");
-			button = newButton;
+			*button = newButton;
 			return;
 		}
 	}

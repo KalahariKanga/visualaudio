@@ -5,12 +5,12 @@
 class ActionView :
 	public UIElement
 {
-	Action action;
+	Action* action;
 	sf::Text actionType, actionAmount;
 
 	std::string getActionTypeString();
 public:
-	ActionView(int x, int y, int w, int h, Action act);
+	ActionView(int x, int y, int w, int h, Action* act);
 	~ActionView();
 
 	virtual void update();

@@ -17,6 +17,6 @@ public:
 	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
 
 	void recieveEvent(InputEvent ev);
-	InputMap::MapType findParameterActions(Parameter* p);
+	std::vector<std::pair<InputButton*, Action*>> findParameterActions(Parameter* p);
 };
 

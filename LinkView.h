@@ -8,8 +8,8 @@
 class LinkView :
 	public UIElement
 {
-	InputButton button;
-	Action action;
+	InputButton* button;
+	Action* action;
 
 	sf::Text deviceName;
 	sf::Text actionType;
@@ -17,7 +17,7 @@ class LinkView :
 	bool waitingForEvent = 0;
 	InputButton sfEventToInputButton(sf::Event ev);
 public:
-	LinkView(int x, int y, int w, int h, InputButton button, Action action);
+	LinkView(int x, int y, int w, int h, InputButton* button, Action* action);
 	~LinkView();
 
 	virtual void update();

@@ -19,5 +19,6 @@ public:
 	bool usesParameter(Parameter* p){ return (p == target); }
 	const Parameter* getTarget(){ return target; }
 	float getAmount(){ return amount; }
+	void setAmount(float a){ amount = a; }//friend with actionview?
 };
 
