@@ -19,7 +19,6 @@ public:
 	virtual void refresh();
 	InputEvent detectNextEvent();//probably need an rtmidi ptr :/
 
-	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
 	void rebuildChildren();//:/
 };
 

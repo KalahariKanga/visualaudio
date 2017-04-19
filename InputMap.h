@@ -14,7 +14,6 @@ public:
 	void addAction(InputButton input, Action action);//s/action/link?
 	void clear();
 	void merge(InputMap other);
-	void updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to);
 
 	void recieveEvent(InputEvent ev);
 	std::vector<std::pair<InputButton*, Action*>> findParameterActions(Parameter* p);

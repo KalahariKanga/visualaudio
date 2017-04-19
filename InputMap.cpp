@@ -28,28 +28,6 @@ void InputMap::merge(InputMap other)
 	}
 }
 
-void InputMap::updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to)
-{
-	///updates the button portion of a link
-	///not as flexible as it could be
-	auto range = map.equal_range(from.first);
-
-	std::vector<MapType::iterator> toDelete;
-
-	for (auto i = range.first; i != range.second; ++i)
-	{
-		if (i->second.getTarget() == from.second.getTarget())
-		{
-			toDelete.push_back(i);
-		}
-	}
-	if (!toDelete.empty())
-		map.insert(to);//dont insert into both maps
-	for (auto i : toDelete)
-		map.erase(i);
-	
-}
-
 void InputMap::recieveEvent(InputEvent ev)
 {
 	for (auto& a : map)

@@ -137,8 +137,3 @@ InputEvent ParameterActionWindow::detectNextEvent()
 	}
 	return input;
 }
-
-void ParameterActionWindow::updateLink(std::pair<InputButton, Action> from, std::pair<InputButton, Action> to)
-{
-	inputMap->updateLink(from, to);
-}
