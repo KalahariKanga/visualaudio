@@ -8,24 +8,22 @@ class Parameter
 {
 	std::string name;
 	float value, min, max, def;
+	bool lock = 0;
 public:
 	Parameter(std::string name, float v, float min, float max);
 	~Parameter();
-	std::string getName()
+	std::string getName() const
 	{
 		return name;
 	}
-	float getDefaultValue()
-	{
-		return def;
-	}
-	float getValue()
-	{
-		return value;
-	}
+	float getDefaultValue(){ return def; }
+	float getValue(){ return value;	}
+	float getMin() const { return min; }
+	float getMax() const { return max; }
 	void setValue(float v)
 	{
-		value = Math::clamp(v, min, max);
+		if (!lock)
+			value = Math::clamp(v, min, max);
 	}
 	float getNormalisedValue()
 	{
@@ -33,8 +31,15 @@ public:
 	}
 	void setNormalisedValue(float v)
 	{
-		v = Math::clamp(v, 0, 1);
-		value = min + v*(max - min);
+		if (!lock)
+		{
+			v = Math::clamp(v, 0, 1);
+			value = min + v*(max - min);
+		}
+	}
+	void setLock(bool l)
+	{
+		lock = l;
 	}
 };
 

@@ -22,7 +22,7 @@ void GeneratorView::update()
 	name.setPosition(x + 16, y + 8);
 	//name.setString(generator->getName());
 	name.setString("Generator");
-	texture->draw(name);
+	draw(name);
 }
 
 void GeneratorView::refresh()

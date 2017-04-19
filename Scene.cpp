@@ -13,18 +13,7 @@ Scene::~Scene()
 
 void Scene::update()
 {
-	eventHandler.update();
 	gen->update(*canvas);
-}
-
-void Scene::addEvent(InputButton::Device device, int button, float data)
-{
-	eventHandler.addEvent(device, button, data);
-}
-
-void Scene::addAction(InputButton input, Action action)
-{
-	eventHandler.addAction(input, action);
 }
 
 Parameter* Scene::getParameter(std::string name)
@@ -40,4 +29,13 @@ std::vector<Parameter*> Scene::getParameterList()
 	auto genList = gen->getParameterList();
 	std::copy(genList.begin(), genList.end(), std::back_inserter(list));
 	return list;
+}
+
+void Scene::setParameterLock(bool lock)
+{
+	auto params = getParameterList();
+	for (auto &p : params)
+	{
+		p->setLock(lock);
+	}
 }

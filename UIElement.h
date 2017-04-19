@@ -30,7 +30,8 @@ public:
 	void doUpdate();
 	void doRefresh();
 
-	sf::Texture getTexture() { return texture->getTexture(); }
+	sf::Texture getTexture();
+	void draw(const sf::Drawable& src);
 	int getX() { return x; }
 	int getY() { return y; }
 	int getH();
@@ -50,5 +51,5 @@ public:
 	virtual void triggerCollapse();
 	sf::Font* getFont();
 
-	static sf::RenderTexture* texture;//protect
+	sf::RenderTexture* texture;//protect
 };

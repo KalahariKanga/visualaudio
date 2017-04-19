@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "UIPanel.h"
 #include "ShaderList.h"
+#include "ParameterActionWindow.h"
 
 class App : public InputReciever
 {
@@ -22,6 +23,8 @@ class App : public InputReciever
 	bool showUI = 0;
 	const int fps = 60;
 
+	std::unique_ptr<PopupWindow> popup;
+
 	std::unique_ptr<Canvas> canvas;
 	Palette palette;
 	std::vector<std::unique_ptr<Scene>> scenes;
@@ -29,6 +32,7 @@ class App : public InputReciever
 
 	std::unique_ptr<RtMidiIn> midiIn;
 
+	InputMap inputMap;
 	EventHandler eventHandler;
 	
 	ShaderList shaderList;
@@ -38,10 +42,9 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
-	InputButton detectNextInput();
+	InputButton detectNextInput();//potentially useless
 	void toggleFullscreen();
 	void resize(int width, int height);
-
 
 public:
 	App();
@@ -50,6 +53,9 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
+	template <class T, class... Args> bool openPopup(Args&&... args);
+
+	void requestParameterActionWindow(Parameter* param);//pass down to parameterview somehow
 };
 
 template <class T>
@@ -60,3 +66,15 @@ Scene* App::addScene()
 	scenes.push_back(std::move(scene));
 	return scenes.back().get();
 }
+
+template <class T, class... Args>
+bool App::openPopup(Args&&... args)
+{
+	if (!popup.get())
+	{
+		popup = std::make_unique<T>(std::forward<Args>(args)...);
+		return 1;
+	}
+	return 0;
+}
+

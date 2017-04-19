@@ -17,15 +17,7 @@ void EventHandler::update()
 		InputEvent ev = eventList.front();
 		eventList.pop_front();
 
-		auto range = inputMap.equal_range(ev.button);
-		for_each(range.first, range.second,
-			[ev](InputMap::value_type& x)
-		{
-			auto action = x.second;
-			action.execute(ev.data);
-		}
-		);
-
+		inputMap->recieveEvent(ev);
 	}
 }
 
@@ -39,7 +31,7 @@ void EventHandler::addEvent(InputButton::Device device, int button, float data)
 	eventList.emplace_back(InputButton(device, button), data);
 }
 
-void EventHandler::addAction(InputButton input, Action action)
+void EventHandler::setInputMap(InputMap* map)
 {
-	inputMap.insert(InputMap::value_type(input, action));
+	inputMap = map;
 }

@@ -26,8 +26,8 @@ void UIButton::update()
 
 	text.setPosition(x, y);
 
-	texture->draw(rectangle);
-	texture->draw(text);
+	draw(rectangle);
+	draw(text);
 }
 
 void UIButton::processEvent(sf::Event ev)

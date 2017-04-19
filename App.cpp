@@ -1,4 +1,5 @@
 #include "App.h"
+#include "ParameterView.h"
 #include <fstream>
 
 App::App()
@@ -17,6 +18,10 @@ App::App()
 	{
 		std::cout << "Cannot open MIDI port\n";
 	}
+
+	ParameterView::popupCall = [this](Parameter* p){requestParameterActionWindow(p); };
+
+	eventHandler.setInputMap(&inputMap);
 
 	addParameter("scene", 0, 0, 16);
 
@@ -52,26 +57,26 @@ App::App()
 	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
 	//}
 
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
 
-	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
-	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
-	eventHandler.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
-	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
-	eventHandler.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
-	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 74), alpha);
-	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 71), zoom);
-	eventHandler.addAction(InputButton(InputButton::Device::MIDICV, 81), rotation);
+	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 74), alpha);
+	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 71), zoom);
+	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 81), rotation);
 
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::W), kalUp);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::S), kalDown);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::A), kalLeft);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::D), kalRight);
-	eventHandler.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::F), flip);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::W), kalUp);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::S), kalDown);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::A), kalLeft);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::D), kalRight);
+	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::F), flip);
 
 	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
 
@@ -81,7 +86,7 @@ App::App()
 	scene = addScene<Gen_Spirograph>();
 	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
 	
 
 	scene = addScene<Gen_Particles>();
@@ -89,27 +94,32 @@ App::App()
 	Action probability(scene->getParameter("spawnProbability"), Action::Type::axis, 1);
 	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
 	Action split(scene->getParameter("split"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
-	scene->addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
 
 	scene = addScene<Gen_Swarm>();
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	scene->addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
-	scene->addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
+	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
+	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
 
 	scene = addScene<Gen_Waveform>();
 	Action fill(scene->getParameter("fill"), Action::Type::trigger);
-	scene->addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
 
 	addScene<Gen_Spectrum>();
 	addScene<Gen_CircleSpectrum>();
 
 	UITexture.create(UIWidth, windowHeight);
-	UIElement::texture = &UITexture;
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator());
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator(), &UITexture);
+
+	//lock all scene parameters
+	for (auto &s : scenes)
+	{
+		s->setParameterLock(true);
+	}
 }
 
 
@@ -129,11 +139,25 @@ void App::update()
 
 	if (activeScene != scenes[sceneID].get())
 	{
+		if (activeScene)
+		{
+			activeScene->setParameterLock(true);
+		}
 		activeScene = scenes[sceneID].get();//try
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator());
+		activeScene->setParameterLock(false);
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
 	}
 
+	if (popup.get())
+	{
+		popup->doRefresh();
+		popup->doUpdate();
+		if (popup->toQuit())
+		{
+			popup.reset(nullptr);
+		}
+	}
 
 	AC.update();
 	palette.update();
@@ -172,7 +196,6 @@ void App::processEvents()
 {
 	sf::Event ev;
 	eventHandler.addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/10);
-	activeScene->addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/10);
 	while (window.pollEvent(ev))
 	{
 		if (ev.type == sf::Event::Closed)
@@ -201,18 +224,18 @@ void App::processEvents()
 			case sf::Keyboard::Escape:
 				quit = 1;
 				break;
+			case sf::Keyboard::W:
+				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), &inputMap);
+				break;
 			}
-			activeScene->addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
 		if (ev.type == sf::Event::JoystickButtonPressed)
 		{
-			activeScene->addEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button);
 			eventHandler.addEvent(InputButton::Device::GamepadButton, (int)ev.joystickButton.button);
 		}
 		if (ev.type == sf::Event::JoystickMoved)
 		{
-			activeScene->addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 		}
 		if (showUI)
@@ -226,13 +249,11 @@ void App::processEvents()
 			break;
 		if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
 		{
-			activeScene->addEvent(InputButton::Device::MIDINote, (int)message[1]);
 			eventHandler.addEvent(InputButton::Device::MIDINote, (int)message[1]);
 			std::cout << (int)message[1] << "\n";
 		}
 		if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
 		{
-			activeScene->addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
 			eventHandler.addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
 			std::cout << (int)message[1] << "\n";
 		}
@@ -345,4 +366,9 @@ void App::resize(int width, int height)
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
 	UITexture.create(UIWidth, windowHeight);
+}
+
+void App::requestParameterActionWindow(Parameter* param)
+{
+	openPopup<ParameterActionWindow>(128, 256, param, &inputMap);
 }

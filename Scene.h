@@ -17,19 +17,17 @@ class Scene :
 {
 	Canvas* canvas;
 	std::unique_ptr<Generator> gen;
-	EventHandler eventHandler;
 	AudioCapture* ac;
 public:
 	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
 	void update();
-	void addEvent(InputButton::Device device, int button, float data = 1);
-	void addAction(InputButton input, Action action);
 	template <class T> void setGenerator();
 
 	Parameter* getParameter(std::string name) override;
 	std::vector<Parameter*> getParameterList() override;
 	Generator* getGenerator() { return gen.get(); } ///nonono
+	void setParameterLock(bool lock);
 };
 
 template <class T>

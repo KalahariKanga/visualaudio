@@ -1,5 +1,8 @@
 #include "ParameterView.h"
+#include "UIButton.h"
 #include <sstream>
+
+std::function<void(Parameter*)> ParameterView::popupCall;
 
 ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _parameter) : UIElement(_x, _y, _w, _h)
 {
@@ -18,6 +21,8 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	sliderOutline.setFillColor(sf::Color(0,0,0,0));
 	sliderOutline.setOutlineColor(sf::Color::White);
 	sliderOutline.setOutlineThickness(1);
+
+	addChild(std::make_unique<UIButton>(w - 8, y, 8, 8, std::bind(popupCall,parameter)));
 }
 
 
@@ -34,10 +39,10 @@ void ParameterView::update()
 	sf::Vector2f sz(parameter->getNormalisedValue() * (w - 2 * paddingY), sliderH);
 	sliderFill.setSize(sz);
 	
-	texture->draw(sliderOutline);
-	texture->draw(sliderFill);
-	texture->draw(name);
-	texture->draw(value);
+	draw(sliderOutline);
+	draw(sliderFill);
+	draw(name);
+	draw(value);
 }
 
 void ParameterView::refresh()
