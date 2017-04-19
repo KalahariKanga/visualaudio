@@ -11,7 +11,7 @@ ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y
 
 	float min = action->getTarget()->getMin();
 	float max = action->getTarget()->getMax();
-	addChild(std::make_unique<UISlider>(x, y + 24, w, 8, action->getAmount(), min, max));//
+	addChild(std::make_unique<UISlider>(x, y + 24, w, 8, action->getAmount(), min, max));
 }
 
 
@@ -24,7 +24,20 @@ void ActionView::update()
 	auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
 	action->setAmount(slider->getValue());
 
+	actionType.setString(getActionTypeString());
+
 	draw(actionType);
+}
+
+void ActionView::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::MouseButtonPressed)
+	{
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h / 2))
+		{
+			cycleActionType();
+		}
+	}
 }
 
 void ActionView::refresh()
@@ -47,5 +60,26 @@ std::string ActionView::getActionTypeString()
 		return "Control by";
 	default:
 		return "";
+	}
+}
+
+void ActionView::cycleActionType()
+{
+	switch (action->type)
+	{
+	case Action::Type::set:
+		action->type = Action::Type::shift;
+		break;
+	case Action::Type::shift:
+		action->type = Action::Type::trigger;
+		break;
+	case Action::Type::trigger:
+		action->type = Action::Type::axis;
+		break;
+	case Action::Type::axis:
+		action->type = Action::Type::set;
+		break;
+	default:
+		action->type = Action::Type::set;
 	}
 }
