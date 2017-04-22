@@ -15,12 +15,12 @@ Gen_Spirograph::~Gen_Spirograph()
 {
 }
 
-void Gen_Spirograph::update(Canvas& target)
+void Gen_Spirograph::update(Canvas& target, float deltaTime)
 {
 	float scale = getParameter("scale")->getValue();
 	float k = getParameter("ratio")->getValue();
 	float l = getParameter("offset")->getValue();
-	float speed = getParameter("speed")->getValue() * abs(ac->getAmplitude())/4;
+	float speed = getParameter("speed")->getValue() * (abs(ac->getAmplitude()) / 4) * deltaTime;
 	int points = (int)getParameter("points")->getValue();
 
 	for (float timeOffset = 0; timeOffset < speed; timeOffset += speed/10.0)

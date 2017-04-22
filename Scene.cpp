@@ -11,9 +11,9 @@ Scene::~Scene()
 {
 }
 
-void Scene::update()
+void Scene::update(float deltaTime)
 {
-	gen->update(*canvas);
+	gen->update(*canvas, deltaTime);
 }
 
 Parameter* Scene::getParameter(std::string name)

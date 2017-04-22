@@ -163,7 +163,7 @@ void App::update()
 	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
 	
-	activeScene->update();
+	activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
 	eventHandler.update();
 
 	image.create(windowWidth, windowHeight, canvas->data);
@@ -189,7 +189,8 @@ void App::update()
 	//std::cout << 1/clock.getElapsedTime().asSeconds() << "\n";
 
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	lastFrameTime = clock.getElapsedTime().asSeconds();
 }
 
 void App::processEvents()

@@ -10,12 +10,12 @@ class Gen_Particles :
 		float x, y, direction, speed, size;
 		float directionChange = 0, speedChange = 0;
 		bool active = 1;
-		void update()
+		void update(float deltaTime)
 		{
 			direction += directionChange;
 			speedChange += speedChange;
-			x += speed * cos(direction);
-			y += speed * sin(direction);
+			x += deltaTime * speed * cos(direction);
+			y += deltaTime * speed * sin(direction);
 		}
 	};
 
@@ -25,7 +25,7 @@ public:
 	Gen_Particles(AudioCapture* ac);
 	~Gen_Particles();
 
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 	void spawnParticle(float x, float y, float direction, float speed, float size);
 };
 

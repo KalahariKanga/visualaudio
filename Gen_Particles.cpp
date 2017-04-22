@@ -36,7 +36,7 @@ void Gen_Particles::spawnParticle(float x, float y, float direction, float speed
 	particles.emplace_back(x, y, direction, speed, size);
 }
 
-void Gen_Particles::update(Canvas& target)
+void Gen_Particles::update(Canvas& target, float deltaTime)
 {
 	static int t = 0;
 	static float direction = 1;
@@ -51,7 +51,7 @@ void Gen_Particles::update(Canvas& target)
 			p.active = 0;
 		if (p.active)
 		{
-			p.update();
+			p.update(deltaTime);
 			p.direction += getParameter("directionChange")->getValue();
 			/*if (reverse)
 				p.direction += PI;

@@ -12,7 +12,7 @@ Gen_Waveform::~Gen_Waveform()
 {
 }
 
-void Gen_Waveform::update(Canvas& target)
+void Gen_Waveform::update(Canvas& target, float deltaTime)
 {
 	for (int cx = 0; cx < target.getWidth(); cx++)
 	{

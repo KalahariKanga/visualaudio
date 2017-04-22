@@ -36,7 +36,7 @@ class Gen_Swarm :
 public:
 	Gen_Swarm(AudioCapture* AC);
 	~Gen_Swarm();
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 	std::vector<Particle> particles;
 };
 

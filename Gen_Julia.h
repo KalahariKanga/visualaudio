@@ -7,6 +7,6 @@ public:
 	Gen_Julia(AudioCapture* ac);
 	~Gen_Julia();
 
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 };
 

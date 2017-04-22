@@ -21,7 +21,7 @@ class Scene :
 public:
 	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
-	void update();
+	void update(float deltaTime);
 	template <class T> void setGenerator();
 
 	Parameter* getParameter(std::string name) override;

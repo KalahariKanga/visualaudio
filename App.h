@@ -22,6 +22,7 @@ class App : public InputReciever
 	bool fullscreen = 0;
 	bool showUI = 0;
 	const int fps = 60;
+	float lastFrameTime = 1 / 60;
 
 	std::unique_ptr<PopupWindow> popup;
 

@@ -10,7 +10,7 @@ Gen_Spectrum::~Gen_Spectrum()
 {
 }
 
-void Gen_Spectrum::update(Canvas& target)
+void Gen_Spectrum::update(Canvas& target, float deltaTime)
 {
 	int width = target.getWidth();
 	int height = target.getHeight();

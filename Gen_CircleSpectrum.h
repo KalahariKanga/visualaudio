@@ -8,6 +8,6 @@ class Gen_CircleSpectrum :
 public:
 	Gen_CircleSpectrum(AudioCapture* AC);
 	~Gen_CircleSpectrum();
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 };
 

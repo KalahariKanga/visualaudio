@@ -6,6 +6,6 @@ class Gen_Waveform :
 public:
 	Gen_Waveform(AudioCapture* ac);
 	~Gen_Waveform();
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 };
 

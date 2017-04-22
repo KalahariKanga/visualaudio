@@ -13,7 +13,7 @@ protected:
 public:
 	Generator(AudioCapture* AC);
 	~Generator();
-	virtual void update(Canvas& target);//draw
+	virtual void update(Canvas& target, float deltaTime);//draw
 
 };
 

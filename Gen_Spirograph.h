@@ -7,6 +7,6 @@ class Gen_Spirograph :
 public:
 	Gen_Spirograph(AudioCapture* ac);
 	~Gen_Spirograph();
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 };
 

@@ -10,7 +10,7 @@ Generator::~Generator()
 {
 }
 
-void Generator::update(Canvas& target)
+void Generator::update(Canvas& target, float deltaTime)
 {
 	int width = target.getWidth();
 	int height = target.getHeight();

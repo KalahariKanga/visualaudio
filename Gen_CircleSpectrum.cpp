@@ -15,7 +15,7 @@ Gen_CircleSpectrum::~Gen_CircleSpectrum()
 {
 }
 
-void Gen_CircleSpectrum::update(Canvas& target)
+void Gen_CircleSpectrum::update(Canvas& target, float deltaTime)
 {
 	bands = (int)getParameter("bands")->getValue();
 	bandAmount.resize(bands);
@@ -25,7 +25,7 @@ void Gen_CircleSpectrum::update(Canvas& target)
 		if (abs(ac->getFFT((float)b / bands,(float)(b+1)/bands)) > bandAmount[b])
 			bandAmount[b] = abs(ac->getFFT((float)b / bands, (float)(b + 1) / bands));
 		else
-			bandAmount[b] -= getParameter("decay")->getValue();
+			bandAmount[b] -= getParameter("decay")->getValue() * deltaTime;
 
 		bandAmount[b] = Math::clamp(bandAmount[b], 0, 1);
 	}

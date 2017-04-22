@@ -7,6 +7,6 @@ public:
 	Gen_Spectrum(AudioCapture* ac);
 	~Gen_Spectrum();
 	
-	virtual void update(Canvas& target);
+	virtual void update(Canvas& target, float deltaTime);
 };
 
