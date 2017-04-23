@@ -44,11 +44,16 @@ void UISlider::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::MouseMoved)
 	{
-		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + h))
+		if (mouseDown)
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			if (ev.mouseMove.y >= y && ev.mouseMove.y < y+h)
+				value = min + (max - min)*((float)(ev.mouseMove.x - x) / w);
+			else
 			{
-				value = min + (max-min)*((float)(ev.mouseMove.x - x) / w);
+				float targetValue = min + (max - min)*((float)(ev.mouseMove.x - x) / w);
+				float startValue = min + (max - min)*((float)(mouseDownX - x) / w);
+				float scrubScale = Math::clamp(4. / abs(y - ev.mouseMove.y), 0.05, 1);
+				value = Math::lint(startValue, targetValue, scrubScale);
 			}
 		}
 	}
@@ -63,8 +68,15 @@ void UISlider::processEvent(sf::Event ev)
 			}
 			if (ev.mouseButton.button == sf::Mouse::Button::Left)
 			{
+				mouseDown = 1;
+				mouseDownX = ev.mouseButton.x;
 				value = min + (max - min)*((float)(ev.mouseButton.x - x) / w);
 			}
 		}
+	}
+	if (ev.type == sf::Event::MouseButtonReleased)
+	{
+		if (ev.mouseButton.button == sf::Mouse::Button::Left)
+			mouseDown = 0;
 	}
 }
