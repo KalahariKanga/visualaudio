@@ -5,6 +5,7 @@
 App::App()
 {
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
+	//window.setVerticalSyncEnabled(true);
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 
@@ -179,7 +180,7 @@ void App::update()
 		UITexture.clear(sf::Color(0, 0, 0, 128));
 		panel->doUpdate();
 		UITexture.display();
-		window.draw(sf::Sprite(panel->getTexture()));
+		window.draw(sf::Sprite(UITexture.getTexture()));//this makes it like a billion times faster...? rather than panel->gettexture
 	}
 
 	window.display();
