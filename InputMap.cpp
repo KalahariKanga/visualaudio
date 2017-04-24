@@ -53,3 +53,18 @@ std::vector<std::pair<InputButton*, Action*>> InputMap::findParameterActions(Par
 	}
 	return actions;
 }
+
+void InputMap::removeLink(std::pair<InputButton, Action> link)
+{
+	for (auto i = map.begin(); i != map.end(); i++)
+	{
+		//TODO assumes an eventbutton only affects a parameter in one way
+		//enforce this or be better otherwise
+		if (i->first.button == link.first.button && i->first.device == link.first.device)
+		if (i->second.getTarget() == link.second.getTarget())
+		{
+			map.erase(i);
+			break;
+		}	
+	}
+}

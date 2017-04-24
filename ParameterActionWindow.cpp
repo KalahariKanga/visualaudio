@@ -13,9 +13,9 @@ ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, Inp
 	title.setCharacterSize(12);
 
 
+	addChild(std::make_unique<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+"));
 
 	//find all input/action pairs using p
-
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
@@ -56,8 +56,7 @@ void ParameterActionWindow::processEvent(sf::Event ev)
 	{
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
-			rebuildChildren();
+			addLink();
 		}
 	}
 }
@@ -65,6 +64,7 @@ void ParameterActionWindow::processEvent(sf::Event ev)
 void ParameterActionWindow::rebuildChildren()
 {
 	children.clear();
+	addChild(std::make_unique<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+"));
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
@@ -136,4 +136,16 @@ InputEvent ParameterActionWindow::detectNextEvent()
 		//}
 	}
 	return input;
+}
+
+void ParameterActionWindow::addLink()
+{
+	inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
+	rebuildChildren();
+}
+
+void ParameterActionWindow::removeLink(std::pair<InputButton, Action> action)
+{
+	inputMap->removeLink(action);
+	rebuildChildren();
 }

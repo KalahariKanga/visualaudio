@@ -17,5 +17,6 @@ public:
 
 	void recieveEvent(InputEvent ev);
 	std::vector<std::pair<InputButton*, Action*>> findParameterActions(Parameter* p);
+	void removeLink(std::pair<InputButton, Action> link);
 };
 

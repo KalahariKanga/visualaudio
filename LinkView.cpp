@@ -10,6 +10,7 @@ LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* acti
 	deviceName.setCharacterSize(12);
 
 	addChild(std::make_unique<ActionView>(x, y + 16, w, 48, action));
+	addChild(std::make_unique<UIButton>(x + w - 16, y, 8, 8, [&](){remove(); }, "x"));
 }
 
 
@@ -78,4 +79,13 @@ InputButton LinkView::sfEventToInputButton(sf::Event ev)
 	}
 	
 	return input;
+}
+
+void LinkView::remove()
+{
+	auto p = dynamic_cast<ParameterActionWindow*>(parent);
+	if (p)
+	{
+		p->removeLink(std::pair<InputButton, Action>(*button, *action));
+	}
 }

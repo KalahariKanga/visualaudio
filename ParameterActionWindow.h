@@ -10,6 +10,7 @@ class ParameterActionWindow :
 	InputMap* inputMap;
 
 	sf::Text title;
+	void addLink();
 public:
 	ParameterActionWindow(int w, int h, Parameter* param, InputMap* map);
 	~ParameterActionWindow();
@@ -20,5 +21,6 @@ public:
 	InputEvent detectNextEvent();//probably need an rtmidi ptr :/
 
 	void rebuildChildren();//:/
+	void removeLink(std::pair<InputButton, Action> action);
 };
 
