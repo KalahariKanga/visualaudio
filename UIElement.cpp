@@ -77,13 +77,14 @@ void UIElement::doUpdate()
 	}
 	toRemove.clear();
 
-	update();
+	
 	for (auto& c : children)
 	{
 		if (c->isActive())
 			c->doUpdate();
 	}
-	
+	update();
+
 	if (needRefresh)
 	{
 		doRefresh();

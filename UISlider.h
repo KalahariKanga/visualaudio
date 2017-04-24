@@ -5,7 +5,7 @@ class UISlider :
 {
 	sf::RectangleShape fill, outline;
 	sf::Text valueText;
-	float min, max, value;
+	float min, max, value, defValue;
 	bool mouseDown = 0;
 	int mouseDownX = 0;
 public:
