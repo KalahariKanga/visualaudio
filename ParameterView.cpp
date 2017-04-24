@@ -17,7 +17,7 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	name.setCharacterSize(12);
 
 
-	addChild(std::make_unique<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter->getValue(), parameter->getMin(), parameter->getMax()));
+	addChild(std::make_unique<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter));
 	addChild(std::make_unique<UIButton>(w - 8, y, 8, 8, std::bind(popupCall,parameter)));
 }
 
@@ -30,9 +30,6 @@ void ParameterView::update()
 {
 	std::stringstream stream;
 	stream << parameter->getValue();
-
-	auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
-	parameter->setValue(slider->getValue());
 	
 	draw(name);
 }

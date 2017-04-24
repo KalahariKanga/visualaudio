@@ -13,6 +13,21 @@ UISlider::UISlider(int x, int y, int w, int h, float value, float min, float max
 	outline.setOutlineThickness(1);
 }
 
+UISlider::UISlider(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h), parameter(p)
+{
+	defValue = parameter->getDefaultValue();
+	min = parameter->getMin();
+	max = parameter->getMax();
+	value = parameter->getValue();
+	valueText.setFillColor(sf::Color::White);
+	valueText.setFont(*UIElement::getFont());
+	valueText.setCharacterSize(12);
+	fill.setFillColor(sf::Color::Red);
+	outline.setFillColor(sf::Color(0, 0, 0, 0));
+	outline.setOutlineColor(sf::Color::White);
+	outline.setOutlineThickness(1);
+}//DRY
+
 
 UISlider::~UISlider()
 {
@@ -20,6 +35,7 @@ UISlider::~UISlider()
 
 void UISlider::update()
 {
+	setValue(parameter->getValue());
 	std::stringstream stream;
 	stream << value;
 	valueText.setString(stream.str());
@@ -48,13 +64,13 @@ void UISlider::processEvent(sf::Event ev)
 		if (mouseDown)
 		{
 			if (ev.mouseMove.y >= y && ev.mouseMove.y < y+h)
-				value = min + (max - min)*((float)(ev.mouseMove.x - x) / w);
+				setValue(min + (max - min)*((float)(ev.mouseMove.x - x) / w));
 			else
 			{
 				float targetValue = min + (max - min)*((float)(ev.mouseMove.x - x) / w);
 				float startValue = min + (max - min)*((float)(mouseDownX - x) / w);
 				float scrubScale = Math::clamp(4. / abs(y + h / 2 - ev.mouseMove.y), 0.05, 1);
-				value = Math::lint(startValue, targetValue, scrubScale);
+				setValue(Math::lint(startValue, targetValue, scrubScale));
 			}
 		}
 	}
@@ -65,13 +81,13 @@ void UISlider::processEvent(sf::Event ev)
 		{
 			if (ev.mouseButton.button == sf::Mouse::Button::Right)
 			{
-				value = defValue;
+				setValue(defValue);
 			}
 			if (ev.mouseButton.button == sf::Mouse::Button::Left)
 			{
 				mouseDown = 1;
 				mouseDownX = ev.mouseButton.x;
-				value = min + (max - min)*((float)(ev.mouseButton.x - x) / w);
+				setValue(min + (max - min)*((float)(ev.mouseButton.x - x) / w));
 			}
 		}
 	}
