@@ -11,7 +11,7 @@ protected:
 	ElementVector children;
 	std::vector<UIElement*> toRemove;
 	UIElement* parent;
-	void addChild(std::unique_ptr<UIElement> child);
+	template <class T, class... Args> void addChild(Args&&... args);
 	void removeChild(UIElement* elem);
 	int x, y;
 	int w, h;
@@ -53,3 +53,11 @@ public:
 
 	sf::RenderTexture* texture;//protect
 };
+
+template <class T, class... Args>
+void UIElement::addChild(Args&&... args)
+{
+	children.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
+	children.back()->parent = this;
+	children.back()->doRefresh();
+}

@@ -11,7 +11,7 @@ ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y
 
 	float min = action->getTarget()->getMin();
 	float max = action->getTarget()->getMax();
-	addChild(std::make_unique<UISlider>(x, y + 24, w, 8, action->getAmount(), min, max));
+	addChild<UISlider>(x, y + 24, w, 8, action->getAmount(), min, max);
 }
 
 

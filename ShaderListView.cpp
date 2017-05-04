@@ -6,9 +6,8 @@ ShaderListView::ShaderListView(int x, int y, int w, int h, ShaderList* shaders) 
 	shaderList = shaders;
 	for (int i = 0; i < shaderList->size(); ++i)
 	{
-		addChild(std::make_unique<ShaderView>(x, y, w, 16, shaderList->getShader(i)));
+		addChild<ShaderView>(x, y, w, 16, shaderList->getShader(i));
 	}
-	//addChild(std::make_unique<UIButton>(x, y, 8, 8, [this](){addShader("shaders/bend"); }));
 }
 
 
@@ -38,7 +37,7 @@ void ShaderListView::processEvent(sf::Event ev)
 void ShaderListView::addShader(std::string filename)
 {
 	shaderList->addShader(filename);
-	addChild(std::make_unique<ShaderView>(x, y, w, 16, shaderList->getShader(shaderList->size()-1)));
+	addChild<ShaderView>(x, y, w, 16, shaderList->getShader(shaderList->size()-1));
 	requestRefresh();
 }
 

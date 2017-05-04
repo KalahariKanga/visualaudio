@@ -35,7 +35,8 @@ UISlider::~UISlider()
 
 void UISlider::update()
 {
-	setValue(parameter->getValue());
+	if (parameter)
+		setValue(parameter->getValue());
 	std::stringstream stream;
 	stream << value;
 	valueText.setString(stream.str());

@@ -24,7 +24,7 @@ void UIButton::update()
 	rectangle.setPosition(x, y);
 	rectangle.setSize(sf::Vector2f(w, h));
 
-	text.setPosition(x, y);
+	text.setPosition(x+1, y-6);
 
 	draw(rectangle);
 	draw(text);

@@ -8,8 +8,8 @@ GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIEle
 	name.setFillColor(sf::Color::White);
 
 	list = generator->getParameterList();
-	addChild(std::make_unique<ParameterListView>(x, y + 16, w, 0, &list));
-	addChild(std::make_unique<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); }));
+	addChild<ParameterListView>(x, y + 16, w, 0, &list);
+	addChild<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); });
 }
 
 

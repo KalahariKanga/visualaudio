@@ -13,13 +13,13 @@ ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, Inp
 	title.setCharacterSize(12);
 
 
-	addChild(std::make_unique<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+"));
+	addChild<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+");
 
 	//find all input/action pairs using p
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild((std::make_unique<LinkView>(x, y+20, w, 16, a.first, a.second)));
+		addChild<LinkView>(x, y+20, w, 16, a.first, a.second);
 	}
 	
 }
@@ -64,11 +64,11 @@ void ParameterActionWindow::processEvent(sf::Event ev)
 void ParameterActionWindow::rebuildChildren()
 {
 	children.clear();
-	addChild(std::make_unique<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+"));
+	addChild<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+");
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild((std::make_unique<LinkView>(x, y + 20, w, 16, a.first, a.second)));
+		addChild<LinkView>(x, y + 20, w, 16, a.first, a.second);
 	}
 }
 

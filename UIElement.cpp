@@ -13,14 +13,6 @@ UIElement::~UIElement()
 {
 }
 
-void UIElement::addChild(std::unique_ptr<UIElement> child)
-{
-	children.emplace_back(std::move(child));
-	children.back()->parent = this;
-//	children.back()->texture = texture;
-	children.back()->doRefresh();
-}
-
 void UIElement::removeChild(UIElement* elem)
 {
 	toRemove.push_back(elem);
@@ -72,8 +64,9 @@ void UIElement::doUpdate()
 	for (auto &toRem : toRemove)
 	{
 		auto it = std::find_if(children.begin(), children.end(),
-			[toRem](std::unique_ptr<UIElement>& elem){ return (elem.get() == (UIElement*)toRem); });
-		children.erase(it);
+			[toRem](std::unique_ptr<UIElement>& elem){ return (elem.get() == (UIElement*)toRem);});
+		if (it != children.end())
+			children.erase(it);
 	}
 	toRemove.clear();
 

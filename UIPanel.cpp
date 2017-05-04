@@ -6,8 +6,8 @@ UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders, Generator* gen
 	this->shaders = shaders;
 	this->generator = gen;
 	this->texture = texture;
-	addChild(std::make_unique<GeneratorView>(x, y, w, 16, generator)); 
-	addChild(std::make_unique<ShaderListView>(x, y, w, 16, shaders));
+	addChild<GeneratorView>(x, y, w, 16, generator); 
+	addChild<ShaderListView>(x, y, w, 16, shaders);
 }
 
 

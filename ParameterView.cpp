@@ -17,8 +17,8 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	name.setCharacterSize(12);
 
 
-	addChild(std::make_unique<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter));
-	addChild(std::make_unique<UIButton>(w - 8, y, 8, 8, std::bind(popupCall,parameter)));
+	addChild<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter);
+	addChild<UIButton>(w - 8, y, 8, 8, std::bind(popupCall,parameter));
 }
 
 
