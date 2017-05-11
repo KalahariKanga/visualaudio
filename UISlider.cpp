@@ -55,7 +55,7 @@ void UISlider::refresh()
 	outline.setSize(sf::Vector2f(w, h));
 	fill.setPosition(x + w*(-min)/(max-min), y);
 
-	valueText.setPosition(x + w/2, y);
+	valueText.setPosition(x + w/2, y-4);
 }
 
 void UISlider::processEvent(sf::Event ev)

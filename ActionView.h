@@ -10,6 +10,7 @@ class ActionView :
 
 	std::string getActionTypeString();
 	void cycleActionType();
+	void updateBounds();
 public:
 	ActionView(int x, int y, int w, int h, Action* act);
 	~ActionView();

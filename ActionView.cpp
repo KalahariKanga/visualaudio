@@ -11,7 +11,8 @@ ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y
 
 	float min = action->getTarget()->getMin();
 	float max = action->getTarget()->getMax();
-	addChild<UISlider>(x, y + 24, w, 8, action->getAmount(), min, max);
+	addChild<UISlider>(x + 4, y + 24, w-16, 8, action->getAmount(), min, max);//actually created in update bounds
+	updateBounds();
 }
 
 
@@ -82,4 +83,32 @@ void ActionView::cycleActionType()
 	default:
 		action->type = Action::Type::set;
 	}
+	updateBounds();
+}
+
+void ActionView::updateBounds()
+{
+	float min, max;
+	switch (action->type)
+	{
+	case Action::Type::set:
+		min = action->getTarget()->getMin();
+		max = action->getTarget()->getMax();
+		break;
+	case Action::Type::shift:
+		min = -(action->getTarget()->getMax());
+		max = action->getTarget()->getMax();
+		break;
+	case Action::Type::trigger:
+		min = 0;
+		max = 1;//for now
+		break;
+	case Action::Type::axis:
+		min = -1;
+		max = 1;
+		break;
+	}
+
+	children.erase(children.begin());
+	addChild<UISlider>(x + 4, y + 24, w-8, 8, 0, min, max);
 }
