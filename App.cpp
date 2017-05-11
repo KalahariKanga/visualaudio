@@ -20,7 +20,8 @@ App::App()
 		std::cout << "Cannot open MIDI port\n";
 	}
 
-	ParameterView::popupCall = [this](Parameter* p){requestParameterActionWindow(p); };
+	ParameterView::popupCall = [this](Parameter* p){ requestParameterActionPanel(p); };
+	LinkView::nextButton = [this](){ return eventHandler.nextButton(); };
 
 	eventHandler.setInputMap(&inputMap);
 
@@ -28,10 +29,11 @@ App::App()
 
 	shaderList.addShader("shaders/blend");
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	shaderList.addShader("shaders/tile");
+	/*shaderList.addShader("shaders/tile");
+	shaderList.addShader("shaders/mosaic");*/
 	shaderList.addShader("shaders/kaleidoscope");
-	shaderList.addShader("shaders/mosaic");
-	shaderList.addShader("shaders/polar");
+	shaderList.addShader("shaders/bend");
+	shaderList.addShader("shaders/bloom");
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -113,7 +115,7 @@ App::App()
 	addScene<Gen_Spectrum>();
 	addScene<Gen_CircleSpectrum>();
 
-	UITexture.create(UIWidth, windowHeight);
+	UITexture.create(UIWidth * 2, windowHeight);
 	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator(), &UITexture);
 
 	//lock all scene parameters
@@ -150,22 +152,12 @@ void App::update()
 		panel->doRefresh();
 	}
 
-	if (popup.get())
-	{
-		popup->doRefresh();
-		popup->doUpdate();
-		if (popup->toQuit())
-		{
-			popup.reset(nullptr);
-		}
-	}
-
 	AC.update();
 	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
 	
 	activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
-	eventHandler.update();
+	
 
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.create(windowWidth, windowHeight);
@@ -179,12 +171,25 @@ void App::update()
 	{
 		UITexture.clear(sf::Color(0, 0, 0, 128));
 		panel->doUpdate();
+		if (subPanel.get())
+		{
+			subPanel->doRefresh();
+			subPanel->doUpdate();
+			if (subPanel->toQuit)
+			{
+				subPanel.reset(nullptr);
+			}
+		}
+
 		UITexture.display();
+
 		window.draw(sf::Sprite(UITexture.getTexture()));//this makes it like a billion times faster...? rather than panel->gettexture
+
 	}
 
 	window.display();
-
+	
+	eventHandler.update();
 	processEvents();
 
 	//std::cout << 1/clock.getElapsedTime().asSeconds() << "\n";
@@ -226,9 +231,6 @@ void App::processEvents()
 			case sf::Keyboard::Escape:
 				quit = 1;
 				break;
-			case sf::Keyboard::W:
-				openPopup<ParameterActionWindow>(256, 256, getParameter("scene"), &inputMap);
-				break;
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
@@ -241,7 +243,11 @@ void App::processEvents()
 			eventHandler.addEvent(InputButton::Device::GamepadAxis, (int)ev.joystickMove.axis, ev.joystickMove.position / 200 + 0.5);
 		}
 		if (showUI)
+		{
 			panel->distributeEvent(ev);
+			if (subPanel.get())
+				subPanel->distributeEvent(ev);
+		}
 	}
 	std::vector<unsigned char> message;
 	while (midiIn->isPortOpen())
@@ -370,7 +376,7 @@ void App::resize(int width, int height)
 	UITexture.create(UIWidth, windowHeight);
 }
 
-void App::requestParameterActionWindow(Parameter* param)
+void App::requestParameterActionPanel(Parameter* param)
 {
-	openPopup<ParameterActionWindow>(128, 256, param, &inputMap);
+	subPanel = std::make_unique<ParameterActionPanel>(192, windowHeight, param, &inputMap, &UITexture);
 }

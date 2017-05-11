@@ -39,7 +39,8 @@ class App : public InputReciever
 	ShaderList shaderList;
 
 	std::unique_ptr<UIPanel> panel;
-	sf::RenderTexture UITexture;
+	std::unique_ptr<ParameterActionPanel> subPanel;
+	sf::RenderTexture UITexture, subUITexture;
 
 	void processEvents();
 	void applyShaders();
@@ -56,7 +57,7 @@ public:
 	template <class T> Scene* addScene();
 	template <class T, class... Args> bool openPopup(Args&&... args);
 
-	void requestParameterActionWindow(Parameter* param);//pass down to parameterview somehow
+	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 };
 
 template <class T>

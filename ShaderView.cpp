@@ -40,7 +40,20 @@ void ShaderView::refresh()
 
 void ShaderView::processEvent(sf::Event ev)
 {
-	
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4)
+		{
+			for (int c = 1; c < children.size(); c++)
+				children[c]->setActive(true);
+		}
+		else
+		{
+			for (int c = 1; c < children.size(); c++)
+				children[c]->setActive(false);
+
+		}
+	}
 }
 
 void ShaderView::triggerCollapse()

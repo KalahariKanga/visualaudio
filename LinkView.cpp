@@ -2,6 +2,8 @@
 #include "ActionView.h"
 #include "ParameterActionWindow.h"
 
+std::function<InputButton(void)> LinkView::nextButton;
+
 LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* action) : UIElement(x, y, w, h), button(button), action(action)
 {
 	deviceName.setString(button->getDeviceName() + " " + std::to_string((int)button->button));
@@ -20,15 +22,9 @@ LinkView::~LinkView()
 
 void LinkView::update()
 {
-	draw(deviceName);
-	//draw(actionTarget);
-}
-
-void LinkView::processEvent(sf::Event ev)
-{
 	if (waitingForEvent)
 	{
-		auto newButton = sfEventToInputButton(ev);
+		auto newButton = nextButton();
 		if (newButton.device != InputButton::Device::None)
 		{
 			waitingForEvent = 0;
@@ -37,6 +33,13 @@ void LinkView::processEvent(sf::Event ev)
 			return;
 		}
 	}
+	
+	draw(deviceName);
+}
+
+void LinkView::processEvent(sf::Event ev)
+{
+	
 	if (ev.type == sf::Event::MouseButtonPressed)
 	{
 		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + 16))
@@ -83,7 +86,7 @@ InputButton LinkView::sfEventToInputButton(sf::Event ev)
 
 void LinkView::remove()
 {
-	auto p = dynamic_cast<ParameterActionWindow*>(parent);
+	auto p = dynamic_cast<ParameterActionPanel*>(parent);
 	if (p)
 	{
 		p->removeLink(std::pair<InputButton, Action>(*button, *action));

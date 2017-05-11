@@ -17,5 +17,8 @@ public:
 	void addEvent(InputButton::Device device, int button, float data = 1);
 	InputMap* getInputMap(){ return inputMap; }
 	void setInputMap(InputMap* map);
+	InputButton nextButton();
+	
+
 };
 

@@ -26,5 +26,7 @@ public:
 	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
 
+	//this is bad too
+	static std::function<InputButton(void)> nextButton;
 };
 

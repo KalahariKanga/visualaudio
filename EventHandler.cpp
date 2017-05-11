@@ -35,3 +35,18 @@ void EventHandler::setInputMap(InputMap* map)
 {
 	inputMap = map;
 }
+
+InputButton EventHandler::nextButton()
+{
+	int sz = eventList.size();
+	for (auto it = eventList.begin(); it != eventList.end(); it++)
+	{
+		if (it->button.device == InputButton::Device::Audio)
+			continue;
+		if (it->button.device == InputButton::Device::GamepadAxis)
+			if (abs(it->data) < 0.1)
+				continue;//deadzone
+		return it->button;
+	}
+	return InputButton(InputButton::Device::None, 0);
+}

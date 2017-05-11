@@ -1,56 +1,38 @@
 #include "ParameterActionWindow.h"
 
 
-ParameterActionWindow::ParameterActionWindow(int w, int h, Parameter* param, InputMap* map) : PopupWindow(w, h), p(param), inputMap(map)
+ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex) : UIElement(192,0,w,h), p(param), inputMap(map)
 {
-	window.create(sf::VideoMode(128, 386), "ParameterActionWindow");
-	texture = new sf::RenderTexture();
-	texture->create(128, 386);
-
+	texture = tex;
 	title.setString(param->getName());
 	title.setFillColor(sf::Color::White);
 	title.setFont(*UIElement::getFont());
 	title.setCharacterSize(12);
 
-
-	addChild<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+");
+	addChild<UIButton>(x + 8, y + 16, 8, 8, [&](){ this->addLink(); }, "+");
 
 	//find all input/action pairs using p
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild<LinkView>(x, y+20, w, 16, a.first, a.second);
+		addChild<LinkView>(x, y + 20, w, 16, a.first, a.second);
 	}
 	
 }
 
 
-ParameterActionWindow::~ParameterActionWindow()
+ParameterActionPanel::~ParameterActionPanel()
 {
-	delete texture;
+
 }
 
-void ParameterActionWindow::update()
+void ParameterActionPanel::update()
 {
-	sf::Event ev;
-	while (window.pollEvent(ev))
-	{
-		if (ev.type == sf::Event::Closed)
-		{
-			quit = 1;
-		}
-		distributeEvent(ev);
-	}
-
-	
 	draw(title);
-
-
-	PopupWindow::update();
-	texture->clear();
+	texture->display();
 }
 
-void ParameterActionWindow::processEvent(sf::Event ev)
+void ParameterActionPanel::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::KeyPressed)
 	{
@@ -61,10 +43,10 @@ void ParameterActionWindow::processEvent(sf::Event ev)
 	}
 }
 
-void ParameterActionWindow::rebuildChildren()
+void ParameterActionPanel::rebuildChildren()
 {
 	children.clear();
-	addChild<UIButton>(8, 16, 8, 8, [&](){ this->addLink(); }, "+");
+	addChild<UIButton>(x + 8, y + 16, 8, 8, [&](){ this->addLink(); }, "+");
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
@@ -72,7 +54,7 @@ void ParameterActionWindow::rebuildChildren()
 	}
 }
 
-void ParameterActionWindow::refresh()
+void ParameterActionPanel::refresh()
 {
 	title.setPosition(x + 4, y + 4);
 	for (int i = 1; i < children.size(); i++)
@@ -82,69 +64,13 @@ void ParameterActionWindow::refresh()
 	}
 }
 
-InputEvent ParameterActionWindow::detectNextEvent()
-{
-	InputButton input(InputButton::Device::None, 0);
-	bool detected = 0;
-	while (!detected)
-	{
-		sf::Event ev;
-		while (window.pollEvent(ev))
-		{
-			if (ev.type == sf::Event::KeyPressed)
-			{
-				input.device = InputButton::Device::Keyboard;
-				input.button = (int)ev.key.code;
-				detected = 1;
-				break;
-			}
-			if (ev.type == sf::Event::JoystickButtonPressed)
-			{
-				input.device = InputButton::Device::GamepadButton;
-				input.button = (int)ev.joystickButton.button;
-				detected = 1;
-				break;
-			}
-			if (ev.type == sf::Event::JoystickMoved)
-			{
-				input.device = InputButton::Device::GamepadAxis;
-				input.button = (int)ev.joystickMove.axis;
-				detected = 1;
-				break;
-			}
-		}
-		//std::vector<unsigned char> message;
-		//while (midiIn->isPortOpen())
-		//{
-		//	midiIn->getMessage(&message);
-		//	if (message.empty())
-		//		break;
-		//	if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
-		//	{
-		//		input.device = InputButton::Device::MIDINote;
-		//		input.button = (int)message[1];
-		//		detected = 1;
-		//		break;
-		//	}
-		//	if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
-		//	{
-		//		input.device = InputButton::Device::MIDICV;
-		//		input.button = (int)message[1];
-		//		detected = 1;
-		//		break;
-		//	}
-		//}
-	}
-	return input;
-}
-
-void ParameterActionWindow::addLink()
+void ParameterActionPanel::addLink()
 {
 	inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
 	rebuildChildren();
 }
 
-void ParameterActionWindow::removeLink(std::pair<InputButton, Action> action)
+void ParameterActionPanel::removeLink(std::pair<InputButton, Action> action)
 {
 	inputMap->removeLink(action);
 	rebuildChildren();

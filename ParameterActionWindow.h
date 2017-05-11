@@ -3,8 +3,8 @@
 #include "InputMap.h"
 #include "LinkView.h"
 
-class ParameterActionWindow :
-	public PopupWindow
+class ParameterActionPanel :
+	public UIElement
 {
 	Parameter* p;
 	InputMap* inputMap;
@@ -12,15 +12,15 @@ class ParameterActionWindow :
 	sf::Text title;
 	void addLink();
 public:
-	ParameterActionWindow(int w, int h, Parameter* param, InputMap* map);
-	~ParameterActionWindow();
+	ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex);
+	~ParameterActionPanel();
 
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
-	InputEvent detectNextEvent();//probably need an rtmidi ptr :/
 
 	void rebuildChildren();//:/
 	void removeLink(std::pair<InputButton, Action> action);
+	bool toQuit = 0;
 };
 

@@ -13,6 +13,6 @@ PopupWindow::~PopupWindow()
 void PopupWindow::update()
 {
 	texture->display();
-	window.draw(sf::Sprite(texture->getTexture()));
-	window.display();
+	//window.draw(sf::Sprite(texture->getTexture()));
+	//window.display();
 }
