@@ -26,6 +26,10 @@ public:
 	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
 
+	const InputButton getButton(){
+		return *button;
+	}
+
 	//this is bad too
 	static std::function<InputButton(void)> nextButton;
 };

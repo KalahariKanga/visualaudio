@@ -1,9 +1,10 @@
 #include "ActionView.h"
+#include "LinkView.h"
 #include "UISlider.h"
 
-ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y, w, h), action(act)
+ActionView::ActionView(int x, int y, int w, int h, InputButton* but, Action* act) : UIElement(x, y, w, h), action(act), button(but)
 {
-	
+	lastDevice = button->device;
 	actionType.setString(getActionTypeString());
 	actionType.setFillColor(UIStyle::Colour::Primary);
 	actionType.setFont(*UIElement::getFont());
@@ -25,6 +26,15 @@ void ActionView::update()
 	auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
 	action->setAmount(slider->getValue());
 
+	//if the inputbutton has changed, we might need to change the type
+	//this is all kinda hacky, but will need a rewrite when params get typed
+	if (button->device != lastDevice)
+	{
+		action->type = Action::Type::axis;
+		nextLegalActionType();
+	}
+	lastDevice = button->device;
+
 	actionType.setString(getActionTypeString());
 
 	draw(actionType);
@@ -36,7 +46,7 @@ void ActionView::processEvent(sf::Event ev)
 	{
 		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h / 3))
 		{
-			cycleActionType();
+			nextLegalActionType();
 		}
 	}
 
@@ -72,26 +82,52 @@ std::string ActionView::getActionTypeString()
 	}
 }
 
-void ActionView::cycleActionType()
+Action::Type ActionView::nextActionType()
 {
 	switch (action->type)
 	{
 	case Action::Type::set:
-		action->type = Action::Type::shift;
+		return Action::Type::shift;
 		break;
 	case Action::Type::shift:
-		action->type = Action::Type::trigger;
+		return Action::Type::trigger;
 		break;
 	case Action::Type::trigger:
-		action->type = Action::Type::axis;
+		return Action::Type::axis;
 		break;
 	case Action::Type::axis:
-		action->type = Action::Type::set;
+		return Action::Type::set;
 		break;
-	default:
-		action->type = Action::Type::set;
 	}
-	updateBounds();
+}
+
+void ActionView::nextLegalActionType()
+{
+	while (true)
+	{
+		action->type = nextActionType();
+		switch (action->type)
+		{
+		case Action::Type::set:
+		case Action::Type::shift:
+		case Action::Type::trigger:
+			if (button->device == InputButton::Device::Audio)
+				continue;
+			if (button->device == InputButton::Device::GamepadAxis)
+				continue;
+			if (button->device == InputButton::Device::MIDICV)
+				continue;
+			return;
+		case Action::Type::axis:
+			if (button->device == InputButton::Device::GamepadButton)
+				continue;
+			if (button->device == InputButton::Device::Keyboard)
+				continue;
+			if (button->device == InputButton::Device::MIDINote)
+				continue;
+			return;
+		}
+	}
 }
 
 void ActionView::updateBounds()

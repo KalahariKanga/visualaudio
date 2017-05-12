@@ -1,18 +1,22 @@
 #pragma once
 #include "UIElement.h"
+#include "InputEvent.h"
 #include "Action.h"
 
 class ActionView :
 	public UIElement
 {
 	Action* action;
+	InputButton* button;
+	InputButton::Device lastDevice;
 	sf::Text actionType;
 
 	std::string getActionTypeString();
-	void cycleActionType();
+	Action::Type nextActionType();
+	void nextLegalActionType();
 	void updateBounds();
 public:
-	ActionView(int x, int y, int w, int h, Action* act);
+	ActionView(int x, int y, int w, int h, InputButton* but, Action* act);
 	~ActionView();
 
 	virtual void update();

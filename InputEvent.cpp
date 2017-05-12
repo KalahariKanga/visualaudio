@@ -8,8 +8,6 @@ std::string InputButton::getDeviceName()
 		return "None";
 	case Device::Keyboard:
 		return "Key";
-	case Device::Mouse:
-		return "Mouse";
 	case Device::GamepadButton:
 		return "Button";
 	case Device::GamepadAxis:

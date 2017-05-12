@@ -11,7 +11,7 @@ LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* acti
 	deviceName.setFont(*UIElement::getFont());
 	deviceName.setCharacterSize(UIStyle::Text::fontSize);
 
-	addChild<ActionView>(x, y + 16, w, 48, action);
+	addChild<ActionView>(x, y + 16, w, 48, button, action);
 	addChild<UIButton>(x + w - 16, y, 8, 8, [&](){remove(); }, "x");
 }
 
