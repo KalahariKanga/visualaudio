@@ -5,9 +5,9 @@ ActionView::ActionView(int x, int y, int w, int h, Action* act) : UIElement(x, y
 {
 	
 	actionType.setString(getActionTypeString());
-	actionType.setFillColor(sf::Color::White);
+	actionType.setFillColor(UIStyle::Colour::Primary);
 	actionType.setFont(*UIElement::getFont());
-	actionType.setCharacterSize(12);
+	actionType.setCharacterSize(UIStyle::Text::fontSize);
 
 	float min = action->getTarget()->getMin();
 	float max = action->getTarget()->getMax();
@@ -43,9 +43,9 @@ void ActionView::processEvent(sf::Event ev)
 	if (ev.type == sf::Event::MouseMoved)
 	{
 		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + h / 3))
-			actionType.setFillColor(sf::Color(255, 200, 200));
+			actionType.setFillColor(UIStyle::Colour::PrimaryHighlight);
 		else
-			actionType.setFillColor(sf::Color::White);
+			actionType.setFillColor(UIStyle::Colour::Primary);
 	}
 }
 

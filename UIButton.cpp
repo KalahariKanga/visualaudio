@@ -7,10 +7,10 @@ UIButton::UIButton(int x, int y, int w, int h, std::function<void(void)> _onClic
 	text.setFont(*UIElement::getFont());
 	text.setString(str);
 	text.setPosition(x, y);
-	text.setCharacterSize(12);
-	text.setFillColor(sf::Color::Red);
-	rectangle.setFillColor(sf::Color(64, 64, 64));
-	rectangle.setOutlineColor(sf::Color::White);
+	text.setCharacterSize(UIStyle::Text::fontSize);
+	text.setFillColor(UIStyle::Colour::Secondary);
+	rectangle.setFillColor(sf::Color(0, 0, 0, 0));
+	rectangle.setOutlineColor(UIStyle::Colour::Primary);
 	rectangle.setOutlineThickness(1);
 }
 

@@ -4,8 +4,8 @@
 GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIElement(x, y, w, h), generator(gen)
 {
 	name.setFont(*UIElement::getFont());
-	name.setCharacterSize(12);
-	name.setFillColor(sf::Color::White);
+	name.setCharacterSize(UIStyle::Text::fontSize);
+	name.setFillColor(UIStyle::Colour::Primary);
 
 	list = generator->getParameterList();
 	addChild<ParameterListView>(x, y + 16, w, 0, &list);

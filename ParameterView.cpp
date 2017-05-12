@@ -12,9 +12,9 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	resize(w, h);
 	
 	name.setString(parameter->getName());
-	name.setFillColor(sf::Color::White);
+	name.setFillColor(UIStyle::Colour::Primary);
 	name.setFont(*UIElement::getFont());
-	name.setCharacterSize(12);
+	name.setCharacterSize(UIStyle::Text::fontSize);
 
 
 	addChild<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter);

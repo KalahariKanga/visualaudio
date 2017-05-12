@@ -4,12 +4,12 @@
 UISlider::UISlider(int x, int y, int w, int h, float value, float min, float max) : UIElement(x, y, w, h), min(min), max(max), value(value)
 {
 	defValue = value;
-	valueText.setFillColor(sf::Color::White);
+	valueText.setFillColor(UIStyle::Colour::Primary);
 	valueText.setFont(*UIElement::getFont());
-	valueText.setCharacterSize(12);
-	fill.setFillColor(sf::Color::Red);
+	valueText.setCharacterSize(UIStyle::Text::fontSize);
+	fill.setFillColor(UIStyle::Colour::Secondary);
 	outline.setFillColor(sf::Color(0, 0, 0, 0));
-	outline.setOutlineColor(sf::Color::White);
+	outline.setOutlineColor(UIStyle::Colour::Primary);
 	outline.setOutlineThickness(1);
 }
 
@@ -19,12 +19,12 @@ UISlider::UISlider(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h
 	min = parameter->getMin();
 	max = parameter->getMax();
 	value = parameter->getValue();
-	valueText.setFillColor(sf::Color::White);
+	valueText.setFillColor(UIStyle::Colour::Primary);
 	valueText.setFont(*UIElement::getFont());
-	valueText.setCharacterSize(12);
-	fill.setFillColor(sf::Color::Red);
+	valueText.setCharacterSize(UIStyle::Text::fontSize);
+	fill.setFillColor(UIStyle::Colour::Secondary);
 	outline.setFillColor(sf::Color(0, 0, 0, 0));
-	outline.setOutlineColor(sf::Color::White);
+	outline.setOutlineColor(UIStyle::Colour::Primary);
 	outline.setOutlineThickness(1);
 }//DRY
 

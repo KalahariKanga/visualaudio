@@ -5,9 +5,9 @@ ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, Input
 {
 	texture = tex;
 	title.setString(param->getName());
-	title.setFillColor(sf::Color::White);
+	title.setFillColor(UIStyle::Colour::Primary);
 	title.setFont(*UIElement::getFont());
-	title.setCharacterSize(12);
+	title.setCharacterSize(UIStyle::Text::fontSize);
 
 	addChild<UIButton>(x + 8, y + 16, 8, 8, [&](){ this->addLink(); }, "+");
 

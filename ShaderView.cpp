@@ -5,8 +5,8 @@
 ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y, w, h), shader(sh)
 {
 	name.setFont(*UIElement::getFont());
-	name.setCharacterSize(12);
-	name.setFillColor(sf::Color::White);
+	name.setCharacterSize(UIStyle::Text::fontSize);
+	name.setFillColor(UIStyle::Colour::Primary);
 
 	list = shader->getParameterList();
 	addChild<ParameterListView>(x, y + 16, w, 0, &list);
@@ -27,9 +27,9 @@ ShaderView::~ShaderView()
 void ShaderView::update()
 {
 	if (shader->isActive())
-		name.setFillColor(sf::Color::White);
+		name.setFillColor(UIStyle::Colour::Primary);
 	else
-		name.setFillColor(sf::Color(92, 92, 92));
+		name.setFillColor(UIStyle::Colour::PrimaryLowlight);
 	name.setPosition(x + 16, y + 4);
 	name.setString(shader->getName());
 	draw(name);

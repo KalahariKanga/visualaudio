@@ -1,5 +1,6 @@
 #pragma once
 #include "Parameter.h"
+#include "UIStyle.h"
 #include <memory>
 #include <functional>
 class UIElement
