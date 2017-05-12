@@ -29,7 +29,6 @@ ParameterActionPanel::~ParameterActionPanel()
 void ParameterActionPanel::update()
 {
 	draw(title);
-	texture->display();
 }
 
 void ParameterActionPanel::processEvent(sf::Event ev)

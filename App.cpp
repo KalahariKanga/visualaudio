@@ -169,7 +169,7 @@ void App::update()
 
 	if (showUI)
 	{
-		UITexture.clear(sf::Color(0, 0, 0, 128));
+		UITexture.clear(sf::Color(0, 0, 0, 0));
 		panel->doUpdate();
 		if (subPanel.get())
 		{
@@ -373,7 +373,7 @@ void App::resize(int width, int height)
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
-	UITexture.create(UIWidth, windowHeight);
+	UITexture.create(UIWidth * 2, windowHeight);
 }
 
 void App::requestParameterActionPanel(Parameter* param)

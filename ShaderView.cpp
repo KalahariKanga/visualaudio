@@ -15,6 +15,8 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	addChild<UIButton>(x + w - 18, y + 8, 8, 8, [=](){ shader->setActive(!shader->isActive()); }, "b");
 	addChild<UIButton>(x + w - 26, y + 4, 8, 8, [=](){ move(-1); });
 	addChild<UIButton>(x + w - 26, y + 12, 8, 8, [=](){ move(1); });
+	for (int c = 1; c < children.size(); c++)
+		children[c]->setActive(false);//hide on init
 }
 
 
@@ -42,7 +44,7 @@ void ShaderView::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::MouseMoved)
 	{
-		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4)
+		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4 && ev.mouseMove.x < w)
 		{
 			for (int c = 1; c < children.size(); c++)
 				children[c]->setActive(true);

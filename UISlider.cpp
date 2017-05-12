@@ -64,7 +64,7 @@ void UISlider::processEvent(sf::Event ev)
 	{
 		if (mouseDown)
 		{
-			if (ev.mouseMove.y >= y && ev.mouseMove.y < y+h)
+			if (ev.mouseMove.y >= y - scrubMargin && ev.mouseMove.y < y + h + scrubMargin)
 				setValue(min + (max - min)*((float)(ev.mouseMove.x - x) / w));
 			else
 			{

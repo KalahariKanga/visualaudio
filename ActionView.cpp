@@ -34,10 +34,18 @@ void ActionView::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::MouseButtonPressed)
 	{
-		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h / 2))
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h / 3))
 		{
 			cycleActionType();
 		}
+	}
+
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + h / 3))
+			actionType.setFillColor(sf::Color(255, 200, 200));
+		else
+			actionType.setFillColor(sf::Color::White);
 	}
 }
 

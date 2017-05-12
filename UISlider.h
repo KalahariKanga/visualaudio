@@ -9,6 +9,8 @@ class UISlider :
 	bool mouseDown = 0;
 	int mouseDownX = 0;
 	Parameter* parameter = nullptr;
+
+	int scrubMargin = 8;
 public:
 	UISlider(int x, int y, int w, int h, float value, float min, float max);
 	UISlider(int x, int y, int w, int h, Parameter* p);
