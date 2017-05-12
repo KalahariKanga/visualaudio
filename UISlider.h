@@ -11,6 +11,9 @@ class UISlider :
 	Parameter* parameter = nullptr;
 
 	int scrubMargin = 8;
+
+	void setup();
+	int valueToXPos(float v);
 public:
 	UISlider(int x, int y, int w, int h, float value, float min, float max);
 	UISlider(int x, int y, int w, int h, Parameter* p);

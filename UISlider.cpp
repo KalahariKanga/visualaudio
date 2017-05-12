@@ -4,6 +4,25 @@
 UISlider::UISlider(int x, int y, int w, int h, float value, float min, float max) : UIElement(x, y, w, h), min(min), max(max), value(value)
 {
 	defValue = value;
+	setup();
+}
+
+UISlider::UISlider(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h), parameter(p)
+{
+	defValue = parameter->getDefaultValue();
+	min = parameter->getMin();
+	max = parameter->getMax();
+	value = parameter->getValue();
+	setup();
+}
+
+
+UISlider::~UISlider()
+{
+}
+
+void UISlider::setup()
+{
 	valueText.setFillColor(UIStyle::Colour::Primary);
 	valueText.setFont(*UIElement::getFont());
 	valueText.setCharacterSize(UIStyle::Text::fontSize);
@@ -13,24 +32,10 @@ UISlider::UISlider(int x, int y, int w, int h, float value, float min, float max
 	outline.setOutlineThickness(1);
 }
 
-UISlider::UISlider(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h), parameter(p)
+int UISlider::valueToXPos(float v)
 {
-	defValue = parameter->getDefaultValue();
-	min = parameter->getMin();
-	max = parameter->getMax();
-	value = parameter->getValue();
-	valueText.setFillColor(UIStyle::Colour::Primary);
-	valueText.setFont(*UIElement::getFont());
-	valueText.setCharacterSize(UIStyle::Text::fontSize);
-	fill.setFillColor(UIStyle::Colour::Secondary);
-	outline.setFillColor(sf::Color(0, 0, 0, 0));
-	outline.setOutlineColor(UIStyle::Colour::Primary);
-	outline.setOutlineThickness(1);
-}//DRY
-
-
-UISlider::~UISlider()
-{
+	auto perc = (v - min) / (max - min);
+	return x + w*perc;
 }
 
 void UISlider::update()
@@ -41,7 +46,7 @@ void UISlider::update()
 	stream << value;
 	valueText.setString(stream.str());
 
-	sf::Vector2f sz(value/(max-min) * w, h);
+	sf::Vector2f sz(valueToXPos(value) - valueToXPos(Math::clamp(0, min, max)), h);
 	fill.setSize(sz);
 
 	draw(outline);
@@ -53,8 +58,8 @@ void UISlider::refresh()
 {
 	outline.setPosition(x, y);
 	outline.setSize(sf::Vector2f(w, h));
-	fill.setPosition(x + w*(-min)/(max-min), y);
-
+	
+	fill.setPosition(Math::clamp(valueToXPos(0), x, x + w), y);
 	valueText.setPosition(x + w/2, y-4);
 }
 
