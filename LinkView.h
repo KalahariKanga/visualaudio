@@ -15,7 +15,6 @@ class LinkView :
 	sf::Text actionType;
 
 	bool waitingForEvent = 0;
-	InputButton sfEventToInputButton(sf::Event ev);
 
 	void remove();
 public:

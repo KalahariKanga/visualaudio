@@ -1,5 +1,6 @@
 #include "ParameterActionWindow.h"
 
+using namespace UIStyle::Layout;
 
 ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex) : UIElement(192,0,w,h), p(param), inputMap(map)
 {
@@ -9,15 +10,14 @@ ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, Input
 	title.setFont(*UIElement::getFont());
 	title.setCharacterSize(UIStyle::Text::fontSize);
 
-	addChild<UIButton>(x + 8, y + 16, 8, 8, [&](){ this->addLink(); }, "+");
+	addChild<UIButton>(x + hPad, y + hStep, buttonSize, buttonSize, [&](){ this->addLink(); }, "+");
 
 	//find all input/action pairs using p
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild<LinkView>(x, y + 20, w, 16, a.first, a.second);
+		addChild<LinkView>(x, y + hPad + hStep, w, 16, a.first, a.second);
 	}
-	
 }
 
 
@@ -45,22 +45,23 @@ void ParameterActionPanel::processEvent(sf::Event ev)
 void ParameterActionPanel::rebuildChildren()
 {
 	children.clear();
-	addChild<UIButton>(x + 8, y + 16, 8, 8, [&](){ this->addLink(); }, "+");
+	addChild<UIButton>(x + hPad, y + hStep, buttonSize, buttonSize, [&](){ this->addLink(); }, "+");
 	auto actions = inputMap->findParameterActions(p);
 	for (auto &a : actions)
 	{
-		addChild<LinkView>(x, y + 20, w, 16, a.first, a.second);
+		addChild<LinkView>(x, y + hPad + hStep, w, 16, a.first, a.second);
 	}
+
 }
 
 void ParameterActionPanel::refresh()
 {
-	title.setPosition(x + 4, y + 4);
+	title.setPosition(x + wPad, y + hPad);
 	for (int i = 1; i < children.size(); i++)
 	{
 		int newY = children[i - 1]->getY() + children[i - 1]->getH();
 		children[i]->setPosition(children[i]->getX(), newY);
-	}
+	}//DRY
 }
 
 void ParameterActionPanel::addLink()

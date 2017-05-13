@@ -26,7 +26,7 @@ void ShaderListView::refresh()
 	{
 		int newY = children[i - 1]->getY() + children[i - 1]->getH();
 		children[i]->setPosition(children[i]->getX(), newY);
-	}
+	}//DRY
 }
 
 void ShaderListView::processEvent(sf::Event ev)
@@ -52,9 +52,9 @@ void ShaderListView::moveShader(ShaderView* sh, int delta)
 {
 	shaderList->moveShader(sh->getShader(), delta);
 	
-	
 	auto it = std::find_if(children.begin(), children.end(),
 		[sh](std::unique_ptr<UIElement>& elem){return (elem.get() == sh); });
+
 	if (it != children.end())
 	{
 		int index = it - children.begin();

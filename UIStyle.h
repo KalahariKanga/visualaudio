@@ -1,19 +1,26 @@
 #pragma once
 #include "SFML/graphics.hpp"
-class UIStyle
+namespace UIStyle
 {
-public:
-	struct Colour
+	namespace Colour
 	{
-		static const sf::Color Primary;
-		static const sf::Color Secondary;
-		static const sf::Color PrimaryHighlight;
-		static const sf::Color SecondaryHighlight;
-		static const sf::Color PrimaryLowlight;
+		static const sf::Color Primary(255, 255, 255);
+		static const sf::Color Secondary(255, 0, 0);
+		static const sf::Color PrimaryHighlight(255, 200, 200);
+		static const sf::Color SecondaryHighlight(255, 255, 0);
+		static const sf::Color PrimaryLowlight(92, 92, 92);
 	};
-	struct Text
+	namespace Text
 	{
-		static const int fontSize;
+		static const int fontSize = 12;
+	};
+	namespace Layout
+	{
+		static const int hPad = 4;
+		static const int wPad = 4;
+		static const int hStep = 16;
+		static const int buttonSize = 8;
+		static const int sliderH = 12;
 	};
 };
 

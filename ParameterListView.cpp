@@ -6,7 +6,7 @@ ParameterListView::ParameterListView(int x, int y, int w, int h, std::vector<Par
 	int i = 0;
 	for (auto& p : *parameters)
 	{
-		addChild<ParameterView>(x, y + i*parameterHeight, w, parameterHeight, p);
+		addChild<ParameterView>(x, y + i * parameterHeight, w, parameterHeight, p);
 		++i;
 	}
 }

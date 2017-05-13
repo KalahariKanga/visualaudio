@@ -2,6 +2,8 @@
 #include "LinkView.h"
 #include "UISlider.h"
 
+using namespace UIStyle::Layout;
+
 ActionView::ActionView(int x, int y, int w, int h, InputButton* but, Action* act) : UIElement(x, y, w, h), action(act), button(but)
 {
 	lastDevice = button->device;
@@ -12,7 +14,7 @@ ActionView::ActionView(int x, int y, int w, int h, InputButton* but, Action* act
 
 	float min = action->getTarget()->getMin();
 	float max = action->getTarget()->getMax();
-	addChild<UISlider>(x + 4, y + 24, w-16, 8, action->getAmount(), min, max);//actually created in update bounds
+	addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);//actually created in update bounds
 	updateBounds();
 }
 
@@ -61,7 +63,7 @@ void ActionView::processEvent(sf::Event ev)
 
 void ActionView::refresh()
 {
-	actionType.setPosition(x + 4, y + 4);
+	actionType.setPosition(x + wPad, y + hPad);
 }
 
 std::string ActionView::getActionTypeString()
@@ -117,6 +119,7 @@ void ActionView::nextLegalActionType()
 				continue;
 			if (button->device == InputButton::Device::MIDICV)
 				continue;
+			updateBounds();
 			return;
 		case Action::Type::axis:
 			if (button->device == InputButton::Device::GamepadButton)
@@ -125,6 +128,7 @@ void ActionView::nextLegalActionType()
 				continue;
 			if (button->device == InputButton::Device::MIDINote)
 				continue;
+			updateBounds();
 			return;
 		}
 	}
@@ -154,5 +158,5 @@ void ActionView::updateBounds()
 	}
 
 	children.erase(children.begin());
-	addChild<UISlider>(x + 4, y + 24, w-8, 8, 0, min, max);
+	addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
 }

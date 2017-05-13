@@ -1,5 +1,6 @@
 #include "GeneratorView.h"
 
+using namespace UIStyle::Layout;
 
 GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIElement(x, y, w, h), generator(gen)
 {
@@ -8,8 +9,8 @@ GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIEle
 	name.setFillColor(UIStyle::Colour::Primary);
 
 	list = generator->getParameterList();
-	addChild<ParameterListView>(x, y + 16, w, 0, &list);
-	addChild<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); });
+	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
+	addChild<UIButton>(hPad, y + hStep / 2, buttonSize, buttonSize, [&](){ triggerCollapse(); });
 }
 
 
@@ -19,8 +20,7 @@ GeneratorView::~GeneratorView()
 
 void GeneratorView::update()
 {
-	name.setPosition(x + 16, y + 8);
-	//name.setString(generator->getName());
+	name.setPosition(x + hStep, y + hPad);
 	name.setString("Generator");
 	draw(name);
 }

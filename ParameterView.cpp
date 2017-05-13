@@ -3,22 +3,27 @@
 #include "UISlider.h"
 #include <sstream>
 
+using namespace UIStyle::Layout;
+
 std::function<void(Parameter*)> ParameterView::popupCall;
 
 ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _parameter) : UIElement(_x, _y, _w, _h)
 {
-	parameter = _parameter;
 	
-	resize(w, h);
+	parameter = _parameter;
 	
 	name.setString(parameter->getName());
 	name.setFillColor(UIStyle::Colour::Primary);
 	name.setFont(*UIElement::getFont());
 	name.setCharacterSize(UIStyle::Text::fontSize);
 
+	int sx = x + wPad;
+	int sy = y + h - hPad - sliderH;
+	addChild<UISlider>(sx, sy, w - 4 * hPad, sliderH, parameter);
 
-	addChild<UISlider>(x + paddingX, y + h - paddingY - sliderH, w - 2 * paddingY, sliderH, parameter);
-	addChild<UIButton>(w - 8, y, 8, 8, std::bind(popupCall,parameter));
+	int bx = w - 3 * wPad;
+	int by = y + h - hPad - sliderH;
+	addChild<UIButton>(bx, by, 2 * wPad, sliderH, std::bind(popupCall, parameter));
 }
 
 
@@ -36,5 +41,5 @@ void ParameterView::update()
 
 void ParameterView::refresh()
 {
-	name.setPosition(x + paddingX, y + paddingY);
+	name.setPosition(x + wPad, y + hPad);
 }

@@ -2,6 +2,8 @@
 #include "ActionView.h"
 #include "ParameterActionWindow.h"
 
+using namespace UIStyle::Layout;
+
 std::function<InputButton(void)> LinkView::nextButton;
 
 LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* action) : UIElement(x, y, w, h), button(button), action(action)
@@ -11,8 +13,8 @@ LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* acti
 	deviceName.setFont(*UIElement::getFont());
 	deviceName.setCharacterSize(UIStyle::Text::fontSize);
 
-	addChild<ActionView>(x, y + 16, w, 48, button, action);
-	addChild<UIButton>(x + w - 16, y, 8, 8, [&](){remove(); }, "x");
+	addChild<ActionView>(x, y + hStep, w, 48, button, action);
+	addChild<UIButton>(x + w - buttonSize - hPad, y, buttonSize, buttonSize, [&](){remove(); }, "x");
 }
 
 
@@ -42,6 +44,13 @@ void LinkView::processEvent(sf::Event ev)
 	
 	if (ev.type == sf::Event::MouseButtonPressed)
 	{
+		//cancel on either click
+		if (waitingForEvent)
+		{
+			deviceName.setString(button->getDeviceName() + " " + std::to_string((int)button->button));
+			waitingForEvent = 0;
+		}
+		//get input on right click
 		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + 16))
 		{
 			if (ev.mouseButton.button == sf::Mouse::Button::Right)
@@ -58,30 +67,7 @@ void LinkView::processEvent(sf::Event ev)
 
 void LinkView::refresh()
 {
-	deviceName.setPosition(x + 4, y + 4);
-}
-
-InputButton LinkView::sfEventToInputButton(sf::Event ev)
-{
-	InputButton input(InputButton::Device::None, 0);
-	if (ev.type == sf::Event::JoystickMoved && abs(ev.joystickMove.position) > 20)//deadzone
-	{
-		std::cout << ev.joystickMove.position << " ";
-		input.device = InputButton::Device::GamepadAxis;
-		input.button = (int)ev.joystickMove.axis;
-	}
-	if (ev.type == sf::Event::KeyPressed)
-	{
-		input.device = InputButton::Device::Keyboard;
-		input.button = (int)ev.key.code;
-	}
-	if (ev.type == sf::Event::JoystickButtonPressed)
-	{
-		input.device = InputButton::Device::GamepadButton;
-		input.button = (int)ev.joystickButton.button;
-	}
-	
-	return input;
+	deviceName.setPosition(x + hPad, y + hPad);
 }
 
 void LinkView::remove()

@@ -4,7 +4,7 @@ class ParameterListView :
 	public UIElement
 {
 	std::vector<Parameter*>* parameters;
-	int parameterHeight = 24;
+	int parameterHeight = 24;//move to uistyle?
 public:
 	ParameterListView(int x, int y, int w, int h, std::vector<Parameter*>* params);
 	~ParameterListView();

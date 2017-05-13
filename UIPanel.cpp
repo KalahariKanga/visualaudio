@@ -29,5 +29,5 @@ void UIPanel::refresh()
 	{
 		int newY = children[i - 1]->getY() + children[i - 1]->getH();
 		children[i]->setPosition(children[i]->getX(), newY);
-	}
+	}//DRY
 }

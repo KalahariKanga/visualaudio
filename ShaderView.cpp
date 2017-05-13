@@ -2,6 +2,8 @@
 #include "UIButton.h"
 #include "ShaderListView.h"
 
+using namespace UIStyle::Layout;
+
 ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y, w, h), shader(sh)
 {
 	name.setFont(*UIElement::getFont());
@@ -9,12 +11,15 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	name.setFillColor(UIStyle::Colour::Primary);
 
 	list = shader->getParameterList();
-	addChild<ParameterListView>(x, y + 16, w, 0, &list);
-	addChild<UIButton>(4, y + 8, 8, 8, [&](){ triggerCollapse(); });
-	addChild<UIButton>(x + w - 10, y + 8, 8, 8, [=](){ remove(); }, "x");
-	addChild<UIButton>(x + w - 18, y + 8, 8, 8, [=](){ shader->setActive(!shader->isActive()); }, "b");
-	addChild<UIButton>(x + w - 26, y + 4, 8, 8, [=](){ move(-1); });
-	addChild<UIButton>(x + w - 26, y + 12, 8, 8, [=](){ move(1); });
+
+	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
+	int by = y + hStep / 2;
+	addChild<UIButton>(hPad,							by,			buttonSize, buttonSize, [&](){ triggerCollapse(); });
+	addChild<UIButton>(x + w - hPad - buttonSize,		by,			buttonSize, buttonSize, [=](){ remove(); }, "x");
+	addChild<UIButton>(x + w - hPad - 2 * buttonSize,	by,			buttonSize, buttonSize, [=](){ shader->setActive(!shader->isActive()); }, "b");
+	addChild<UIButton>(x + w - hPad - 3 * buttonSize,	by - hPad,	buttonSize, buttonSize, [=](){ move(-1); });
+	addChild<UIButton>(x + w - hPad - 3 * buttonSize,	by + hPad,	buttonSize, buttonSize, [=](){ move(1); });
+
 	for (int c = 1; c < children.size(); c++)
 		children[c]->setActive(false);//hide on init
 }
@@ -30,7 +35,7 @@ void ShaderView::update()
 		name.setFillColor(UIStyle::Colour::Primary);
 	else
 		name.setFillColor(UIStyle::Colour::PrimaryLowlight);
-	name.setPosition(x + 16, y + 4);
+	name.setPosition(x + hStep, y + hPad);
 	name.setString(shader->getName());
 	draw(name);
 }

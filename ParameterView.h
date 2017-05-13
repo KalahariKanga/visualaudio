@@ -7,9 +7,7 @@ class ParameterView :
 	Parameter* parameter;
 	
 	sf::Text name;
-
-	int paddingX = 4, paddingY = 4;
-	int sliderH = 14;
+	
 public:
 	ParameterView(int x, int y, int w, int h, Parameter* parameter);
 	~ParameterView();
