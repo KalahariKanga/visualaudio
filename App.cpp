@@ -150,6 +150,7 @@ void App::update()
 		activeScene->setParameterLock(false);
 		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
 		panel->doRefresh();
+		subPanel.reset(nullptr);//hide panel on scene change
 	}
 
 	AC.update();

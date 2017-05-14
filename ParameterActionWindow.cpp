@@ -72,7 +72,7 @@ void ParameterActionPanel::refresh()
 void ParameterActionPanel::addLink()
 {
 	inputMap->addAction(InputButton(InputButton::Device::None, -1), Action(p, Action::Type::set));
-	rebuildChildren();
+	needRebuild = 1;
 }
 
 void ParameterActionPanel::removeLink(std::pair<InputButton, Action> action)
