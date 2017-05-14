@@ -1,5 +1,5 @@
 #pragma once
-#include "PopupWindow.h"
+#include "UIPanel.h"
 #include "InputMap.h"
 #include "LinkView.h"
 

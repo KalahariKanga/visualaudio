@@ -24,8 +24,6 @@ class App : public InputReciever
 	const int fps = 60;
 	float lastFrameTime = 1 / 60;
 
-	std::unique_ptr<PopupWindow> popup;
-
 	std::unique_ptr<Canvas> canvas;
 	Palette palette;
 	std::vector<std::unique_ptr<Scene>> scenes;
@@ -44,7 +42,6 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
-	InputButton detectNextInput();//potentially useless
 	void toggleFullscreen();
 	void resize(int width, int height);
 
@@ -55,7 +52,6 @@ public:
 	bool quit = 0;
 
 	template <class T> Scene* addScene();
-	template <class T, class... Args> bool openPopup(Args&&... args);
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 };
@@ -67,16 +63,5 @@ Scene* App::addScene()
 	scene->setGenerator<T>();
 	scenes.push_back(std::move(scene));
 	return scenes.back().get();
-}
-
-template <class T, class... Args>
-bool App::openPopup(Args&&... args)
-{
-	if (!popup.get())
-	{
-		popup = std::make_unique<T>(std::forward<Args>(args)...);
-		return 1;
-	}
-	return 0;
 }
 

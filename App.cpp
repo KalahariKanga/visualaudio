@@ -158,7 +158,6 @@ void App::update()
 	
 	activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
 	
-
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.create(windowWidth, windowHeight);
 	texture.loadFromImage(image);
@@ -180,19 +179,14 @@ void App::update()
 				subPanel.reset(nullptr);
 			}
 		}
-
 		UITexture.display();
-
 		window.draw(sf::Sprite(UITexture.getTexture()));//this makes it like a billion times faster...? rather than panel->gettexture
-
 	}
 
 	window.display();
 	
 	eventHandler.update();
 	processEvents();
-
-	//std::cout << 1/clock.getElapsedTime().asSeconds() << "\n";
 
 	while (clock.getElapsedTime().asSeconds() < 1.0 / fps)
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -289,64 +283,7 @@ void App::applyShaders()
 			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 		renderTexture[t % 2].display();
 	}
-	window.draw(sf::Sprite(renderTexture[(t+1) % 2].getTexture()));
-}
-
-InputButton App::detectNextInput()
-{
-	InputButton input(InputButton::Device::None, 0);
-	bool detected = 0;
-	while (!detected)
-	{
-		sf::Event ev;
-		while (window.pollEvent(ev))
-		{
-			if (ev.type == sf::Event::KeyPressed)
-			{
-				input.device = InputButton::Device::Keyboard;
-				input.button = (int)ev.key.code;
-				detected = 1;
-				break;
-			}
-			if (ev.type == sf::Event::JoystickButtonPressed)
-			{
-				input.device = InputButton::Device::GamepadButton;
-				input.button = (int)ev.joystickButton.button;
-				detected = 1;
-				break;
-			}
-			if (ev.type == sf::Event::JoystickMoved)
-			{
-				input.device = InputButton::Device::GamepadAxis;
-				input.button = (int)ev.joystickMove.axis;
-				detected = 1;
-				break;
-			}
-		}
-		std::vector<unsigned char> message;
-		while (midiIn->isPortOpen())
-		{
-			midiIn->getMessage(&message);
-			if (message.empty())
-				break;
-			if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
-			{
-				input.device = InputButton::Device::MIDINote;
-				input.button = (int)message[1];
-				detected = 1;
-				break;
-			}
-			if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
-			{
-				input.device = InputButton::Device::MIDICV;
-				input.button = (int)message[1];
-				detected = 1;
-				break;
-			}
-		}
-	}
-	std::cout << (int)input.device << ": " << input.button << "\n";
-	return input;
+	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 }
 
 void App::toggleFullscreen()
