@@ -56,6 +56,11 @@ void ParameterActionPanel::rebuildChildren()
 
 void ParameterActionPanel::refresh()
 {
+	if (needRebuild)
+	{
+		rebuildChildren();
+		needRebuild = 0;
+	}
 	title.setPosition(x + wPad, y + hPad);
 	for (int i = 1; i < children.size(); i++)
 	{
@@ -73,5 +78,5 @@ void ParameterActionPanel::addLink()
 void ParameterActionPanel::removeLink(std::pair<InputButton, Action> action)
 {
 	inputMap->removeLink(action);
-	rebuildChildren();
+	needRebuild = 1;
 }
