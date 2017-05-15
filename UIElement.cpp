@@ -18,6 +18,15 @@ void UIElement::removeChild(UIElement* elem)
 	toRemove.push_back(elem);
 }
 
+void UIElement::repositionChildren()
+{
+	for (int i = 1; i < children.size(); i++)
+	{
+		int newY = children[i - 1]->getY() + children[i - 1]->getH();
+		children[i]->setPosition(children[i]->getX(), newY);
+	}
+}
+
 void UIElement::resize(int _w, int _h)
 {
 	w = _w;

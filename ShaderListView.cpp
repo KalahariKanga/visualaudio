@@ -22,11 +22,7 @@ void ShaderListView::update()
 
 void ShaderListView::refresh()
 {
-	for (int i = 1; i < children.size(); i++)
-	{
-		int newY = children[i - 1]->getY() + children[i - 1]->getH();
-		children[i]->setPosition(children[i]->getX(), newY);
-	}//DRY
+	repositionChildren();
 }
 
 void ShaderListView::processEvent(sf::Event ev)

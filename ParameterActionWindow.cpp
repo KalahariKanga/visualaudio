@@ -62,11 +62,7 @@ void ParameterActionPanel::refresh()
 		needRebuild = 0;
 	}
 	title.setPosition(x + wPad, y + hPad);
-	for (int i = 1; i < children.size(); i++)
-	{
-		int newY = children[i - 1]->getY() + children[i - 1]->getH();
-		children[i]->setPosition(children[i]->getX(), newY);
-	}//DRY
+	repositionChildren();
 }
 
 void ParameterActionPanel::addLink()

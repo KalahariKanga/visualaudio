@@ -25,9 +25,5 @@ void UIPanel::refresh()
 	if (!shaders)
 		return;//look at how shaders is initialized
 
-	for (int i = 1; i < children.size(); i++)
-	{
-		int newY = children[i - 1]->getY() + children[i - 1]->getH();
-		children[i]->setPosition(children[i]->getX(), newY);
-	}//DRY
+	repositionChildren();
 }
