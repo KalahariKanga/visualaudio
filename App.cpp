@@ -197,7 +197,7 @@ void App::update()
 void App::processEvents()
 {
 	sf::Event ev;
-	eventHandler.addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/10);
+	eventHandler.addEvent(InputButton::Device::Audio, 0, AC.getAmplitude()/50);//yikes magic
 	while (window.pollEvent(ev))
 	{
 		if (ev.type == sf::Event::Closed)

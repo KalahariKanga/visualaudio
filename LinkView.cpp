@@ -14,7 +14,10 @@ LinkView::LinkView(int x, int y, int w, int h, InputButton* button, Action* acti
 	deviceName.setCharacterSize(UIStyle::Text::fontSize);
 
 	addChild<ActionView>(x, y + hStep, w, 48, button, action);
-	addChild<UIButton>(x + w - buttonSize - hPad, y, buttonSize, buttonSize, [&](){ remove(); }, "x");
+	addChild<UIButton>(x + w - buttonSize - hPad, y,				buttonSize,	buttonSize, [&](){ remove(); }, "x");
+	addChild<UIButton>(x + w - buttonSize - hPad, y + buttonSize,	buttonSize, buttonSize, [&](){ linkAudio(); }, "~");
+
+	children.back()->setActive(0);
 }
 
 
@@ -24,9 +27,10 @@ LinkView::~LinkView()
 
 void LinkView::update()
 {
+	children.back()->setActive(waitingForEvent);//eww
 	if (waitingForEvent)
 	{
-		auto newButton = nextButton();
+		auto newButton = nextButton();//get next event
 		if (newButton.device != InputButton::Device::None)
 		{
 			waitingForEvent = 0;
@@ -78,4 +82,12 @@ void LinkView::remove()
 		p->removeLink(std::pair<InputButton, Action>(*button, *action));
 		p->requestRefresh();
 	}
+}
+
+void LinkView::linkAudio()
+{
+	InputButton newButton = InputButton(InputButton::Device::Audio, 0);
+	waitingForEvent = 0;
+	deviceName.setString(newButton.getDeviceName() + " " + std::to_string((int)newButton.button));
+	*button = newButton;
 }

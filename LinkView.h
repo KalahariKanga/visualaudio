@@ -17,6 +17,8 @@ class LinkView :
 	bool waitingForEvent = 0;
 
 	void remove();
+	void linkAudio();
+
 public:
 	LinkView(int x, int y, int w, int h, InputButton* button, Action* action);
 	~LinkView();
