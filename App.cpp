@@ -4,21 +4,17 @@
 
 App::App()
 {
-	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
-	//window.setVerticalSyncEnabled(true);
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight, &palette);
 	midiIn = std::make_unique<RtMidiIn>();
-	try
-	{
-		midiIn->openPort(3);
-	}
-	catch (...)
-	{
-		std::cout << "Cannot open MIDI port\n";
-	}
+
+	setupMidi();
+	//midiIn->openPort(3);
+	
+	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
+	//window.setVerticalSyncEnabled(true);
 
 	ParameterView::popupCall = [this](Parameter* p){ requestParameterActionPanel(p); };
 	LinkView::nextButton = [this](){ return eventHandler.nextButton(); };
@@ -29,8 +25,8 @@ App::App()
 
 	shaderList.addShader("shaders/blend");
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	/*shaderList.addShader("shaders/tile");
-	shaderList.addShader("shaders/mosaic");*/
+	shaderList.addShader("shaders/tile");
+	shaderList.addShader("shaders/mosaic");
 	shaderList.addShader("shaders/kaleidoscope");
 	shaderList.addShader("shaders/bend");
 	shaderList.addShader("shaders/bloom");
@@ -125,9 +121,28 @@ App::App()
 	}
 }
 
-
 App::~App()
 {
+}
+
+void App::setupMidi()
+{
+	//just until I gui it
+	int nPorts = midiIn->getPortCount();
+	int port = 0;
+	std::cout << "Found " << nPorts << " MIDI ports:\n";
+	for (int c = 0; c < nPorts; c++)
+		std::cout << c << ": " << midiIn->getPortName(c) << "\n";
+	std::cin >> port;
+
+	try
+	{
+		midiIn->openPort(port);
+	}
+	catch (...)
+	{
+		std::cout << "Cannot open MIDI port\n";
+	}
 }
 
 void App::update()
@@ -316,5 +331,5 @@ void App::resize(int width, int height)
 
 void App::requestParameterActionPanel(Parameter* param)
 {
-	subPanel = std::make_unique<ParameterActionPanel>(192, windowHeight, param, &inputMap, &UITexture);
+	subPanel = std::make_unique<ParameterActionPanel>(UIWidth, windowHeight, param, &inputMap, &UITexture);
 }

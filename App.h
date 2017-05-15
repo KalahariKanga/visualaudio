@@ -40,6 +40,8 @@ class App : public InputReciever
 	std::unique_ptr<ParameterActionPanel> subPanel;
 	sf::RenderTexture UITexture, subUITexture;
 
+	void setupMidi();
+
 	void processEvents();
 	void applyShaders();
 	void toggleFullscreen();
