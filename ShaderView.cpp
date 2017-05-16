@@ -14,11 +14,11 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 
 	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
 	int by = y + hStep / 2;
-	addChild<UIButton>(hPad,							by,			buttonSize, buttonSize, [&](){ triggerCollapse(); });
-	addChild<UIButton>(x + w - hPad - buttonSize,		by,			buttonSize, buttonSize, [=](){ remove(); }, "x");
-	addChild<UIButton>(x + w - hPad - 2 * buttonSize,	by,			buttonSize, buttonSize, [=](){ shader->setActive(!shader->isActive()); }, "b");
-	addChild<UIButton>(x + w - hPad - 3 * buttonSize,	by - hPad,	buttonSize, buttonSize, [=](){ move(-1); });
-	addChild<UIButton>(x + w - hPad - 3 * buttonSize,	by + hPad,	buttonSize, buttonSize, [=](){ move(1); });
+	addChild<UIButton>(hPad,							by,	buttonSize, buttonSize, [&](){ triggerCollapse(); });
+	addChild<UIButton>(x + w - hPad - buttonSize,		by,	buttonSize, buttonSize, [=](){ remove(); }, "x");
+	addChild<UIButton>(x + w - 2 * (hPad + buttonSize),	by,	buttonSize, buttonSize, [=](){ shader->setActive(!shader->isActive()); }, "b");
+	addChild<UIButton>(x + w - 3 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(-1); }, "^");
+	addChild<UIButton>(x + w - 4 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(1); }, "v");
 
 	for (int c = 1; c < children.size(); c++)
 		children[c]->setActive(false);//hide on init

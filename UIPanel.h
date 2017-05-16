@@ -11,6 +11,7 @@ public:
 	~UIPanel();
 	virtual void update();
 	virtual void refresh();
+	virtual void processEvent(sf::Event ev);
 	Generator* generator;
 };
 

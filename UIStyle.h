@@ -19,7 +19,7 @@ namespace UIStyle
 		static const int hPad = 4;
 		static const int wPad = 4;
 		static const int hStep = 16;
-		static const int buttonSize = 8;
+		static const int buttonSize = 12;
 		static const int sliderH = 12;
 	};
 };
