@@ -76,6 +76,7 @@ void ShaderView::remove()
 	if (p)
 	{
 		p->removeShader(this);
+		p->refresh();
 	}
 }
 
@@ -85,5 +86,6 @@ void ShaderView::move(int delta)
 	if (p)
 	{
 		p->moveShader(this, delta);
+		p->refresh();//bit odd
 	}
 }
