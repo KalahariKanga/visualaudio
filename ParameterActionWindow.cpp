@@ -28,18 +28,13 @@ ParameterActionPanel::~ParameterActionPanel()
 
 void ParameterActionPanel::update()
 {
+	notNew = 1;//this is sooo dumbbbbb
 	draw(title);
 }
 
 void ParameterActionPanel::processEvent(sf::Event ev)
 {
-	if (ev.type == sf::Event::KeyPressed)
-	{
-		if (ev.key.code == sf::Keyboard::Space)
-		{
-			addLink();
-		}
-	}
+	//scrolling
 	if (ev.type == sf::Event::MouseWheelMoved)
 	{
 		if (ev.mouseWheel.x > x && ev.mouseWheel.x < x + w)
@@ -55,6 +50,12 @@ void ParameterActionPanel::processEvent(sf::Event ev)
 				needRefresh = 1;
 			}
 		}
+	}
+	//click away
+	if (ev.type == sf::Event::MouseButtonPressed && notNew)
+	{
+		if (!Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h))
+			toQuit = 1;
 	}
 }
 

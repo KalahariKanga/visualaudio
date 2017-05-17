@@ -184,7 +184,7 @@ void App::update()
 
 	if (showUI)
 	{
-		UITexture.clear(sf::Color(0, 0, 0, 0));
+		UITexture.clear(sf::Color(0, 0, 0, 128));
 		panel->doUpdate();
 		if (subPanel.get())
 		{
@@ -196,7 +196,10 @@ void App::update()
 			}
 		}
 		UITexture.display();
-		window.draw(sf::Sprite(UITexture.getTexture()));//this makes it like a billion times faster...? rather than panel->gettexture
+		if (subPanel.get())
+			window.draw(sf::Sprite(UITexture.getTexture()));//this makes it like a billion times faster...? rather than panel->gettexture
+		else
+			window.draw(sf::Sprite(UITexture.getTexture(), sf::IntRect(0, 0, UIWidth, windowHeight)));
 	}
 
 	window.display();
@@ -266,15 +269,9 @@ void App::processEvents()
 		if (message.empty())
 			break;
 		if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
-		{
 			eventHandler.addEvent(InputButton::Device::MIDINote, (int)message[1]);
-			std::cout << (int)message[1] << "\n";
-		}
 		if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
-		{
 			eventHandler.addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
-			std::cout << (int)message[1] << "\n";
-		}
 	}
 }
 
