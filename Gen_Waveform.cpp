@@ -16,8 +16,8 @@ void Gen_Waveform::update(Canvas& target, float deltaTime)
 {
 	for (int cx = 0; cx < target.getWidth(); cx++)
 	{
-		int y1 = ac->getWaveform((float)cx / target.getWidth());
-		int y2 = ac->getWaveform((float)(cx + 1) / target.getWidth());
+		int y1 = 20 * ac->getWaveform((float)cx / target.getWidth());//magic
+		int y2 = 20 * ac->getWaveform((float)(cx + 1) / target.getWidth());
 		target.setDrawColour((float)abs(y1) / (target.getHeight() / 2));
 
 		int baseHeight = getParameter("yPosition")->getValue() * target.getHeight();

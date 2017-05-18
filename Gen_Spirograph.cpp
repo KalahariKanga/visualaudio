@@ -20,7 +20,7 @@ void Gen_Spirograph::update(Canvas& target, float deltaTime)
 	float scale = getParameter("scale")->getValue();
 	float k = getParameter("ratio")->getValue();
 	float l = getParameter("offset")->getValue();
-	float speed = getParameter("speed")->getValue() * (abs(ac->getAmplitude()) / 4) * deltaTime;
+	float speed = getParameter("speed")->getValue() * (abs(ac->getAmplitude())) * deltaTime;
 	int points = (int)getParameter("points")->getValue();
 
 	for (float timeOffset = 0; timeOffset < speed; timeOffset += speed/10.0)
@@ -32,7 +32,7 @@ void Gen_Spirograph::update(Canvas& target, float deltaTime)
 			float y = scale * ((1 - k)*sin(t) - l * k * sin(((1 - k) / k)*t));
 		
 			target.setDrawColour((float)c / points);
-			float size = abs(ac->getWaveform((float)timeOffset / speed));
+			float size = abs(6 * ac->getWaveform((float)timeOffset / speed));
 			target.drawCircle(target.getWidth() / 2 + x, target.getHeight() / 2 + y, size, 0);
 		}
 	}

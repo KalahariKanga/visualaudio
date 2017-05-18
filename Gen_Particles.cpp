@@ -68,26 +68,26 @@ void Gen_Particles::update(Canvas& target, float deltaTime)
 		switch ((int)getParameter("pattern")->getValue())
 		{
 		case 0:
-			direction += (ac->getAmplitude() / 100) * (ac->getAmplitude() / 100);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() / 2);
+			direction += (ac->getAmplitude() / 20) * (ac->getAmplitude() / 20);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() * 4);
 			break;
 		case 1:
 			direction += sin((float)t / 100);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 2 + ac->getAmplitude() / 5, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 2 + ac->getAmplitude() / 5, ac->getAmplitude() / 2);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 2 + ac->getAmplitude(), ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 2 + ac->getAmplitude(), ac->getAmplitude() * 4);
 			break;
 		case 2:
 			direction += tan(sin((float)t / 200) / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction + PI, 6, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction + PI, 6, ac->getAmplitude() / 2);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction + PI, 6, ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction + PI, 6, ac->getAmplitude() * 4);
 			break;
 		case 3:
-			direction += (ac->getAmplitude() / 30) * sin((float)t / 100);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() / 2);
-			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() / 2);
+			direction += (ac->getAmplitude() / 6) * sin((float)t / 100);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, direction, 6, ac->getAmplitude() * 4);
+			spawnParticle(target.getWidth() / 2, target.getHeight() / 2, -direction, 6, ac->getAmplitude() * 4);
 			break;
 		}
 	}

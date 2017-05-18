@@ -34,7 +34,7 @@ void Gen_CircleSpectrum::update(Canvas& target, float deltaTime)
 		for (int b = 0; b < bands; b++)
 			bandAmount[b] = 1;
 	}*/
-	float innerRadius = ac->getAmplitude();
+	float innerRadius = ac->getAmplitude() * 5;
 	for (int b = 0; b < bands-1; b++)
 	{
 		float a1 = PI * ((float)b / bands);

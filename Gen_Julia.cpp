@@ -16,8 +16,8 @@ Gen_Julia::~Gen_Julia()
 
 void Gen_Julia::update(Canvas& target, float deltaTime)
 {
-	float jx = Math::lint(getParameter("minX")->getValue(), getParameter("maxX")->getValue(), ac->getAmplitude() / 5);
-	float jy = Math::lint(getParameter("minY")->getValue(), getParameter("maxY")->getValue(), ac->getAmplitude() / 5);
+	float jx = Math::lint(getParameter("minX")->getValue(), getParameter("maxX")->getValue(), ac->getAmplitude());
+	float jy = Math::lint(getParameter("minY")->getValue(), getParameter("maxY")->getValue(), ac->getAmplitude());
 
 	for (int cx = 0; cx < target.getWidth(); cx++)
 	{
