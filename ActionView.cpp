@@ -46,7 +46,7 @@ void ActionView::processEvent(sf::Event ev)
 {
 	if (ev.type == sf::Event::MouseButtonPressed)
 	{
-		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h / 3))
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + hStep - 1))
 		{
 			nextLegalActionType();
 		}
@@ -54,7 +54,7 @@ void ActionView::processEvent(sf::Event ev)
 
 	if (ev.type == sf::Event::MouseMoved)
 	{
-		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + h / 3))
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + hStep - 1))
 			actionType.setFillColor(UIStyle::Colour::PrimaryHighlight);
 		else
 			actionType.setFillColor(UIStyle::Colour::Primary);
@@ -63,7 +63,7 @@ void ActionView::processEvent(sf::Event ev)
 
 void ActionView::refresh()
 {
-	actionType.setPosition(x + wPad, y + hPad);
+	actionType.setPosition(x + wPad, y);
 }
 
 std::string ActionView::getActionTypeString()

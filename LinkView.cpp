@@ -54,10 +54,10 @@ void LinkView::processEvent(sf::Event ev)
 			deviceName.setString(button->getDeviceName() + " " + std::to_string((int)button->button));
 			waitingForEvent = 0;
 		}
-		//get input on right click
-		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + 16))
+		//get input on left click
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + hStep))
 		{
-			if (ev.mouseButton.button == sf::Mouse::Button::Right)
+			if (ev.mouseButton.button == sf::Mouse::Button::Left)
 			{
 				if (!waitingForEvent)
 				{
@@ -67,11 +67,19 @@ void LinkView::processEvent(sf::Event ev)
 			}
 		}
 	}
+	//highlight
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + hStep) || waitingForEvent)
+			deviceName.setFillColor(UIStyle::Colour::PrimaryHighlight);
+		else
+			deviceName.setFillColor(UIStyle::Colour::Primary);
+	}
 }
 
 void LinkView::refresh()
 {
-	deviceName.setPosition(x + hPad, y + hPad);
+	deviceName.setPosition(x + hPad, y);
 }
 
 void LinkView::remove()
