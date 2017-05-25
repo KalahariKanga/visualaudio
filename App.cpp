@@ -112,7 +112,7 @@ App::App()
 	addScene<Gen_CircleSpectrum>();
 
 	UITexture.create(UIWidth * 2, windowHeight);
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0]->getGenerator(), &UITexture);
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList,  scenes[0]->getGenerator(), &palette,&UITexture);
 
 	//lock all scene parameters
 	for (auto &s : scenes)
@@ -163,7 +163,7 @@ void App::update()
 		}
 		activeScene = scenes[sceneID].get();//try
 		activeScene->setParameterLock(false);
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &UITexture);
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &palette, &UITexture);
 		panel->doRefresh();
 		subPanel.reset(nullptr);//hide panel on scene change
 	}
