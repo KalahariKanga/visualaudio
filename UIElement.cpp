@@ -140,7 +140,7 @@ int UIElement::getH()
 	int min = y, max = y + h;
 	for (auto& ch : children)
 	{
-		if (ch->isActive())
+		if (ch->isActive() && !ch->collapsed)
 		{
 			int bottom = ch->getY() + ch->getH();
 			if (bottom > max)
