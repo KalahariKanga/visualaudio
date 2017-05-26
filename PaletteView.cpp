@@ -37,6 +37,17 @@ void PaletteView::refresh()
 	repositionChildren();
 }
 
+void PaletteView::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4 && ev.mouseMove.x < w)
+			children[0]->setActive(true);
+		else
+			children[0]->setActive(false);
+	}
+}
+
 void PaletteView::triggerCollapse()
 {
 	collapsed = !collapsed;

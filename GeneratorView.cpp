@@ -33,7 +33,19 @@ void GeneratorView::refresh()
 
 void GeneratorView::processEvent(sf::Event ev)
 {
-	
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4 && ev.mouseMove.x < w)
+		{
+			for (int c = 1; c < children.size(); c++)
+				children[c]->setActive(true);
+		}
+		else
+		{
+			for (int c = 1; c < children.size(); c++)
+				children[c]->setActive(false);
+		}
+	}
 }
 
 void GeneratorView::triggerCollapse()

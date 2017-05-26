@@ -13,6 +13,7 @@ public:
 
 	virtual void update() override;
 	virtual void refresh() override;
+	virtual void processEvent(sf::Event ev) override;
 	virtual void triggerCollapse() override;
 };
 
