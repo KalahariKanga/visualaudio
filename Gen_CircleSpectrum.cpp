@@ -5,9 +5,9 @@ Gen_CircleSpectrum::Gen_CircleSpectrum(AudioCapture* AC) : Generator(AC)
 {
 	bandAmount.resize(bands,0);
 	addParameter("decay", 0.04, 0, 1);
-	addParameter("bands", 24, 1, 256);
+	addParameter("bands", 24, 1, 256, Parameter::Type::Discrete);
 	
-	addParameter("burst", 0, 0, 0);
+	addParameter("burst", 0, 0, 0, Parameter::Type::Trigger);
 }
 
 

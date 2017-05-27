@@ -7,7 +7,7 @@ Gen_Spirograph::Gen_Spirograph(AudioCapture* ac) : Generator(ac)
 	addParameter("offset", 0.6, 0, 2);
 	addParameter("scale", 128, 1, 512);
 	addParameter("speed", 0.1, 0, 1);
-	addParameter("points", 1, 1, 16);
+	addParameter("points", 1, 1, 16, Parameter::Type::Discrete);
 }
 
 

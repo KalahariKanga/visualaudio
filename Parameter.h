@@ -10,8 +10,14 @@ class Parameter
 	float value, min, max, def;
 	bool lock = 0;
 public:
-	Parameter(std::string name, float v, float min, float max);
+	enum class Type
+	{
+		Continuous, Discrete, Switch, Trigger
+	}type;
+	
+	Parameter(std::string name, float v, float min, float max, Type type = Type::Continuous);
 	~Parameter();
+	
 	std::string getName() const
 	{
 		return name;
@@ -23,7 +29,12 @@ public:
 	void setValue(float v)
 	{
 		if (!lock)
-			value = Math::clamp(v, min, max);
+		{
+			if (type == Type::Discrete)
+				value = (int)round(Math::clamp(v, min, max));
+			else
+				value = Math::clamp(v, min, max);
+		}
 	}
 	float getNormalisedValue()
 	{
@@ -34,7 +45,7 @@ public:
 		if (!lock)
 		{
 			v = Math::clamp(v, 0, 1);
-			value = min + v*(max - min);
+			setValue(min + v*(max - min));
 		}
 	}
 	void setLock(bool l)

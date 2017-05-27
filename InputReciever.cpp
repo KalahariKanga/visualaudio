@@ -10,9 +10,9 @@ InputReciever::~InputReciever()
 {
 }
 
-void InputReciever::addParameter(std::string name, float value, float min, float max)
+void InputReciever::addParameter(std::string name, float value, float min, float max, Parameter::Type type)
 {
-	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(name, value, min, max)));
+	parameters.insert(std::map<std::string, Parameter>::value_type(name, Parameter(name, value, min, max, type)));
 }
 
 Parameter* InputReciever::getParameter(std::string name)

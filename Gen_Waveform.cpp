@@ -3,7 +3,7 @@
 
 Gen_Waveform::Gen_Waveform(AudioCapture* ac) : Generator(ac)
 {
-	addParameter("fill", 0, 0, 1);
+	addParameter("fill", 0, 0, 1, Parameter::Type::Switch);
 	addParameter("yPosition", 0.5, 0, 1);
 }
 

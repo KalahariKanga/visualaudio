@@ -1,6 +1,7 @@
 #include "ParameterView.h"
 #include "UIButton.h"
 #include "UISlider.h"
+#include "UISwitch.h"
 #include <sstream>
 
 using namespace UIStyle::Layout;
@@ -17,9 +18,19 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	name.setFont(*UIElement::getFont());
 	name.setCharacterSize(UIStyle::Text::fontSize);
 
-	int sx = x + wPad;
-	int sy = y + h - hPad - sliderH;
-	addChild<UISlider>(sx, sy, w - 4 * hPad, sliderH, parameter);
+	if (parameter->type == Parameter::Type::Continuous || parameter->type == Parameter::Type::Discrete)
+	{
+		int sx = x + wPad;
+		int sy = y + h - hPad - sliderH;
+		addChild<UISlider>(sx, sy, w - 4 * hPad, sliderH, parameter);
+	}
+
+	if (parameter->type == Parameter::Type::Switch)
+	{
+		int sx = x + wPad;
+		int sy = y + h - hPad - sliderH;
+		addChild<UISwitch>(sx, sy, w - 4 * hPad, sliderH, parameter);
+	}
 
 	int bx = w - 3 * wPad;
 	int by = y + h - hPad - sliderH;

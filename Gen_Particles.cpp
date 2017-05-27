@@ -3,13 +3,13 @@
 
 Gen_Particles::Gen_Particles(AudioCapture* AC) : Generator(AC)
 {
-	addParameter("outline", 0, 0, 1);
-	addParameter("pattern", 3, 0, 5);
+	addParameter("outline", 0, 0, 1, Parameter::Type::Switch);
+	addParameter("pattern", 3, 0, 5, Parameter::Type::Discrete);
 	addParameter("directionChange", 0, -0.1, 0.1);
 	addParameter("spawnRate", 1, 0.1, 1);
 	//triggers
-	addParameter("reverse", 0, 0, 0);
-	addParameter("split", 0, 0, 0);
+	addParameter("reverse", 0, 0, 0, Parameter::Type::Trigger);
+	addParameter("split", 0, 0, 0, Parameter::Type::Trigger);
 	
 }
 

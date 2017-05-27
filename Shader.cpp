@@ -32,6 +32,7 @@ void Shader::load(std::string filename)
 	parameters.clear();
 	std::fstream params(filename + ".params");
 	std::string name;
+	char type;
 	float def, min, max;
 	if (params.is_open())
 	{
@@ -39,13 +40,34 @@ void Shader::load(std::string filename)
 		{
 			try
 			{
-				params >> name >> def >> min >> max;
+				params >> name >> type;
+				switch (type)
+				{
+				case 'c':
+					params >> def >> min >> max;
+					addParameter(name, def, min, max);
+					break;
+				case 'd':
+					params >> def >> min >> max;
+					addParameter(name, def, min, max, Parameter::Type::Discrete);
+					break;
+				case 's':
+					params >> def;
+					addParameter(name, def, 0, 1, Parameter::Type::Switch);
+					break;
+				case 't':
+					addParameter(name, 0, 0, 0, Parameter::Type::Trigger);
+					break;
+				default:
+					throw std::exception();
+				}
 			}
 			catch (...)
 			{
 				std::cout << "Error reading .params file for shader " << filename << std::endl;
+				return;
 			}
-			addParameter(name, def, min, max);
+			
 		}
 	}
 	else
