@@ -15,6 +15,7 @@ class ActionView :
 	Action::Type nextActionType();
 	void nextLegalActionType();
 	void updateBounds();
+	void cycle(std::vector<Action::Type> list);
 public:
 	ActionView(int x, int y, int w, int h, InputButton* but, Action* act);
 	~ActionView();

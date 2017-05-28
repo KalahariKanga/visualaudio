@@ -84,54 +84,44 @@ std::string ActionView::getActionTypeString()
 	}
 }
 
-Action::Type ActionView::nextActionType()
-{
-	switch (action->type)
-	{
-	case Action::Type::set:
-		return Action::Type::shift;
-		break;
-	case Action::Type::shift:
-		return Action::Type::trigger;
-		break;
-	case Action::Type::trigger:
-		return Action::Type::axis;
-		break;
-	case Action::Type::axis:
-		return Action::Type::set;
-		break;
-	}
-}
-
 void ActionView::nextLegalActionType()
 {
-	while (true)
+	switch (button->device)
 	{
-		action->type = nextActionType();
-		switch (action->type)
+	case InputButton::Device::Audio:
+	case InputButton::Device::GamepadAxis:
+	case InputButton::Device::MIDICV:
+		switch (action->getTarget()->type)
 		{
-		case Action::Type::set:
-		case Action::Type::shift:
-		case Action::Type::trigger:
-			if (button->device == InputButton::Device::Audio)
-				continue;
-			if (button->device == InputButton::Device::GamepadAxis)
-				continue;
-			if (button->device == InputButton::Device::MIDICV)
-				continue;
-			updateBounds();
-			return;
-		case Action::Type::axis:
-			if (button->device == InputButton::Device::GamepadButton)
-				continue;
-			if (button->device == InputButton::Device::Keyboard)
-				continue;
-			if (button->device == InputButton::Device::MIDINote)
-				continue;
-			updateBounds();
-			return;
+		case Parameter::Type::Continuous:
+		case Parameter::Type::Discrete:
+		case Parameter::Type::Switch://i think?
+			cycle({ Action::Type::axis });
+			break;
+		case Parameter::Type::Trigger:
+			cycle({ Action::Type::trigger });
+			break;
 		}
+		break;
+	case InputButton::Device::GamepadButton:
+	case InputButton::Device::Keyboard:
+	case InputButton::Device::MIDINote:
+		switch (action->getTarget()->type)
+		{
+		case Parameter::Type::Continuous:
+		case Parameter::Type::Discrete:
+			cycle({ Action::Type::set, Action::Type::shift });
+			break;
+		case Parameter::Type::Switch:
+			cycle({ Action::Type::set, Action::Type::trigger });
+			break;
+		case Parameter::Type::Trigger:
+			cycle({ Action::Type::trigger });
+			break;
+		}
+		break;
 	}
+	updateBounds();
 }
 
 void ActionView::updateBounds()
@@ -159,4 +149,17 @@ void ActionView::updateBounds()
 
 	children.erase(children.begin());
 	addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
+}
+
+void ActionView::cycle(std::vector<Action::Type> list)
+{
+	for (int c = 0; c < list.size(); c++)
+	{
+		if (list[c] == action->type)
+		{
+			action->type = list[(c + 1) % list.size()];
+			return;
+		}
+	}
+	action->type = list[0];
 }
