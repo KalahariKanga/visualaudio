@@ -10,6 +10,7 @@ Shader::Shader(std::string fname)
 
 Shader& Shader::operator=(Shader&& other)
 {
+	delete shader;
 	shader = other.shader;
 	other.shader = nullptr;
 	return *this;
@@ -17,6 +18,7 @@ Shader& Shader::operator=(Shader&& other)
 
 Shader::Shader(Shader && other)
 {
+	delete shader;
 	shader = other.shader;
 	other.shader = nullptr;
 }
