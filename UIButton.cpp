@@ -1,5 +1,6 @@
 #include "UIButton.h"
 
+using namespace UIStyle::Layout;
 
 UIButton::UIButton(int x, int y, int w, int h, std::function<void(void)> _onClick, std::string str) : UIElement(x, y, w, h)
 {
@@ -39,6 +40,13 @@ void UIButton::processEvent(sf::Event ev)
 			if (ev.mouseButton.button == sf::Mouse::Button::Left)
 				onClick();
 		}
+	}
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + hStep - 1))
+			rectangle.setOutlineColor(UIStyle::Colour::PrimaryHighlight);
+		else
+			rectangle.setOutlineColor(UIStyle::Colour::Primary);
 	}
 }
 

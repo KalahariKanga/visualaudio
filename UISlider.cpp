@@ -1,6 +1,8 @@
 #include "UISlider.h"
 #include <sstream>
 
+using namespace UIStyle::Layout;
+
 UISlider::UISlider(int x, int y, int w, int h, float value, float min, float max) : UIElement(x, y, w, h), min(min), max(max), value(value)
 {
 	defValue = value;
@@ -78,6 +80,13 @@ void UISlider::processEvent(sf::Event ev)
 				float scrubScale = Math::clamp(4. / abs(y + h / 2 - ev.mouseMove.y), 0.05, 1);
 				setValue(Math::lint(startValue, targetValue, scrubScale));
 			}
+		}
+		else
+		{
+			if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + hStep - 1))
+				outline.setOutlineColor(UIStyle::Colour::PrimaryHighlight);
+			else
+				outline.setOutlineColor(UIStyle::Colour::Primary);
 		}
 	}
 
