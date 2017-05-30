@@ -1,19 +1,22 @@
 #define PI 3.141592653
-uniform sampler2D texture;
+
 
 void main()
 {
 	vec2 pos = vec2(gl_TexCoord[0]) - vec2(0.5);
-	
+	pos.y *= 1/aspectRatio;
 	vec2 newPos = vec2(length(pos)/sqrt(2.0), (atan(pos.y,pos.x))/(2 * PI));
 
+	
+
+	//if(newPos.x > 1) newPos.x = 2 - newPos.x;
+	//if(newPos.y > 1) newPos.y = 2 - newPos.y;
+	//if(newPos.x < 0) newPos.x *= -1;
+	//if(newPos.y < 0) newPos.y *= -1;
+
+	newPos.y *= aspectRatio;
+
 	vec4 col = texture2D(texture, newPos + vec2(0.5));
-
-	if(newPos.x > 1) newPos.x = 2 - newPos.x;
-	if(newPos.y > 1) newPos.y = 2 - newPos.y;
-	if(newPos.x < 0) newPos.x *= -1;
-	if(newPos.y < 0) newPos.y *= -1;
-
 	gl_FragColor = col;
 
 }

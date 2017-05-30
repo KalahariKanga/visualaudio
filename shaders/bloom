@@ -1,4 +1,4 @@
-uniform sampler2D texture;
+
 uniform float size;
 
 void main()

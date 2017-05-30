@@ -1,6 +1,5 @@
 #define PI 3.141592653
 
-uniform sampler2D texture;
 uniform float reflections;
 uniform float xpos;
 uniform float ypos;
@@ -11,7 +10,7 @@ void main() {
     
 	vec2 offset = vec2(xpos,ypos);
     vec2 newPos = vec2(gl_TexCoord[0]) - offset;
-     
+	newPos.y *= 1/aspectRatio;	
 	int ireflections = int(reflections);
 
 	float distance = length(newPos.xy);
@@ -29,7 +28,9 @@ void main() {
 		else
 			targetAngle = theta + (2 * c * PI) / ireflections + initRotation;
 		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
+		target.y *= aspectRatio;
 		target += offset;
+		
 		if(target.x > 1) target.x = 2 - target.x;
 		if(target.y > 1) target.y = 2 - target.y;
 		if(target.x < 0) target.x *= -1;

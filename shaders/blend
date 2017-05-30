@@ -1,5 +1,5 @@
-uniform sampler2D texture;
-uniform sampler2D lastFrame;
+
+
 
 uniform float alpha;
 uniform float driftX;

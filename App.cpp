@@ -24,9 +24,8 @@ App::App()
 	addParameter("scene", 0, 0, 16);
 
 	shaderList.addShader("shaders/blend");
-	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
-	shaderList.addShader("shaders/tile");
-	shaderList.addShader("shaders/mosaic");
+	//shaderList.addShader("shaders/tile");
+	shaderList.addShader("shaders/polar");
 	shaderList.addShader("shaders/kaleidoscope");
 	shaderList.addShader("shaders/bend");
 	shaderList.addShader("shaders/bloom");
@@ -280,6 +279,9 @@ void App::applyShaders()
 	//probably could be simpler
 	if (shaderList.size() == 0) return;
 	shaderList.getShader(0)->update();
+	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
+	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+
 	if (shaderList.getShader(0)->isActive())
 		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
 	else
@@ -290,6 +292,9 @@ void App::applyShaders()
 	for (; t < shaderList.size(); t++)
 	{
 		shaderList.getShader(t)->update();
+		shaderList.getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
+		shaderList.getShader(t)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+
 		if (shaderList.getShader(t)->isActive())
 			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
 		else

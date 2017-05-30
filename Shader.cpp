@@ -1,5 +1,9 @@
 #include "Shader.h"
+#include <sstream>
 
+const std::string Shader::preamble =	"uniform float aspectRatio;\n\
+										uniform sampler2D texture;\n\
+										uniform sampler2D lastFrame;\n";
 
 Shader::Shader(std::string fname)
 {
@@ -30,7 +34,14 @@ Shader::~Shader()
 
 void Shader::load(std::string filename)
 {
-	shader->loadFromFile(filename, sf::Shader::Type::Fragment);
+	std::ifstream file(filename);
+	//if (!file.is_open())	:/
+		
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	auto shader_str = preamble + buffer.str();
+	shader->loadFromMemory(shader_str, sf::Shader::Type::Fragment);
+
 	parameters.clear();
 	std::fstream params(filename + ".params");
 	std::string name;

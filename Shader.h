@@ -9,6 +9,7 @@ class Shader :
 	sf::Shader* shader;
 	std::string filename;
 	bool active = 1;
+	static const std::string preamble;
 public:
 	Shader(std::string filename);
 	Shader& operator=(Shader& other) = delete;
