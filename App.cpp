@@ -6,6 +6,7 @@ App::App()
 {
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
+	lastFrame.create(windowWidth, windowHeight);
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight, &palette);
 	midiIn = std::make_unique<RtMidiIn>();
@@ -37,24 +38,6 @@ App::App()
 	Action rotation(shaderList.getShader(0)->getParameter("angle"), Action::Type::axis, 1);
 	Action zoom(shaderList.getShader(0)->getParameter("zoom"), Action::Type::axis, 1);
 
-	Action moreMirrors(shaderList.getShader(1)->getParameter("reflections"), Action::Type::shift, 1);
-	Action lessMirrors(shaderList.getShader(1)->getParameter("reflections"), Action::Type::shift, -1);
-	Action kalUp(shaderList.getShader(1)->getParameter("ypos"), Action::Type::shift, 0.1);
-	Action kalDown(shaderList.getShader(1)->getParameter("ypos"), Action::Type::shift, -0.1);
-	Action kalLeft(shaderList.getShader(1)->getParameter("xpos"), Action::Type::shift, 0.1);
-	Action kalRight(shaderList.getShader(1)->getParameter("xpos"), Action::Type::shift, -0.1);
-	Action flip(shaderList.getShader(1)->getParameter("flip"), Action::Type::trigger);
-	
-	//for (int c = 0; c < 9; c++)
-	//{
-	//	auto a = Action(shaders[0]->getParameter("alpha"), Action::Type::setNormalised, (float)c / 9);
-	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c), a);
-	//	a = Action(shaders[0]->getParameter("zoom"), Action::Type::setNormalised, (float)c / 9);
-	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+16), a);
-	//	a = Action(shaders[0]->getParameter("angle"), Action::Type::setNormalised, (float)c / 9);
-	//	eventHandler.addAction(InputButton(InputButton::Device::MIDINote, c+32), a);
-	//}
-
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
 
@@ -64,32 +47,16 @@ App::App()
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
-	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 74), alpha);
-	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 71), zoom);
-	inputMap.addAction(InputButton(InputButton::Device::MIDICV, 81), rotation);
-
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Up), moreMirrors);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Down), lessMirrors);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::W), kalUp);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::S), kalDown);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::A), kalLeft);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::D), kalRight);
-	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::F), flip);
-
-	//eventHandler.addAction(InputButton(InputButton::Device::Audio, 0), rotation);
-
 	auto scene = addScene<Gen_Julia>();
 
-
 	scene = addScene<Gen_Spirograph>();
-	Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
+	/*Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);
-	
+	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);*/
 
 	scene = addScene<Gen_Particles>();
 	Action outline(scene->getParameter("outline"), Action::Type::trigger);
-	Action probability(scene->getParameter("spawnProbability"), Action::Type::axis, 1);
+	Action probability(scene->getParameter("spawnRate"), Action::Type::axis, 1);
 	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
 	Action split(scene->getParameter("split"), Action::Type::trigger);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
@@ -280,7 +247,7 @@ void App::applyShaders()
 	if (shaderList.size() == 0) return;
 	shaderList.getShader(0)->update();
 	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
-	shaderList.getShader(0)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
 
 	if (shaderList.getShader(0)->isActive())
 		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
@@ -293,7 +260,7 @@ void App::applyShaders()
 	{
 		shaderList.getShader(t)->update();
 		shaderList.getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
-		shaderList.getShader(t)->getShader()->setUniform("lastFrame", renderTexture[0].getTexture());
+		shaderList.getShader(t)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
 
 		if (shaderList.getShader(t)->isActive())
 			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
@@ -302,6 +269,79 @@ void App::applyShaders()
 		renderTexture[t % 2].display();
 	}
 	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+	lastFrame.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+	lastFrame.display();
+	renderTexture[0].clear();
+}
+
+void App::debugShaders()
+{
+	//dumb as heck, dont actually use
+	static sf::RenderTexture temptex;
+	static bool created = 0;
+	if (!created)
+	{
+		temptex.create(windowWidth, windowHeight);
+		created = 1;
+	}
+	if (shaderList.size() == 0) return;
+	shaderList.getShader(0)->update();
+	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
+	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
+
+	if (shaderList.getShader(0)->isActive())
+	{
+		sf::Sprite spr;
+		spr.setTexture(renderTexture[0].getTexture());
+		spr.setScale(0.16, 0.16);
+		spr.setPosition(windowWidth*5.0/6.0, 0);
+		temptex.draw(spr, shaderList.getShader(0)->getShader());
+		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
+	}
+	else
+	{
+		sf::Sprite spr;
+		spr.setTexture(renderTexture[0].getTexture());
+		spr.setScale(0.16, 0.16);
+		spr.setPosition(windowWidth*5.0 / 6.0, 0);
+		temptex.draw(spr);
+		renderTexture[0].draw(sprite);
+	}
+
+	renderTexture[0].display();
+	int t = 1;
+	for (; t < shaderList.size(); t++)
+	{
+		shaderList.getShader(t)->update();
+		shaderList.getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
+		shaderList.getShader(t)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
+
+		if (shaderList.getShader(t)->isActive())
+		{
+			sf::Sprite spr;
+			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
+			spr.setScale(0.16, 0.16);
+			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
+			temptex.draw(spr, shaderList.getShader(t)->getShader());
+			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
+		}
+		else
+		{
+			sf::Sprite spr;
+			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
+			spr.setScale(0.16, 0.16);
+			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
+			temptex.draw(spr);
+			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+		}
+		renderTexture[t % 2].display();
+	}
+	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+	window.draw(sf::Sprite(temptex.getTexture()));
+	lastFrame.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+	lastFrame.display();
+	temptex.display();
+	renderTexture[0].clear();
 }
 
 void App::toggleFullscreen()
@@ -327,6 +367,7 @@ void App::resize(int width, int height)
 	windowHeight = height;
 	renderTexture[0].create(windowWidth, windowHeight);
 	renderTexture[1].create(windowWidth, windowHeight);
+	lastFrame.create(windowWidth, windowHeight);
 	canvas->resize(windowWidth, windowHeight);
 	UITexture.create(UIWidth * 2, windowHeight);
 }

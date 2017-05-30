@@ -18,8 +18,10 @@ void UIElement::removeChild(UIElement* elem)
 	toRemove.push_back(elem);
 }
 
-void UIElement::repositionChildren()
+void UIElement::repositionChildren(int offsetX, int offsetY)
 {
+	//only use for pure containers?
+	children[0]->setPosition(x + offsetX, y + offsetY);
 	for (int i = 1; i < children.size(); i++)
 	{
 		int newY = children[i - 1]->getY() + children[i - 1]->getH();

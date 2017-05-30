@@ -13,7 +13,7 @@ class App : public InputReciever
 	sf::Sprite sprite;
 	sf::Texture texture;
 	sf::Image image;
-	sf::RenderTexture renderTexture[2];
+	sf::RenderTexture renderTexture[2], lastFrame;
 	sf::Clock clock;
 	AudioCapture AC;
 
@@ -44,6 +44,7 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
+	void debugShaders();
 	void toggleFullscreen();
 	void resize(int width, int height);
 

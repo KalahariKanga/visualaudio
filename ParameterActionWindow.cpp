@@ -79,7 +79,8 @@ void ParameterActionPanel::refresh()
 		needRebuild = 0;
 	}
 	title.setPosition(x + wPad, y + hPad);
-	repositionChildren();
+	repositionChildren(0, hStep + hStep);
+
 }
 
 void ParameterActionPanel::addLink()

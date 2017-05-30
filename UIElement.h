@@ -14,7 +14,7 @@ protected:
 	UIElement* parent;
 	template <class T, class... Args> void addChild(Args&&... args);
 	void removeChild(UIElement* elem);
-	void repositionChildren();
+	void repositionChildren(int offsetX = 0, int offsetY = 0);
 	int x, y;
 	int w, h;
 	bool active = 1;
