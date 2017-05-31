@@ -4,10 +4,14 @@ class UISwitch :
 	public UIElement
 {
 	bool state;
-	Parameter* parameter;
+	Parameter* parameter = nullptr;
 	sf::RectangleShape outline, fill;
+
+	void setup();
+
 public:
 	UISwitch(int x, int y, int w, int h, Parameter* p);
+	UISwitch(int x, int y, int w, int h, bool state);
 	~UISwitch();
 
 	virtual void update() override;
@@ -18,7 +22,8 @@ public:
 	void setState(bool s)
 	{
 		state = s;
-		parameter->setValue(s);
+		if (parameter)
+			parameter->setValue(s);
 	}
 };
 

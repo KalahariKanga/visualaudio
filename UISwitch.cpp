@@ -6,7 +6,20 @@ using namespace UIStyle::Layout;
 UISwitch::UISwitch(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h), parameter(p)
 {
 	state = parameter->getValue();
+	setup();
+}
 
+UISwitch::UISwitch(int x, int y, int w, int h, bool state) : UIElement(x, y, w, h), state(state)
+{
+	setup();
+}
+
+UISwitch::~UISwitch()
+{
+}
+
+void UISwitch::setup()
+{
 	outline.setFillColor(sf::Color(0, 0, 0, 0));
 	outline.setOutlineColor(Primary);
 	outline.setOutlineThickness(1);
@@ -14,14 +27,10 @@ UISwitch::UISwitch(int x, int y, int w, int h, Parameter* p) : UIElement(x,y,w,h
 	fill.setOutlineColor(sf::Color(0, 0, 0, 0));
 }
 
-
-UISwitch::~UISwitch()
-{
-}
-
 void UISwitch::update()
 {
-	state = parameter->getValue();
+	if (parameter)
+		state = parameter->getValue();
 	if (state)
 	{
 		fill.setFillColor(SecondaryHighlight);

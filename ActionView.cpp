@@ -1,6 +1,7 @@
 #include "ActionView.h"
 #include "LinkView.h"
 #include "UISlider.h"
+#include "UISwitch.h"
 
 using namespace UIStyle::Layout;
 
@@ -25,8 +26,16 @@ ActionView::~ActionView()
 
 void ActionView::update()
 {
-	auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
-	action->setAmount(slider->getValue());
+	if (!children.empty())
+	{
+		auto slider = dynamic_cast<UISlider*>(children[0].get());//eww
+		if (slider)
+			action->setAmount(slider->getValue());
+
+		auto sw = dynamic_cast<UISwitch*>(children[0].get());
+		if (sw)
+			action->setAmount(sw->getState());
+	}
 
 	//if the inputbutton has changed, we might need to change the type
 	//this is all kinda hacky, but will need a rewrite when params get typed
@@ -147,8 +156,12 @@ void ActionView::updateBounds()
 		break;
 	}
 
-	children.erase(children.begin());
-	addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
+	if (!children.empty())
+		children.erase(children.begin());
+	if (action->type == Action::Type::set && action->getTarget()->type == Parameter::Type::Switch)
+		addChild<UISwitch>(x + wPad, y + hStep, w - 2 * hPad, sliderH, false);
+	else if (action->type != Action::Type::trigger)
+		addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
 }
 
 void ActionView::cycle(std::vector<Action::Type> list)
