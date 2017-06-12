@@ -1,6 +1,3 @@
-
-
-
 uniform float alpha;
 uniform float driftX;
 uniform float driftY;
@@ -10,19 +7,29 @@ uniform float angle;
 void main()
 {
 	vec4 lastColour;
+
 	vec2 texcoord = vec2(gl_TexCoord[0]);
-	vec2 drift = vec2(driftX,driftY);
-	texcoord = vec2(texcoord.s, 1.0 - texcoord.t);
 	gl_FragColor = texture2D(texture,texcoord);
+	texcoord = texcoord - vec2(0.5,0.5);
+	texcoord.y *= 1/aspectRatio;	
+	
 	mat2 rot;
 	rot[0] = vec2(cos(angle),sin(angle));
 	rot[1] = vec2(-sin(angle),cos(angle));
+
+	vec2 drift = vec2(driftX,driftY);
+
+	vec2 newcoord = (texcoord) * zoom * rot + drift;
+
+	newcoord.y *= aspectRatio;
 	
-	vec2 newcoord = (texcoord - vec2(0.5,0.5)) * zoom * rot + vec2(0.5,0.5) + drift;
+	newcoord = newcoord + vec2(0.5,0.5);
+
 	if(newcoord.x > 1) newcoord.x = 2 - newcoord.x;
 	if(newcoord.y > 1) newcoord.y = 2 - newcoord.y;
 	if(newcoord.x < 0) newcoord.x *= -1;
 	if(newcoord.y < 0) newcoord.y *= -1;
+	
 	lastColour = texture2D(lastFrame, newcoord) * alpha;
 	lastColour.a = 1;
 	
