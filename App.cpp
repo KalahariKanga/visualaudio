@@ -378,7 +378,7 @@ void App::initialize()
 	scenes.clear();
 	activeScene = 0;
 	getParameter("scene")->setValue(0);
-	//inputMap.clear();//impl
+	inputMap.clear();
 	//eventHandler.clear();//impl
 	shaderList.clear();
 
@@ -414,13 +414,56 @@ void App::requestParameterActionPanel(Parameter* param)
 	subPanel = std::make_unique<ParameterActionPanel>(UIWidth, windowHeight, param, &inputMap, &UITexture);
 }
 
+void App::serializeParameterList(std::ofstream& file, ParameterList list)
+{
+	file << list.size() << std::endl;
+	for (auto &p : list)
+	{
+		file << p->getName() << std::endl;
+		file << p->getValue() << std::endl;
+		serializeLinkList(file, p);
+	}
+}
+
+void App::deserializeLinkList(std::ifstream& file, Parameter* param)
+{
+	int noLinks = 0;
+	file >> noLinks;
+	for (int e = 0; e < noLinks; e++)
+	{
+		int device, button;
+		file >> device;
+		file >> button;
+		InputButton inputButton((InputButton::Device)device, button);
+		int type;
+		float amount;
+		file >> type;
+		file >> amount;
+		Action act(param, (Action::Type)type, amount);
+		inputMap.addAction(inputButton, act);
+	}
+}
+
+void App::serializeLinkList(std::ofstream& file, Parameter* p)
+{
+	auto links = inputMap.findParameterActions(p);
+	file << std::to_string(links.size()) << std::endl;
+	for (auto &l : links)
+	{
+		file << std::to_string((int)l.first->device) << std::endl;
+		file << std::to_string((int)l.first->button) << std::endl;
+		file << std::to_string((int)l.second->type) << std::endl;
+		file << std::to_string(l.second->getAmount()) << std::endl;
+	}
+}
+
 void App::save(std::string fname)
 {
 	std::ofstream file(fname, std::ios::trunc);
-	std::cout << "Saving to file " << fname << "...\n";
+	std::cout << "Saving to file " << fname << "...";
 	if (!file.is_open())
 	{
-		std::cout << "Could not open file " << fname << "\n";
+		std::cout << "Could not open file\n";
 		return;
 	}
 
@@ -429,18 +472,12 @@ void App::save(std::string fname)
 	for (auto &sc : scenes)
 	{
 		file << sc->getGenerator()->getName() << std::endl;
-		auto genParamList = sc->getGenerator()->getParameterList();
-		file << genParamList.size() << std::endl;
-		for (auto &p : genParamList)
-		{
-			file << p->getName() << std::endl;
-			file << p->getValue() << std::endl;
-		}
-
+		serializeParameterList(file, sc->getGenerator()->getParameterList());
 	}
 
 	int sceneID = (int)getParameter("scene")->getValue();
 	file << sceneID << std::endl;
+	serializeLinkList(file, getParameter("scene"));
 
 	file << shaderList.size() << std::endl;
 	
@@ -449,28 +486,17 @@ void App::save(std::string fname)
 		auto sh = shaderList.getShader(c);
 		file << sh->getName() << std::endl;
 		file << sh->isActive() << std::endl;
-		auto shaderParamList = sh->getParameterList();
-		file << shaderParamList.size() << std::endl;
-		for (auto &p : shaderParamList)
-		{
-			file << p->getName() << std::endl;
-			file << p->getValue() << std::endl;
-		}
+		serializeParameterList(file, sh->getParameterList());
 	}
 
-	auto paletteParamList = palette.getParameterList();
-	file << paletteParamList.size() << std::endl;
-	for (auto &p : paletteParamList)
-	{
-		file << p->getName() << std::endl;
-		file << p->getValue() << std::endl;
-	}
+	serializeParameterList(file, palette.getParameterList());
+	std::cout << "done!\n";
 }
 
 void App::load(std::string fname)
 {
 	std::ifstream file(fname);
-	std::cout << "Loading file " << fname << "...\n";
+	std::cout << "Loading file " << fname << "...";
 	if (!file.is_open())
 	{
 		std::cout << "Could not open file.\n";
@@ -495,13 +521,17 @@ void App::load(std::string fname)
 			float val = 0;
 			file >> name;//
 			file >> val;
-			sc->getParameter(name)->setValue(val);//try
+			auto param = sc->getParameter(name);
+			param->setValue(val);//try
+
+			deserializeLinkList(file, param);
 		}
 	}
 
 	file >> sceneID;
 	lastSceneID = -1;//force scene switch
 	getParameter("scene")->setValue(sceneID);
+	deserializeLinkList(file, getParameter("scene"));
 
 	int noShaders = 0;
 	file >> noShaders;
@@ -523,7 +553,10 @@ void App::load(std::string fname)
 			float val = 0;
 			file >> name;//
 			file >> val;
-			sh->getParameter(name)->setValue(val);//try
+			auto param = sh->getParameter(name);
+			param->setValue(val);//try
+
+			deserializeLinkList(file, param);
 		}
 	}
 
@@ -535,9 +568,12 @@ void App::load(std::string fname)
 		float val = 0;
 		file >> name;//
 		file >> val;
-		palette.getParameter(name)->setValue(val);//try
-	}
+		auto param = palette.getParameter(name);
+		param->setValue(val);//try
 
+		deserializeLinkList(file, param);
+	}
+	std::cout << "done!\n";
 }
 
 Scene* App::addScene(std::string sceneType)

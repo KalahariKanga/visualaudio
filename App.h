@@ -9,6 +9,8 @@
 
 class App : public InputReciever
 {
+	using ParameterList = std::vector < Parameter* > ;
+
 	sf::RenderWindow window;
 	sf::Sprite sprite;
 	sf::Texture texture;
@@ -50,6 +52,11 @@ class App : public InputReciever
 	void resize(int width, int height);
 	void initialize();
 	void changeScene(int id);
+
+	void serializeParameterList(std::ofstream& file, ParameterList list);
+	void deserializeLinkList(std::ifstream& file, Parameter* param);
+	void serializeLinkList(std::ofstream& file, Parameter* param);
+
 public:
 	App();
 	~App();

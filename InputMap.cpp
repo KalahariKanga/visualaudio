@@ -55,3 +55,4 @@ void InputMap::removeLink(std::pair<InputButton, Action> link)
 		}	
 	}
 }
+
