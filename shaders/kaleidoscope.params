@@ -6,5 +6,7 @@ ypos c
 0.5 0 1
 flip s
 1
+wrap s
+1
 initRotation c
 0 0 6.283

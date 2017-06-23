@@ -4,6 +4,7 @@ uniform float reflections;
 uniform float xpos;
 uniform float ypos;
 uniform float flip;
+uniform float wrap;
 uniform float initRotation;
  
 void main() {
@@ -31,10 +32,13 @@ void main() {
 		target.y *= aspectRatio;
 		target += offset;
 		
-		if(target.x > 1) target.x = 2 - target.x;
-		if(target.y > 1) target.y = 2 - target.y;
-		if(target.x < 0) target.x *= -1;
-		if(target.y < 0) target.y *= -1;
+		if(wrap > 0)
+		{
+			if(target.x > 1) target.x = 2 - target.x;
+			if(target.y > 1) target.y = 2 - target.y;
+			if(target.x < 0) target.x *= -1;
+			if(target.y < 0) target.y *= -1;
+		}
 		col = max(col,texture2D(texture, target));
 	}
 	 
