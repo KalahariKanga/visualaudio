@@ -14,5 +14,6 @@ public:
 	void moveShader(Shader* sh, int delta);
 	Shader* getShader(int pos);
 	int size();
+	void clear();
 };
 

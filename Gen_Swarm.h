@@ -31,12 +31,13 @@ public:
 class Gen_Swarm :
 	public Generator
 {
-	
 	int noParts = 30;
 public:
 	Gen_Swarm(AudioCapture* AC);
 	~Gen_Swarm();
 	virtual void update(Canvas& target, float deltaTime);
+	virtual std::string getName() override { return "Swarm"; }
+
 	std::vector<Particle> particles;
 };
 

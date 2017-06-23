@@ -71,3 +71,7 @@ int ShaderList::size()
 {
 	return shaders.size();
 }
+void ShaderList::clear()
+{
+	shaders.clear();
+}

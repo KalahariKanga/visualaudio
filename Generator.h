@@ -14,6 +14,7 @@ public:
 	Generator(AudioCapture* AC);
 	~Generator();
 	virtual void update(Canvas& target, float deltaTime);//draw
+	virtual std::string getName() = 0;
 
 };
 

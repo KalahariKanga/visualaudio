@@ -6,6 +6,8 @@ class Gen_Waveform :
 public:
 	Gen_Waveform(AudioCapture* ac);
 	~Gen_Waveform();
-	virtual void update(Canvas& target, float deltaTime);
+	virtual void update(Canvas& target, float deltaTime);	
+	virtual std::string getName() override { return "Waveform"; }
+
 };
 

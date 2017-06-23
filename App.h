@@ -23,6 +23,7 @@ class App : public InputReciever
 	bool showUI = 0;
 	const int fps = 60;
 	float lastFrameTime = 1 / 60;
+	int sceneID = 0, lastSceneID = -1;
 
 	std::unique_ptr<Canvas> canvas;
 	Palette palette;
@@ -47,14 +48,19 @@ class App : public InputReciever
 	void debugShaders();
 	void toggleFullscreen();
 	void resize(int width, int height);
-
+	void initialize();
+	void changeScene(int id);
 public:
 	App();
 	~App();
 	void update();
 	bool quit = 0;
 
+	void save(std::string fname);
+	void load(std::string fname);
+
 	template <class T> Scene* addScene();
+	Scene* addScene(std::string sceneType);
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 };

@@ -8,7 +8,8 @@ GeneratorView::GeneratorView(int x, int y, int w, int h, Generator* gen) : UIEle
 	name.setCharacterSize(UIStyle::Text::fontSize);
 	name.setFillColor(UIStyle::Colour::Primary);
 
-	list = generator->getParameterList();
+	if (generator)
+		list = generator->getParameterList();
 	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
 	addChild<UIButton>(hPad, y + hStep / 2, buttonSize, buttonSize, [&](){ triggerCollapse(); });
 }
@@ -29,6 +30,8 @@ void GeneratorView::refresh()
 {
 	if (generator)
 		list = generator->getParameterList();
+	else
+		list.clear();
 }
 
 void GeneratorView::processEvent(sf::Event ev)

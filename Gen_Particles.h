@@ -26,6 +26,8 @@ public:
 	~Gen_Particles();
 
 	virtual void update(Canvas& target, float deltaTime);
+	virtual std::string getName() override { return "Particles"; }
+
 	void spawnParticle(float x, float y, float direction, float speed, float size);
 };
 

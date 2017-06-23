@@ -114,31 +114,23 @@ void App::setupMidi()
 void App::update()
 {
 	clock.restart();
-	int sceneID = (int)getParameter("scene")->getValue();
+	sceneID = (int)getParameter("scene")->getValue();
 	if (sceneID >= scenes.size())
 	{
 		sceneID = scenes.size() - 1;
 		getParameter("scene")->setValue(sceneID);
 	}
 
-	if (activeScene != scenes[sceneID].get())
-	{
-		if (activeScene)
-		{
-			activeScene->setParameterLock(true);
-		}
-		activeScene = scenes[sceneID].get();//try
-		activeScene->setParameterLock(false);
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &palette, &UITexture);
-		panel->doRefresh();
-		subPanel.reset(nullptr);//hide panel on scene change
-	}
+	if (sceneID != lastSceneID)
+		changeScene(sceneID);
+	lastSceneID = sceneID;
 
 	AC.update();
 	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
 	
-	activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
+	if (activeScene)
+		activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
 	
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.create(windowWidth, windowHeight);
@@ -210,6 +202,11 @@ void App::processEvents()
 			case sf::Keyboard::Escape:
 				quit = 1;
 				break;
+			case sf::Keyboard::S:
+				save("savefile.txt");
+				break;
+			case sf::Keyboard::L:
+				load("savefile.txt");
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
@@ -375,7 +372,190 @@ void App::resize(int width, int height)
 	UITexture.create(UIWidth * 2, windowHeight);
 }
 
+void App::initialize()
+{
+	canvas->clear(sf::Color(0, 0, 0, 255));
+	scenes.clear();
+	activeScene = 0;
+	getParameter("scene")->setValue(0);
+	//inputMap.clear();//impl
+	//eventHandler.clear();//impl
+	shaderList.clear();
+
+	changeScene(-1);
+}
+
+void App::changeScene(int id)
+{
+	if (activeScene)
+	{
+		activeScene->setParameterLock(true);
+	}
+
+	if (id < 0 || id >= scenes.size())
+	{
+		activeScene = nullptr;
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, nullptr, &palette, &UITexture);
+	}
+	else
+	{
+		activeScene = scenes[id].get();//try
+		activeScene->setParameterLock(false);
+		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene->getGenerator(), &palette, &UITexture);
+
+	}
+
+	panel->doRefresh();
+	subPanel.reset(nullptr);//hide panel on scene change
+}
+
 void App::requestParameterActionPanel(Parameter* param)
 {
 	subPanel = std::make_unique<ParameterActionPanel>(UIWidth, windowHeight, param, &inputMap, &UITexture);
+}
+
+void App::save(std::string fname)
+{
+	std::ofstream file(fname, std::ios::trunc);
+	std::cout << "Saving to file " << fname << "...\n";
+	if (!file.is_open())
+	{
+		std::cout << "Could not open file " << fname << "\n";
+		return;
+	}
+
+	file << scenes.size() << std::endl;
+	
+	for (auto &sc : scenes)
+	{
+		file << sc->getGenerator()->getName() << std::endl;
+		auto genParamList = sc->getGenerator()->getParameterList();
+		file << genParamList.size() << std::endl;
+		for (auto &p : genParamList)
+		{
+			file << p->getName() << std::endl;
+			file << p->getValue() << std::endl;
+		}
+
+	}
+
+	int sceneID = (int)getParameter("scene")->getValue();
+	file << sceneID << std::endl;
+
+	file << shaderList.size() << std::endl;
+	
+	for (int c = 0; c < shaderList.size(); c++)
+	{
+		auto sh = shaderList.getShader(c);
+		file << sh->getName() << std::endl;
+		file << sh->isActive() << std::endl;
+		auto shaderParamList = sh->getParameterList();
+		file << shaderParamList.size() << std::endl;
+		for (auto &p : shaderParamList)
+		{
+			file << p->getName() << std::endl;
+			file << p->getValue() << std::endl;
+		}
+	}
+
+	auto paletteParamList = palette.getParameterList();
+	file << paletteParamList.size() << std::endl;
+	for (auto &p : paletteParamList)
+	{
+		file << p->getName() << std::endl;
+		file << p->getValue() << std::endl;
+	}
+}
+
+void App::load(std::string fname)
+{
+	std::ifstream file(fname);
+	std::cout << "Loading file " << fname << "...\n";
+	if (!file.is_open())
+	{
+		std::cout << "Could not open file.\n";
+		return;
+	}
+
+	initialize();
+
+	int noScenes = 0;
+	file >> noScenes;
+	for (int c = 0; c < noScenes; c++)
+	{
+		Scene* sc = nullptr;
+		std::string scenetype;
+		file >> scenetype;//
+		sc = addScene(scenetype);
+		int noParams = 0;
+		file >> noParams;
+		for (int d = 0; d < noParams; d++)
+		{
+			std::string name;
+			float val = 0;
+			file >> name;//
+			file >> val;
+			sc->getParameter(name)->setValue(val);//try
+		}
+	}
+
+	file >> sceneID;
+	lastSceneID = -1;//force scene switch
+	getParameter("scene")->setValue(sceneID);
+
+	int noShaders = 0;
+	file >> noShaders;
+	for (int c = 0; c < noShaders; c++)
+	{
+		std::string name;
+		bool active;
+		file >> name;
+		file >> active;
+		shaderList.addShader(name);//try
+		auto sh = shaderList.getShader(c);
+		sh->setActive(active);
+
+		int noParams = 0;
+		file >> noParams;
+		for (int d = 0; d < noParams; d++)
+		{
+			std::string name;
+			float val = 0;
+			file >> name;//
+			file >> val;
+			sh->getParameter(name)->setValue(val);//try
+		}
+	}
+
+	int noParams = 0;
+	file >> noParams;
+	for (int c = 0; c < noParams; c++)
+	{
+		std::string name;
+		float val = 0;
+		file >> name;//
+		file >> val;
+		palette.getParameter(name)->setValue(val);//try
+	}
+
+}
+
+Scene* App::addScene(std::string sceneType)
+{
+	if (sceneType == "CircleSpectrum")
+		return addScene<Gen_CircleSpectrum>();
+	else if (sceneType == "Julia")
+		return addScene<Gen_Julia>();
+	else if (sceneType == "Particles")
+		return addScene<Gen_Particles>();
+	else if (sceneType == "Spectrum")
+		return addScene<Gen_Spectrum>();
+	else if (sceneType == "Spirograph")
+		return addScene<Gen_Spirograph>();
+	else if (sceneType == "Swarm")
+		return addScene<Gen_Swarm>();
+	else if (sceneType == "Waveform")
+		return addScene<Gen_Waveform>();
+	else
+		return nullptr;
 }
