@@ -1,0 +1,17 @@
+
+void main() {
+	vec2 texcoord = vec2(gl_TexCoord[0]);
+	vec2 pixeldelta = textureSize(texture,0);
+	float dx = 1. / float(pixeldelta.x);
+	float dy = 1. / float(pixeldelta.y);
+	vec4 col = vec4(0,0,0,255);
+	
+	col += texture2D(texture, texcoord + vec2(dx,0));
+	col += texture2D(texture, texcoord + vec2(0,-dy));
+	col += texture2D(texture, texcoord + vec2(-dx,0));
+	col += texture2D(texture, texcoord + vec2(0,dy));
+	col -= 4 * texture2D(texture, texcoord);
+	
+
+	gl_FragColor = col;
+}
