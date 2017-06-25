@@ -22,19 +22,19 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	{
 		int sx = x + wPad;
 		int sy = y + h - hPad - sliderH;
-		addChild<UISlider>(sx, sy, w - 4 * hPad, sliderH, parameter);
+		addChild<UISlider>(sx, sy, w - 2 * hPad, sliderH, parameter);
 	}
 
 	if (parameter->type == Parameter::Type::Switch)
 	{
 		int sx = x + wPad;
 		int sy = y + h - hPad - sliderH;
-		addChild<UISwitch>(sx, sy, w - 4 * hPad, sliderH, parameter);
+		addChild<UISwitch>(sx, sy, w - 2 * hPad, sliderH, parameter);
 	}
 
-	int bx = w - 3 * wPad;
+	/*int bx = w - 3 * wPad;
 	int by = y + h - hPad - sliderH;
-	addChild<UIButton>(bx, by, 2 * wPad, sliderH, std::bind(popupCall, parameter));
+	addChild<UIButton>(bx, by, 2 * wPad, sliderH, std::bind(popupCall, parameter));*/
 }
 
 
@@ -53,4 +53,18 @@ void ParameterView::update()
 void ParameterView::refresh()
 {
 	name.setPosition(x + wPad, y + hPad);
+}
+
+void ParameterView::processEvent(sf::Event ev)
+{
+	if (ev.type == sf::Event::MouseButtonPressed)
+	{
+		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h))
+		{
+			if (ev.mouseButton.button == sf::Mouse::Button::Middle)
+			{
+				popupCall(parameter);
+			}
+		}
+	}
 }
