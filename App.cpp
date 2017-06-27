@@ -47,14 +47,22 @@ App::App()
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
-	auto scene = addScene<Gen_Julia>();
+	Generator::registerConstructor("CircleSpectrum", [&](){return new Gen_CircleSpectrum(&AC); });
+	Generator::registerConstructor("Julia", [&](){return new Gen_Julia(&AC); });
+	Generator::registerConstructor("Particles", [&](){return new Gen_Particles(&AC); });
+	Generator::registerConstructor("Spectrum", [&](){return new Gen_Spectrum(&AC); });
+	Generator::registerConstructor("Swarm", [&](){return new Gen_Swarm(&AC); });
+	Generator::registerConstructor("Spirograph", [&](){return new Gen_Spirograph(&AC); });
+	Generator::registerConstructor("Waveform", [&](){return new Gen_Waveform(&AC); });
 
-	scene = addScene<Gen_Spirograph>();
+	auto scene = addScene("Julia");
+
+	scene = addScene("Spirograph");
 	/*Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
 	Action burst(scene->getParameter("burst"), Action::Type::trigger);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);*/
 
-	scene = addScene<Gen_Particles>();
+	scene = addScene("Particles");
 	Action outline(scene->getParameter("outline"), Action::Type::trigger);
 	Action probability(scene->getParameter("spawnRate"), Action::Type::axis, 1);
 	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
@@ -64,18 +72,18 @@ App::App()
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
 
-	scene = addScene<Gen_Swarm>();
+	scene = addScene("Swarm");
 	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
 	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
 	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
 	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
 
-	scene = addScene<Gen_Waveform>();
+	scene = addScene("Waveform");
 	Action fill(scene->getParameter("fill"), Action::Type::trigger);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
 
-	addScene<Gen_Spectrum>();
-	addScene<Gen_CircleSpectrum>();
+	addScene("Spectrum");
+	addScene("CircleSpectrum");
 
 	UITexture.create(UIWidth * 2, windowHeight);
 	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList,  scenes[0]->getGenerator(), &palette,&UITexture);
@@ -578,20 +586,9 @@ void App::load(std::string fname)
 
 Scene* App::addScene(std::string sceneType)
 {
-	if (sceneType == "CircleSpectrum")
-		return addScene<Gen_CircleSpectrum>();
-	else if (sceneType == "Julia")
-		return addScene<Gen_Julia>();
-	else if (sceneType == "Particles")
-		return addScene<Gen_Particles>();
-	else if (sceneType == "Spectrum")
-		return addScene<Gen_Spectrum>();
-	else if (sceneType == "Spirograph")
-		return addScene<Gen_Spirograph>();
-	else if (sceneType == "Swarm")
-		return addScene<Gen_Swarm>();
-	else if (sceneType == "Waveform")
-		return addScene<Gen_Waveform>();
-	else
-		return nullptr;
+
+	std::unique_ptr<Scene> scene = std::make_unique<Scene>(&AC, canvas.get());
+	scene->setGenerator(Generator::construct(sceneType));
+	scenes.push_back(std::move(scene));
+	return scenes.back().get();
 }

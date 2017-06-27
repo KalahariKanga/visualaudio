@@ -66,18 +66,8 @@ public:
 	void save(std::string fname);
 	void load(std::string fname);
 
-	template <class T> Scene* addScene();
 	Scene* addScene(std::string sceneType);
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 };
-
-template <class T>
-Scene* App::addScene()
-{
-	std::unique_ptr<Scene> scene = std::make_unique<Scene>(&AC, canvas.get());
-	scene->setGenerator<T>();
-	scenes.push_back(std::move(scene));
-	return scenes.back().get();
-}
 

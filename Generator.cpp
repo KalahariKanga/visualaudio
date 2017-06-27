@@ -1,6 +1,8 @@
 #include "Generator.h"
 #include <iostream>
 
+std::map<std::string, std::function<Generator*(void)>> Generator::factoryMap;
+
 Generator::Generator(AudioCapture* AC) : ac(AC)
 {
 }
@@ -28,3 +30,20 @@ void Generator::update(Canvas& target, float deltaTime)
 	}
 }
 
+void Generator::registerConstructor(std::string generatorName, std::function<Generator*(void)> ctor)
+{
+	factoryMap[generatorName] = ctor;
+}
+
+Generator* Generator::construct(std::string generatorName)
+{
+	try
+	{
+		return factoryMap[generatorName]();
+	}
+	catch (...)
+	{
+		std::cout << "illegal generator name!!\n";
+		return nullptr;
+	}
+}

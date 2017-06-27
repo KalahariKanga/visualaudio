@@ -22,16 +22,10 @@ public:
 	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
 	void update(float deltaTime);
-	template <class T> void setGenerator();
 
+	void setGenerator(Generator* gen);
 	Parameter* getParameter(std::string name) override;
 	std::vector<Parameter*> getParameterList() override;
 	Generator* getGenerator() { return gen.get(); } ///nonono
 	void setParameterLock(bool lock);
 };
-
-template <class T>
-void Scene::setGenerator()
-{
-	gen = std::make_unique<T>(ac);
-}

@@ -39,3 +39,8 @@ void Scene::setParameterLock(bool lock)
 		p->setLock(lock);
 	}
 }
+
+void Scene::setGenerator(Generator* gen_)
+{
+	gen.reset(gen_);
+}
