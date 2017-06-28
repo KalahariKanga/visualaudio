@@ -586,7 +586,6 @@ void App::load(std::string fname)
 
 Scene* App::addScene(std::string sceneType)
 {
-
 	std::unique_ptr<Scene> scene = std::make_unique<Scene>(&AC, canvas.get());
 	scene->setGenerator(Generator::construct(sceneType));
 	scenes.push_back(std::move(scene));

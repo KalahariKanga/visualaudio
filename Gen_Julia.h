@@ -9,7 +9,5 @@ public:
 	~Gen_Julia();
 
 	virtual void update(Canvas& target, float deltaTime);
-	virtual std::string getName() override { return "Julia"; }
-
 };
 

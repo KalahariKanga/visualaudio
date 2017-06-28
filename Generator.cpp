@@ -39,11 +39,23 @@ Generator* Generator::construct(std::string generatorName)
 {
 	try
 	{
-		return factoryMap[generatorName]();
+		auto gen = factoryMap[generatorName]();
+		gen->name = generatorName;
+		return gen;
 	}
 	catch (...)
 	{
 		std::cout << "illegal generator name!!\n";
 		return nullptr;
 	}
+}
+
+std::vector<std::string> Generator::getGeneratorList()
+{
+	std::vector<std::string> list;
+	for (auto &kv : factoryMap)
+	{
+		list.push_back(kv.first);
+	}
+	return list;
 }
