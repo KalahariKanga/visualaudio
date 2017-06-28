@@ -1,13 +1,13 @@
 #include "UIPanel.h"
 #include "PaletteView.h"
+#include "UIComboBox.h"
 
-UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders, Generator* gen, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h)
+UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders, Scene* sc, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h)
 {
 	this->shaders = shaders;
-	this->generator = gen;
 	this->texture = texture;
 	addChild<PaletteView>(x, y, w, 16, pal);
-	addChild<GeneratorView>(x, y, w, 16, generator); 
+	addChild<GeneratorView>(x, y, w, 16, sc); 
 	addChild<ShaderListView>(x, y, w, 16, shaders);
 }
 

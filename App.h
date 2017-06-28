@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "UIPanel.h"
 #include "ShaderList.h"
+#include "ComboBoxPanel.h"
 #include "ParameterActionWindow.h"
 
 class App : public InputReciever
