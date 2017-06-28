@@ -19,6 +19,7 @@ App::App()
 
 	ParameterView::popupCall = [this](Parameter* p){ requestParameterActionPanel(p); };
 	LinkView::nextButton = [this](){ return eventHandler.nextButton(); };
+	UIComboBox::popupCall = [this](UIComboBox* box){ requestComboBoxPanel(box); };
 
 	eventHandler.setInputMap(&inputMap);
 
@@ -420,6 +421,11 @@ void App::changeScene(int id)
 void App::requestParameterActionPanel(Parameter* param)
 {
 	subPanel = std::make_unique<ParameterActionPanel>(UIWidth, windowHeight, param, &inputMap, &UITexture);
+}
+
+void App::requestComboBoxPanel(UIComboBox* box)
+{
+	subPanel = std::make_unique<ComboBoxPanel>(UIWidth, windowHeight, box, &UITexture);
 }
 
 void App::serializeParameterList(std::ofstream& file, ParameterList list)

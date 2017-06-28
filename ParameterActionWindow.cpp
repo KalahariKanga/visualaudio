@@ -2,7 +2,7 @@
 
 using namespace UIStyle::Layout;
 
-ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex) : UIElement(192,0,w,h), p(param), inputMap(map)
+ParameterActionPanel::ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex) : UISubPanel(w,h), p(param), inputMap(map)
 {
 	texture = tex;
 	title.setString(param->getName());

@@ -40,7 +40,7 @@ class App : public InputReciever
 	ShaderList shaderList;
 
 	std::unique_ptr<UIPanel> panel;
-	std::unique_ptr<ParameterActionPanel> subPanel;
+	std::unique_ptr<UISubPanel> subPanel;
 	sf::RenderTexture UITexture, subUITexture;
 
 	void setupMidi();
@@ -69,5 +69,6 @@ public:
 	Scene* addScene(std::string sceneType);
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
+	void requestComboBoxPanel(UIComboBox* box);
 };
 

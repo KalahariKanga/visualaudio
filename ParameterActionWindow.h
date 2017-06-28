@@ -1,10 +1,11 @@
 #pragma once
 #include "UIPanel.h"
+#include "UISubPanel.h"
 #include "InputMap.h"
 #include "LinkView.h"
 
 class ParameterActionPanel :
-	public UIElement
+	public UISubPanel
 {
 	Parameter* p;
 	InputMap* inputMap;
@@ -13,7 +14,6 @@ class ParameterActionPanel :
 	void addLink();
 
 	bool needRebuild = 0;
-	bool notNew = 0;
 public:
 	ParameterActionPanel(int w, int h, Parameter* param, InputMap* map, sf::RenderTexture* tex);
 	~ParameterActionPanel();
@@ -24,6 +24,5 @@ public:
 
 	void rebuildChildren();//:/
 	void removeLink(std::pair<InputButton, Action> action);
-	bool toQuit = 0;
 };
 
