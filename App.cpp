@@ -271,6 +271,9 @@ void App::debugShaders()
 	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
 
+	sprite.setScale(1, -1);
+	sprite.setPosition(0, windowHeight);//dump on gpu
+
 	if (shaderList.getShader(0)->isActive())
 	{
 		sf::Sprite spr;
