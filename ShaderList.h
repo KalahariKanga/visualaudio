@@ -15,5 +15,6 @@ public:
 	Shader* getShader(int pos);
 	int size();
 	void clear();
+	static std::vector<std::string> getShaderList();
 };
 

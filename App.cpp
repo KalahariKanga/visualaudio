@@ -26,11 +26,6 @@ App::App()
 	addParameter("scene", 0, 0, 16);
 
 	shaderList.addShader("shaders/blend");
-	//shaderList.addShader("shaders/tile");
-	shaderList.addShader("shaders/polar");
-	shaderList.addShader("shaders/kaleidoscope");
-	shaderList.addShader("shaders/bend");
-	shaderList.addShader("shaders/bloom");
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
@@ -56,33 +51,11 @@ App::App()
 	Generator::registerConstructor("Spirograph", [&](){return new Gen_Spirograph(&AC); });
 	Generator::registerConstructor("Waveform", [&](){return new Gen_Waveform(&AC); });
 
-	auto scene = addScene("Julia");
-
-	scene = addScene("Spirograph");
-	/*Action decay(scene->getParameter("decay"), Action::Type::axis, 1);
-	Action burst(scene->getParameter("burst"), Action::Type::trigger);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), burst);*/
-
-	scene = addScene("Particles");
-	Action outline(scene->getParameter("outline"), Action::Type::trigger);
-	Action probability(scene->getParameter("spawnRate"), Action::Type::axis, 1);
-	Action reverse(scene->getParameter("reverse"), Action::Type::trigger);
-	Action split(scene->getParameter("split"), Action::Type::trigger);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), outline);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 1), probability);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 1), reverse);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 2), split);
-
-	scene = addScene("Swarm");
-	Action moreParticles(scene->getParameter("noParts"), Action::Type::shift, 5);
-	Action fewerParticles(scene->getParameter("noParts"), Action::Type::shift, -5);
-	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 0), moreParticles);
-	inputMap.addAction(InputButton(InputButton::Device::MIDINote, 1), fewerParticles);
-
-	scene = addScene("Waveform");
-	Action fill(scene->getParameter("fill"), Action::Type::trigger);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 0), fill);
-
+	addScene("Julia");
+	addScene("Spirograph");
+	addScene("Particles");
+	addScene("Swarm");
+	addScene("Waveform");
 	addScene("Spectrum");
 	addScene("CircleSpectrum");
 

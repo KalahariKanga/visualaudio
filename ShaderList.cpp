@@ -75,3 +75,20 @@ void ShaderList::clear()
 {
 	shaders.clear();
 }
+
+std::vector<std::string> ShaderList::getShaderList()
+{
+	std::vector<std::string> list;
+	list = {
+		"shaders/bend",
+		"shaders/blend",
+		"shaders/bloom",
+		"shaders/edgedetect",
+		"shaders/kaleidoscope",
+		"shaders/mosaic",
+		"shaders/polar",
+		"shaders/separatechannels",
+		"shaders/tile"
+	};
+	return list;
+}
