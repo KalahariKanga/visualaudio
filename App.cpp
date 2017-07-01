@@ -223,7 +223,15 @@ void App::processEvents()
 void App::applyShaders()
 {
 	//probably could be simpler
-	if (shaderList.size() == 0) return;
+	if (shaderList.size() == 0)
+	{
+		renderTexture[0].draw(sprite);
+		window.draw(sf::Sprite(renderTexture[0].getTexture()));
+		lastFrame.draw(sf::Sprite(renderTexture[0].getTexture()));
+		lastFrame.display();
+		renderTexture[0].clear();
+		return;
+	}
 	shaderList.getShader(0)->update();
 	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
 	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
@@ -250,6 +258,7 @@ void App::applyShaders()
 			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 		renderTexture[t % 2].display();
 	}
+
 	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 	lastFrame.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
 	lastFrame.display();
