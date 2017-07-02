@@ -13,9 +13,9 @@ ActionView::ActionView(int x, int y, int w, int h, InputButton* but, Action* act
 	actionType.setFont(*UIElement::getFont());
 	actionType.setCharacterSize(UIStyle::Text::fontSize);
 
-	float min = action->getTarget()->getMin();
-	float max = action->getTarget()->getMax();
-	addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);//actually created in update bounds
+	//float min = action->getTarget()->getMin();
+	//float max = action->getTarget()->getMax();
+	//addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);//actually created in update bounds
 	updateBounds();
 }
 
@@ -32,6 +32,12 @@ void ActionView::update()
 		if (slider)
 			action->setAmount(slider->getValue());
 
+		if (children.size() > 1)//if axis
+		{
+			auto slider2 = dynamic_cast<UISlider*>(children[1].get());
+			if (slider2)
+				action->setAmount2(slider2->getValue());
+		}
 		auto sw = dynamic_cast<UISwitch*>(children[0].get());
 		if (sw)
 			action->setAmount(sw->getState());
@@ -87,7 +93,7 @@ std::string ActionView::getActionTypeString()
 	case Action::Type::trigger:
 		return "Trigger";
 	case Action::Type::axis:
-		return "Control by";
+		return "Control between";
 	default:
 		return "";
 	}
@@ -151,18 +157,27 @@ void ActionView::updateBounds()
 		max = 1;//for now
 		break;
 	case Action::Type::axis:
-		min = -1;
-		max = 1;
+		min = action->getTarget()->getMin();
+		max = action->getTarget()->getMax();
 		break;
 	}
 
-	if (!children.empty())
-		children.erase(children.begin());
+	children.clear();
+
 	if (action->type == Action::Type::set && action->getTarget()->type == Parameter::Type::Switch)
 		addChild<UISwitch>(x + wPad, y + hStep, w - 2 * hPad, sliderH, false);
 	else if (action->type != Action::Type::trigger)
-		addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
+	{
+		if (action->type == Action::Type::axis)
+		{
+			addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
+			addChild<UISlider>(x + wPad, y + 2 * hStep, w - 2 * hPad, sliderH, action->getAmount2(), min, max);
+		}
+		else
+			addChild<UISlider>(x + wPad, y + hStep, w - 2 * hPad, sliderH, action->getAmount(), min, max);
+	}
 }
+		
 
 void ActionView::cycle(std::vector<Action::Type> list)
 {

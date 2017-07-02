@@ -4,7 +4,7 @@ Action::Action()
 {
 
 }
-Action::Action(Parameter* _target, Action::Type _type, float _amount) : target(_target), type(_type), amount(_amount)
+Action::Action(Parameter* _target, Action::Type _type, float _amount, float _amount2) : target(_target), type(_type), amount(_amount), amount2(_amount2)
 {
 }
 
@@ -38,7 +38,7 @@ void Action::execute(float eventValue)
 			target->setValue(1);
 		break;
 	case Type::axis:
-		target->setNormalisedValue(eventValue*amount);
+		target->setValue(amount + eventValue*(amount2-amount));
 		break;
 	}
 }
