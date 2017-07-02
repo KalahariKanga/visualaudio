@@ -144,6 +144,7 @@ void App::update()
 
 	window.display();
 	
+	Parameter::untriggerAll();
 	eventHandler.update();
 	processEvents();
 

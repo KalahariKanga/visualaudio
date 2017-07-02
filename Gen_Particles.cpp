@@ -42,8 +42,8 @@ void Gen_Particles::update(Canvas& target, float deltaTime)
 	static float direction = 1;
 	++t;
 
-	//bool reverse = getParameter("reverse")->hasChanged();
-	//bool split = getParameter("split")->hasChanged();
+	bool reverse = getParameter("reverse")->getValue();
+	bool split = getParameter("split")->getValue();
 	
 	for (auto & p : particles)
 	{
@@ -53,10 +53,10 @@ void Gen_Particles::update(Canvas& target, float deltaTime)
 		{
 			p.update(deltaTime);
 			p.direction += getParameter("directionChange")->getValue();
-			/*if (reverse)
+			if (reverse)
 				p.direction += PI;
 			if (split)
-				p.direction += PI / 2 * ((int)p.x % 2 ? -1 : 1);*/
+				p.direction += PI / 2 * ((int)p.x % 2 ? -1 : 1);
 			target.setDrawColour(p.direction / (2 * PI));
 			target.drawCircle(p.x, p.y, p.size, (int)getParameter("outline")->getValue());
 		}

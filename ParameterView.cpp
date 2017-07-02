@@ -32,6 +32,13 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 		addChild<UISwitch>(sx, sy, w - 2 * hPad, sliderH, parameter);
 	}
 
+	if (parameter->type == Parameter::Type::Trigger)
+	{
+		int sx = x + wPad;
+		int sy = y + h - hPad - sliderH;
+		addChild<UIButton>(sx, sy, w - 2 * hPad, sliderH, [&](){ parameter->trigger(); });
+	}
+
 	/*int bx = w - 3 * wPad;
 	int by = y + h - hPad - sliderH;
 	addChild<UIButton>(bx, by, 2 * wPad, sliderH, std::bind(popupCall, parameter));*/

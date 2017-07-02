@@ -6,6 +6,7 @@
 
 class Parameter
 {
+	static std::vector<Parameter*> untriggerParameters;
 	std::string name;
 	float value, min, max, def;
 	bool lock = 0;
@@ -18,6 +19,12 @@ public:
 	Parameter(std::string name, float v, float min, float max, Type type = Type::Continuous);
 	~Parameter();
 	
+	static void untriggerAll()
+	{
+		for (auto &p : untriggerParameters)
+			p->setValue(0);
+	}
+
 	std::string getName() const
 	{
 		return name;
@@ -51,6 +58,14 @@ public:
 	void setLock(bool l)
 	{
 		lock = l;
+	}
+	void trigger()
+	{
+		if (!lock)
+		{
+			value = 1;
+			untriggerParameters.push_back(this);
+		}
 	}
 };
 

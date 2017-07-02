@@ -29,11 +29,11 @@ void Gen_CircleSpectrum::update(Canvas& target, float deltaTime)
 
 		bandAmount[b] = Math::clamp(bandAmount[b], 0, 1);
 	}
-	/*if (getParameter("burst")->hasChanged())
+	if (getParameter("burst")->getValue())
 	{
 		for (int b = 0; b < bands; b++)
 			bandAmount[b] = 1;
-	}*/
+	}
 	float innerRadius = ac->getAmplitude() * 5;
 	for (int b = 0; b < bands-1; b++)
 	{
