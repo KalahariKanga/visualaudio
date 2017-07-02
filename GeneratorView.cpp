@@ -62,7 +62,7 @@ void GeneratorView::triggerCollapse()
 void GeneratorView::rebuildChildren()
 {
 	children.clear();
-	addChild<UIComboBox>(x, y + 5 * hStep, 128, 16, Generator::getGeneratorList(),
+	addChild<UIComboBox>(x, y + 5 * hStep, w - 2 * hPad, sliderH, Generator::getGeneratorList(),
 		[&](std::string str)
 	{
 		scene->setGenerator(Generator::construct(str));

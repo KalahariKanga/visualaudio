@@ -25,21 +25,21 @@ App::App()
 
 	addParameter("scene", 0, 0, 16);
 
-	shaderList.addShader("shaders/blend");
+	//shaderList.addShader("shaders/blend");
 
 	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
 	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
 
-	Action alpha(shaderList.getShader(0)->getParameter("alpha"), Action::Type::axis, 1);
+	/*Action alpha(shaderList.getShader(0)->getParameter("alpha"), Action::Type::axis, 1);
 	Action rotation(shaderList.getShader(0)->getParameter("angle"), Action::Type::axis, 1);
-	Action zoom(shaderList.getShader(0)->getParameter("zoom"), Action::Type::axis, 1);
+	Action zoom(shaderList.getShader(0)->getParameter("zoom"), Action::Type::axis, 1);*/
 
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
 
-	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
+	/*inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);
+	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);*/
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
