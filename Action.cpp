@@ -32,10 +32,7 @@ void Action::execute(float eventValue)
 		target->setValue(target->getValue() + amount);
 		break;
 	case Type::trigger:
-		if (target->getValue() > 0)
-			target->setValue(0);
-		else
-			target->setValue(1);
+		target->trigger();
 		break;
 	case Type::axis:
 		target->setValue(amount + eventValue*(amount2-amount));

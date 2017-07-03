@@ -63,8 +63,15 @@ public:
 	{
 		if (!lock)
 		{
-			value = 1;
-			untriggerParameters.push_back(this);
+			if (type == Type::Trigger)
+			{
+				value = 1;
+				untriggerParameters.push_back(this);
+			}
+			if (type == Type::Switch)
+			{
+				value = value ? 0 : 1;
+			}
 		}
 	}
 };
