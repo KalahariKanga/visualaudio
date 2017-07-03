@@ -214,7 +214,9 @@ void App::processEvents()
 		midiIn->getMessage(&message);
 		if (message.empty())
 			break;
-		if (message[0] >= 144 && message[0] <= 159)//10010000 to 10011111 - note on
+		/*for (auto b : message)
+			std::cout << (unsigned)b << ' ';*/
+		if (message[0] >= 144 && message[0] <= 159 && message[2] > 0)//10010000 to 10011111 - note on, >0 velocity
 			eventHandler.addEvent(InputButton::Device::MIDINote, (int)message[1]);
 		if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
 			eventHandler.addEvent(InputButton::Device::MIDICV, (int)message[1], (float)message[2] / 128);
