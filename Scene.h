@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include "Gen_Swarm.h"
+#include "Gen_CircleWaveform.h"
 #include "Gen_CircleSpectrum.h"
 #include "Gen_Waveform.h"
 #include "Gen_Spectrum.h"

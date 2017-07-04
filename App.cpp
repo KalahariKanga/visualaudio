@@ -44,6 +44,7 @@ App::App()
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
 	Generator::registerConstructor("CircleSpectrum", [&](){return new Gen_CircleSpectrum(&AC); });
+	Generator::registerConstructor("CircleWaveform", [&](){return new Gen_CircleWaveform(&AC); });
 	Generator::registerConstructor("Julia", [&](){return new Gen_Julia(&AC); });
 	Generator::registerConstructor("Particles", [&](){return new Gen_Particles(&AC); });
 	Generator::registerConstructor("Spectrum", [&](){return new Gen_Spectrum(&AC); });
