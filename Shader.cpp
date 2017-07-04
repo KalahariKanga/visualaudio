@@ -34,7 +34,7 @@ Shader::~Shader()
 
 void Shader::load(std::string filename)
 {
-	std::ifstream file(filename);
+	std::ifstream file("shaders/"+filename);
 	//if (!file.is_open())	:/
 		
 	std::stringstream buffer;
@@ -43,7 +43,8 @@ void Shader::load(std::string filename)
 	shader->loadFromMemory(shader_str, sf::Shader::Type::Fragment);
 
 	parameters.clear();
-	std::fstream params(filename + ".params");
+	addParameter("bypass", 0, 0, 1, Parameter::Type::Switch);
+	std::fstream params("shaders/" + filename + ".params");
 	std::string name;
 	char type;
 	float def, min, max;
@@ -89,6 +90,10 @@ void Shader::load(std::string filename)
 
 void Shader::update()
 {
+	if (getParameter("bypass")->getValue())
+		active = false;
+	else
+		active = true;
 	for (auto p : parameters)
 	{
 		shader->setUniform(p.first, p.second.getValue());

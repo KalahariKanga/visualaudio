@@ -43,6 +43,13 @@ void UIComboBox::processEvent(sf::Event ev)
 			}
 		}
 	}
+	if (ev.type == sf::Event::MouseMoved)
+	{
+		if (Math::pointInRect(ev.mouseMove.x, ev.mouseMove.y, x, y, x + w, y + hStep - 1))
+			outline.setOutlineColor(UIStyle::Colour::PrimaryHighlight);
+		else
+			outline.setOutlineColor(UIStyle::Colour::Primary);
+	}
 }
 
 void UIComboBox::refresh()

@@ -13,15 +13,12 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	list = shader->getParameterList();
 
 	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
-	int by = y + hStep / 2;
-	addChild<UIButton>(hPad,							by,	buttonSize, buttonSize, [&](){ triggerCollapse(); });
+	int by = y + hPad;
+	addChild<UIButton>(x + hPad,						by,	buttonSize, buttonSize, [&](){ triggerCollapse(); });
 	addChild<UIButton>(x + w - hPad - buttonSize,		by,	buttonSize, buttonSize, [=](){ remove(); }, "x");
 	addChild<UIButton>(x + w - 2 * (hPad + buttonSize),	by,	buttonSize, buttonSize, [=](){ shader->setActive(!shader->isActive()); }, "b");
 	addChild<UIButton>(x + w - 3 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(-1); }, "^");
 	addChild<UIButton>(x + w - 4 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(1); }, "v");
-
-	for (int c = 1; c < children.size(); c++)
-		children[c]->setActive(false);//hide on init
 }
 
 
@@ -35,7 +32,7 @@ void ShaderView::update()
 		name.setFillColor(UIStyle::Colour::Primary);
 	else
 		name.setFillColor(UIStyle::Colour::PrimaryLowlight);
-	name.setPosition(x + hStep, y + hPad);
+	name.setPosition(x + 2 * hStep, y + 2);
 	name.setString(shader->getName());
 	draw(name);
 }
@@ -47,7 +44,7 @@ void ShaderView::refresh()
 
 void ShaderView::processEvent(sf::Event ev)
 {
-	if (ev.type == sf::Event::MouseMoved)
+	/*if (ev.type == sf::Event::MouseMoved)
 	{
 		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4 && ev.mouseMove.x < w)
 		{
@@ -60,7 +57,7 @@ void ShaderView::processEvent(sf::Event ev)
 				children[c]->setActive(false);
 
 		}
-	}
+	}*/
 }
 
 void ShaderView::triggerCollapse()

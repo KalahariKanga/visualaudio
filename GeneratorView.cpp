@@ -22,7 +22,7 @@ GeneratorView::~GeneratorView()
 
 void GeneratorView::update()
 {
-	name.setPosition(x + hStep, y + hPad);
+	name.setPosition(x + 2 * hStep, y + 2);
 	name.setString(scene->getGenerator()->getName());
 	draw(name);
 }
@@ -55,14 +55,15 @@ void GeneratorView::processEvent(sf::Event ev)
 void GeneratorView::triggerCollapse()
 {
 	collapsed = !collapsed;
-	children[0]->triggerCollapse();
+	children[2]->triggerCollapse();
 	requestRefresh();
 }
 
 void GeneratorView::rebuildChildren()
 {
 	children.clear();
-	addChild<UIComboBox>(x, y + 5 * hStep, w - 2 * hPad, sliderH, Generator::getGeneratorList(),
+	addChild<UIButton>(x + hPad, y + hPad, buttonSize, buttonSize, [&](){ triggerCollapse(); });
+	addChild<UIComboBox>(x + 2 * hPad + buttonSize, y + hPad, w - 4 * hPad - buttonSize, sliderH, Generator::getGeneratorList(),
 		[&](std::string str)
 	{
 		scene->setGenerator(Generator::construct(str));
@@ -76,7 +77,7 @@ void GeneratorView::rebuildChildren()
 		list.clear();
 
 	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
-	addChild<UIButton>(hPad, y + hStep / 2, buttonSize, buttonSize, [&](){ triggerCollapse(); });
-	repositionChildren();
+	
+	//repositionChildren();
 	requestRefresh();
 }
