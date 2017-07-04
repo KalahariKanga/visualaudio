@@ -114,7 +114,7 @@ void ActionView::nextLegalActionType()
 			cycle({ Action::Type::axis });
 			break;
 		case Parameter::Type::Trigger:
-			cycle({ Action::Type::trigger });
+			cycle({ Action::Type::axis });
 			break;
 		}
 		break;

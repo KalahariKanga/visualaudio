@@ -35,7 +35,23 @@ void Action::execute(float eventValue)
 		target->trigger();
 		break;
 	case Type::axis:
-		target->setValue(amount + eventValue*(amount2-amount));
+		switch (target->type)
+		{
+		case Parameter::Type::Continuous:
+		case Parameter::Type::Discrete:
+			target->setValue(amount + eventValue*(amount2-amount));
+			break;
+		case Parameter::Type::Switch:
+			if (eventValue > amount)
+				target->setValue(1);
+			else
+				target->setValue(0);
+			break;
+		case Parameter::Type::Trigger:
+			if (eventValue > amount)
+				target->trigger();
+			break;
+		}
 		break;
 	}
 }
