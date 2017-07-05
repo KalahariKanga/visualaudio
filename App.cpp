@@ -45,7 +45,7 @@ App::App()
 	sceneList->addScene("Waveform");
 
 	UITexture.create(UIWidth * 2, windowHeight);
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList->getCurentScene(), &palette,&UITexture);
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList.get(), &palette,&UITexture);
 }
 
 App::~App()
@@ -348,7 +348,7 @@ void App::initialize()
 
 void App::rebuildUI()
 {
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList->getCurentScene(), &palette, &UITexture);
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList.get(), &palette, &UITexture);
 	panel->doRefresh();
 	subPanel.reset(nullptr);
 }

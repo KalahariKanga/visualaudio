@@ -22,7 +22,8 @@ public:
 	Scene* getCurentScene();
 	void onSceneChange();
 	void setScene(int id);
-
+	void nextScene();
+	void prevScene();
 	void clear();
 
 	int size();

@@ -4,7 +4,7 @@
 
 using namespace UIStyle::Layout;
 
-UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders_, Scene* sc, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h), palette(pal), scene(sc)
+UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders_, SceneList* sl, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h), palette(pal), sceneList(sl)
 {
 	this->shaders = shaders_;
 	this->texture = texture;
@@ -52,9 +52,9 @@ void UIPanel::processEvent(sf::Event ev)
 void UIPanel::rebuildChildren()
 {
 	children.clear();
-
+	addChild<SceneListView>(x, y, w, 16, sceneList);
 	addChild<PaletteView>(x, y, w, 16, palette);
-	addChild<GeneratorView>(x, y, w, 16, scene);
+	addChild<GeneratorView>(x, y, w, 16, sceneList->getCurentScene());
 	addChild<ShaderListView>(x, y, w, 16, shaders);
 	std::function<void(std::string)> cb = [this](std::string str){shaders->addShader(str); rebuildChildren(); };
 	addChild<UIComboBox>(x, y, w - 2 * hPad, 16, ShaderList::getShaderList(), cb);

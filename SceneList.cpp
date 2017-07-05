@@ -30,13 +30,13 @@ void SceneList::onSceneChange()
 
 void SceneList::update(float deltaTime)
 {
-	int sceneID = (int)getParameter("scene")->getValue();
+	auto p = getParameter("scene");
+	int sceneID = (int)p->getValue();
 	if (sceneID >= scenes.size())
-	{
 		sceneID = scenes.size() - 1;
-		getParameter("scene")->setValue(sceneID);
-	}
-
+	if (sceneID < 0)
+		sceneID = 0;
+	p->setValue(sceneID);
 	if (sceneID != lastSceneID)
 		onSceneChange();
 	lastSceneID = sceneID;
@@ -49,6 +49,7 @@ Scene* SceneList::addScene(std::string sceneType)
 	std::unique_ptr<Scene> scene = std::make_unique<Scene>(ac, canvas);
 	scene->setGenerator(Generator::construct(sceneType));
 	scenes.push_back(std::move(scene));
+	setScene(size() - 1);
 	return scenes.back().get();
 }
 
@@ -72,6 +73,18 @@ Scene* SceneList::getCurentScene()
 void SceneList::setScene(int id)
 {
 	getParameter("scene")->setValue(id);
+}
+
+void SceneList::nextScene()
+{
+	auto p = getParameter("scene");
+	p->setValue(p->getValue() + 1);
+}
+
+void SceneList::prevScene()
+{
+	auto p = getParameter("scene");
+	p->setValue(p->getValue() - 1);
 }
 
 void SceneList::clear()
