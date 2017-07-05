@@ -6,8 +6,6 @@
 
 using namespace UIStyle::Layout;
 
-std::function<void(Parameter*)> ParameterView::popupCall;
-
 ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _parameter) : UIElement(_x, _y, _w, _h)
 {
 	
@@ -60,14 +58,5 @@ void ParameterView::refresh()
 
 void ParameterView::processEvent(sf::Event ev)
 {
-	if (ev.type == sf::Event::MouseButtonPressed)
-	{
-		if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h))
-		{
-			if (ev.mouseButton.button == sf::Mouse::Button::Middle)
-			{
-				popupCall(parameter);
-			}
-		}
-	}
+	
 }

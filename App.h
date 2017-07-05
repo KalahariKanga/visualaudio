@@ -68,5 +68,7 @@ public:
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 	void requestComboBoxPanel(UIComboBox* box);
+
+	static std::function<void(Parameter*)> parameterActionPopup;
 };
 

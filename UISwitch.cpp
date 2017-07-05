@@ -1,4 +1,5 @@
 #include "UISwitch.h"
+#include "App.h"
 
 using namespace UIStyle::Colour;
 using namespace UIStyle::Layout;
@@ -62,6 +63,10 @@ void UISwitch::processEvent(sf::Event ev)
 			if (ev.mouseButton.button == sf::Mouse::Button::Left)
 			{
 				setState(!getState());//O.o
+			}
+			if (ev.mouseButton.button == sf::Mouse::Button::Middle)
+			{
+				App::parameterActionPopup(parameter);
 			}
 		}
 	}

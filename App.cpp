@@ -2,6 +2,8 @@
 #include "ParameterView.h"
 #include <fstream>
 
+std::function<void(Parameter*)> App::parameterActionPopup;
+
 App::App()
 {
 	renderTexture[0].create(windowWidth, windowHeight);
@@ -18,7 +20,7 @@ App::App()
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
 	//window.setVerticalSyncEnabled(true);
 
-	ParameterView::popupCall = [this](Parameter* p){ requestParameterActionPanel(p); };
+	parameterActionPopup = [this](Parameter* p){ requestParameterActionPanel(p); };
 	LinkView::nextButton = [this](){ return eventHandler.nextButton(); };
 	UIComboBox::popupCall = [this](UIComboBox* box){ requestComboBoxPanel(box); };
 

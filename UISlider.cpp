@@ -1,5 +1,6 @@
 #include "UISlider.h"
 #include <sstream>
+#include "App.h"
 
 using namespace UIStyle::Layout;
 
@@ -103,6 +104,10 @@ void UISlider::processEvent(sf::Event ev)
 				mouseDown = 1;
 				mouseDownX = ev.mouseButton.x;
 				setValue(min + (max - min)*((float)(ev.mouseButton.x - x) / w));
+			}
+			if (ev.mouseButton.button == sf::Mouse::Button::Middle)
+			{
+				App::parameterActionPopup(parameter);
 			}
 		}
 	}
