@@ -4,7 +4,8 @@ using namespace UIStyle::Layout;
 
 GeneratorView::GeneratorView(int x, int y, int w, int h, Scene* sc) : UIElement(x, y, w, h), scene(sc)
 {
-	generator = scene->getGenerator();
+	if (scene)
+		generator = scene->getGenerator();
 	name.setFont(*UIElement::getFont());
 	name.setCharacterSize(UIStyle::Text::fontSize);
 	name.setFillColor(UIStyle::Colour::Primary);

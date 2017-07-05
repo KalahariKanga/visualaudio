@@ -10,6 +10,7 @@ App::App()
 
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight, &palette);
 	midiIn = std::make_unique<RtMidiIn>();
+	sceneList = std::make_unique<SceneList>(&AC, canvas.get(), [&]{rebuildUI();} );
 
 	setupMidi();
 	//midiIn->openPort(3);
@@ -23,23 +24,12 @@ App::App()
 
 	eventHandler.setInputMap(&inputMap);
 
-	addParameter("scene", 0, 0, 16);
-
-	//shaderList.addShader("shaders/blend");
-
-	Action nextScene(getParameter("scene"), Action::Type::shift, 1);
-	Action prevScene(getParameter("scene"), Action::Type::shift, -1);
-
-	/*Action alpha(shaderList.getShader(0)->getParameter("alpha"), Action::Type::axis, 1);
-	Action rotation(shaderList.getShader(0)->getParameter("angle"), Action::Type::axis, 1);
-	Action zoom(shaderList.getShader(0)->getParameter("zoom"), Action::Type::axis, 1);*/
+	Action nextScene(sceneList->getParameter("scene"), Action::Type::shift, 1);
+	Action prevScene(sceneList->getParameter("scene"), Action::Type::shift, -1);
 
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Right), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::Keyboard, (int)sf::Keyboard::Left), prevScene);
 
-	/*inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 2), alpha);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 0), zoom);
-	inputMap.addAction(InputButton(InputButton::Device::GamepadAxis, 4), rotation);*/
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 5), nextScene);
 	inputMap.addAction(InputButton(InputButton::Device::GamepadButton, 4), prevScene);
 
@@ -52,22 +42,10 @@ App::App()
 	Generator::registerConstructor("Spirograph", [&](){return new Gen_Spirograph(&AC); });
 	Generator::registerConstructor("Waveform", [&](){return new Gen_Waveform(&AC); });
 
-	addScene("Julia");
-	addScene("Spirograph");
-	addScene("Particles");
-	addScene("Swarm");
-	addScene("Waveform");
-	addScene("Spectrum");
-	addScene("CircleSpectrum");
+	sceneList->addScene("Waveform");
 
 	UITexture.create(UIWidth * 2, windowHeight);
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, scenes[0].get(), &palette,&UITexture);
-
-	//lock all scene parameters
-	for (auto &s : scenes)
-	{
-		s->setParameterLock(true);
-	}
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList->getCurentScene(), &palette,&UITexture);
 }
 
 App::~App()
@@ -97,23 +75,11 @@ void App::setupMidi()
 void App::update()
 {
 	clock.restart();
-	sceneID = (int)getParameter("scene")->getValue();
-	if (sceneID >= scenes.size())
-	{
-		sceneID = scenes.size() - 1;
-		getParameter("scene")->setValue(sceneID);
-	}
-
-	if (sceneID != lastSceneID)
-		changeScene(sceneID);
-	lastSceneID = sceneID;
-
+	
 	AC.update();
 	palette.update();
 	canvas->clear(sf::Color(0, 0, 0, 0));
-	
-	if (activeScene)
-		activeScene->update(fps * lastFrameTime);//2 -> half fps -> move twice
+	sceneList->update(fps * lastFrameTime);//2 -> half fps -> move twice
 	
 	image.create(windowWidth, windowHeight, canvas->data);
 	texture.create(windowWidth, windowHeight);
@@ -191,6 +157,7 @@ void App::processEvents()
 				break;
 			case sf::Keyboard::L:
 				load("savefile.txt");
+				break;
 			}
 			eventHandler.addEvent(InputButton::Device::Keyboard, (int)ev.key.code);
 		}
@@ -215,8 +182,6 @@ void App::processEvents()
 		midiIn->getMessage(&message);
 		if (message.empty())
 			break;
-		/*for (auto b : message)
-			std::cout << (unsigned)b << ' ';*/
 		if (message[0] >= 144 && message[0] <= 159 && message[2] > 0)//10010000 to 10011111 - note on, >0 velocity
 			eventHandler.addEvent(InputButton::Device::MIDINote, (int)message[1]);
 		if (message[0] >= 176 && message[0] <= 191) //10110000 to 10111111 - control change
@@ -373,38 +338,19 @@ void App::resize(int width, int height)
 void App::initialize()
 {
 	canvas->clear(sf::Color(0, 0, 0, 255));
-	scenes.clear();
-	activeScene = 0;
-	getParameter("scene")->setValue(0);
+	sceneList->clear();
 	inputMap.clear();
 	//eventHandler.clear();//impl
 	shaderList.clear();
 
-	changeScene(-1);
+	sceneList->setScene(0);//could do something here re: onscenechange being public
 }
 
-void App::changeScene(int id)
+void App::rebuildUI()
 {
-	if (activeScene)
-	{
-		activeScene->setParameterLock(true);
-	}
-
-	if (id < 0 || id >= scenes.size())
-	{
-		activeScene = nullptr;
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, nullptr, &palette, &UITexture);
-	}
-	else
-	{
-		activeScene = scenes[id].get();//try
-		activeScene->setParameterLock(false);
-		panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, activeScene, &palette, &UITexture);
-
-	}
-
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList->getCurentScene(), &palette, &UITexture);
 	panel->doRefresh();
-	subPanel.reset(nullptr);//hide panel on scene change
+	subPanel.reset(nullptr);
 }
 
 void App::requestParameterActionPanel(Parameter* param)
@@ -470,17 +416,18 @@ void App::save(std::string fname)
 		return;
 	}
 
-	file << scenes.size() << std::endl;
+	file << sceneList->size() << std::endl;
 	
-	for (auto &sc : scenes)
+	for (int c = 0; c < sceneList->size(); c++)
 	{
+		auto sc = sceneList->getScene(c);
 		file << sc->getGenerator()->getName() << std::endl;
 		serializeParameterList(file, sc->getGenerator()->getParameterList());
 	}
 
-	int sceneID = (int)getParameter("scene")->getValue();
+	int sceneID = (int)sceneList->getParameter("scene")->getValue();
 	file << sceneID << std::endl;
-	serializeLinkList(file, getParameter("scene"));
+	serializeLinkList(file, sceneList->getParameter("scene"));
 
 	file << shaderList.size() << std::endl;
 	
@@ -515,7 +462,7 @@ void App::load(std::string fname)
 		Scene* sc = nullptr;
 		std::string scenetype;
 		file >> scenetype;//
-		sc = addScene(scenetype);
+		sc = sceneList->addScene(scenetype);
 		int noParams = 0;
 		file >> noParams;
 		for (int d = 0; d < noParams; d++)
@@ -531,10 +478,10 @@ void App::load(std::string fname)
 		}
 	}
 
-	file >> sceneID;
-	lastSceneID = -1;//force scene switch
-	getParameter("scene")->setValue(sceneID);
-	deserializeLinkList(file, getParameter("scene"));
+	int scene;
+	file >> scene;
+	sceneList->getParameter("scene")->setValue(scene);
+	deserializeLinkList(file, sceneList->getParameter("scene"));
 
 	int noShaders = 0;
 	file >> noShaders;
@@ -576,13 +523,8 @@ void App::load(std::string fname)
 
 		deserializeLinkList(file, param);
 	}
-	std::cout << "done!\n";
-}
 
-Scene* App::addScene(std::string sceneType)
-{
-	std::unique_ptr<Scene> scene = std::make_unique<Scene>(&AC, canvas.get());
-	scene->setGenerator(Generator::construct(sceneType));
-	scenes.push_back(std::move(scene));
-	return scenes.back().get();
+	sceneList->onSceneChange();
+
+	std::cout << "done!\n";
 }

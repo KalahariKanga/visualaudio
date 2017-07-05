@@ -7,6 +7,7 @@
 #include "ShaderList.h"
 #include "ComboBoxPanel.h"
 #include "ParameterActionWindow.h"
+#include "SceneList.h"
 
 class App : public InputReciever
 {
@@ -26,12 +27,10 @@ class App : public InputReciever
 	bool showUI = 0;
 	const int fps = 60;
 	float lastFrameTime = 1 / 60;
-	int sceneID = 0, lastSceneID = -1;
 
 	std::unique_ptr<Canvas> canvas;
 	Palette palette;
-	std::vector<std::unique_ptr<Scene>> scenes;
-	Scene* activeScene;
+	std::unique_ptr<SceneList> sceneList;
 
 	std::unique_ptr<RtMidiIn> midiIn;
 
@@ -52,7 +51,7 @@ class App : public InputReciever
 	void toggleFullscreen();
 	void resize(int width, int height);
 	void initialize();
-	void changeScene(int id);
+	void rebuildUI();
 
 	void serializeParameterList(std::ofstream& file, ParameterList list);
 	void deserializeLinkList(std::ifstream& file, Parameter* param);
@@ -66,8 +65,6 @@ public:
 
 	void save(std::string fname);
 	void load(std::string fname);
-
-	Scene* addScene(std::string sceneType);
 
 	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
 	void requestComboBoxPanel(UIComboBox* box);
