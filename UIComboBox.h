@@ -19,6 +19,5 @@ public:
 	const std::vector<std::string>& getItems();
 	void setItem(std::string str);
 	std::string getItem();
-	static std::function<void(UIComboBox*)> popupCall;
 };
 

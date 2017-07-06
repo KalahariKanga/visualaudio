@@ -66,9 +66,10 @@ public:
 	void save(std::string fname);
 	void load(std::string fname);
 
-	void requestParameterActionPanel(Parameter* param);//pass down to parameterview somehow
+	void requestParameterActionPanel(Parameter* param);
 	void requestComboBoxPanel(UIComboBox* box);
 
 	static std::function<void(Parameter*)> parameterActionPopup;
+	static std::function<void(UIComboBox*)> comboBoxPopup;
 };
 

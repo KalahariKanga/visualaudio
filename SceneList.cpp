@@ -20,10 +20,17 @@ SceneList::~SceneList()
 void SceneList::onSceneChange()
 {
 	//change from lastSceneID to current scene
-	scenes[lastSceneID]->setParameterLock(true);
-	if (getCurentScene())
+	try
 	{
-		getCurentScene()->setParameterLock(false);
+		scenes.at(lastSceneID)->setParameterLock(true);
+		if (getCurentScene())
+		{
+			getCurentScene()->setParameterLock(false);
+		}
+	}
+	catch (...)
+	{
+		//no worries
 	}
 	callback();//rebuildUI;
 }
@@ -55,13 +62,24 @@ Scene* SceneList::addScene(std::string sceneType)
 
 void SceneList::removeScene(int id)
 {
-	if (id >= 0 && id < scenes.size())
+	if (id >= 0 && id < scenes.size() && scenes.size() > 1)
+	{
+		if (id == size() - 1)
+			getParameter("scene")->setValue(size() - 2);
 		scenes.erase(scenes.begin() + id);
+		onSceneChange();
+	}
+}
+
+void SceneList::removeScene()
+{
+	int id = (int)getParameter("scene")->getValue();
+	removeScene(id);
 }
 
 Scene* SceneList::getScene(int id)
 {
-	return scenes[id].get();//catch
+	return scenes.at(id).get();//catch
 }
 
 Scene* SceneList::getCurentScene()

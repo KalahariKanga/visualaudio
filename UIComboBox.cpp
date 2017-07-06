@@ -1,9 +1,8 @@
 #include "UIComboBox.h"
+#include "App.h"
 
 using namespace UIStyle::Layout;
 using namespace UIStyle::Colour;
-
-std::function<void(UIComboBox*)> UIComboBox::popupCall;
 
 UIComboBox::UIComboBox(int x, int y, int w, int h, std::vector<std::string> list_, std::function<void(std::string)> cb) : UIElement(x, y, w, h), items(list_), callback(cb)
 {
@@ -39,7 +38,7 @@ void UIComboBox::processEvent(sf::Event ev)
 		{
 			if (Math::pointInRect(ev.mouseButton.x, ev.mouseButton.y, x, y, x + w, y + h))
 			{
-				popupCall(this);
+				App::comboBoxPopup(this);
 			}
 		}
 	}
@@ -54,7 +53,7 @@ void UIComboBox::processEvent(sf::Event ev)
 
 void UIComboBox::refresh()
 {
-	outline.setPosition(x + hPad, y);
+	outline.setPosition(x, y);
 	outline.setSize(sf::Vector2f(w, h));
 	text.setString(item);
 	text.setPosition(x + hPad, y);

@@ -3,6 +3,7 @@
 #include <fstream>
 
 std::function<void(Parameter*)> App::parameterActionPopup;
+std::function<void(UIComboBox*)> App::comboBoxPopup;
 
 App::App()
 {
@@ -21,8 +22,8 @@ App::App()
 	//window.setVerticalSyncEnabled(true);
 
 	parameterActionPopup = [this](Parameter* p){ requestParameterActionPanel(p); };
+	comboBoxPopup = [this](UIComboBox* box){ requestComboBoxPanel(box); };
 	LinkView::nextButton = [this](){ return eventHandler.nextButton(); };
-	UIComboBox::popupCall = [this](UIComboBox* box){ requestComboBoxPanel(box); };
 
 	eventHandler.setInputMap(&inputMap);
 
