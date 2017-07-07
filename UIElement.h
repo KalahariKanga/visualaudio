@@ -3,6 +3,10 @@
 #include "UIStyle.h"
 #include <memory>
 #include <functional>
+class SquashEventException : public std::exception
+{
+
+};
 class UIElement
 {
 	static bool loadedFont;
@@ -50,6 +54,7 @@ public:
 		else
 			needRefresh = 1;
 	}
+	void squashEvent(){ throw SquashEventException(); }
 	virtual void triggerCollapse();
 	sf::Font* getFont();
 

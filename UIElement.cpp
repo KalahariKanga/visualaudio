@@ -64,9 +64,8 @@ void UIElement::distributeEvent(sf::Event ev)
 	for (int c = 0; c < children.size(); c++)
 	{
 		if (c >= children.size()) break;
-		
-		if (children[c]->isActive())
-			children[c]->distributeEvent(ev);
+		if (children.at(c)->isActive())
+			children.at(c)->distributeEvent(ev);
 	}
 }
 

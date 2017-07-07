@@ -14,7 +14,6 @@ App::App()
 	canvas = std::make_unique<Canvas>(windowWidth, windowHeight, &palette);
 	midiIn = std::make_unique<RtMidiIn>();
 	sceneList = std::make_unique<SceneList>(&AC, canvas.get(), [&]{rebuildUI();} );
-
 	setupMidi();
 	//midiIn->openPort(3);
 	
@@ -174,9 +173,16 @@ void App::processEvents()
 		}
 		if (showUI)
 		{
-			panel->distributeEvent(ev);
-			if (subPanel.get())
-				subPanel->distributeEvent(ev);
+			try
+			{
+				panel->distributeEvent(ev);
+				if (subPanel.get())
+					subPanel->distributeEvent(ev);
+			}
+			catch (SquashEventException sq)
+			{
+
+			}
 		}
 	}
 	std::vector<unsigned char> message;
