@@ -34,7 +34,7 @@ ParameterView::ParameterView(int _x, int _y, int _w, int _h, Parameter* _paramet
 	{
 		int sx = x + wPad;
 		int sy = y + h - hPad - sliderH;
-		addChild<UIButton>(sx, sy, w - 2 * hPad, sliderH, [&](){ parameter->trigger(); });
+		addChild<UIButton>(sx, sy, w - 2 * hPad, sliderH, parameter);
 	}
 }
 

@@ -11,12 +11,14 @@ ShaderView::ShaderView(int x, int y, int w, int h, Shader* sh) : UIElement(x, y,
 	name.setFillColor(UIStyle::Colour::Primary);
 
 	list = shader->getParameterList();
+	auto bypassParam = std::find(list.begin(), list.end(), shader->getParameter("bypass"));
+	list.erase(bypassParam);
 
 	addChild<ParameterListView>(x, y + hStep, w, 0, &list);
 	int by = y + hPad;
 	addChild<UIButton>(x + hPad,						by,	buttonSize, buttonSize, [&](){ triggerCollapse(); });
 	addChild<UIButton>(x + w - hPad - buttonSize,		by,	buttonSize, buttonSize, [=](){ remove(); }, "x");
-	addChild<UIButton>(x + w - 2 * (hPad + buttonSize),	by,	buttonSize, buttonSize, [=](){ shader->setActive(!shader->isActive()); }, "b");
+	addChild<UIButton>(x + w - 2 * (hPad + buttonSize), by, buttonSize, buttonSize, shader->getParameter("bypass"), "b");
 	addChild<UIButton>(x + w - 3 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(-1); }, "^");
 	addChild<UIButton>(x + w - 4 * (hPad + buttonSize), by, buttonSize, buttonSize, [=](){ move(1); }, "v");
 }
@@ -40,24 +42,13 @@ void ShaderView::update()
 void ShaderView::refresh()
 {
 	list = shader->getParameterList();
+	auto bypassParam = std::find(list.begin(), list.end(), shader->getParameter("bypass"));
+	list.erase(bypassParam);
 }
 
 void ShaderView::processEvent(sf::Event ev)
 {
-	/*if (ev.type == sf::Event::MouseMoved)
-	{
-		if (ev.mouseMove.y > y - 4 && ev.mouseMove.y < y + h + 4 && ev.mouseMove.x < w)
-		{
-			for (int c = 1; c < children.size(); c++)
-				children[c]->setActive(true);
-		}
-		else
-		{
-			for (int c = 1; c < children.size(); c++)
-				children[c]->setActive(false);
-
-		}
-	}*/
+	
 }
 
 void ShaderView::triggerCollapse()
