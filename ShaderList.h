@@ -1,13 +1,14 @@
 #pragma once
-#include "Shader.h"
+#include "ShaderStore.h"
 class ShaderList
 {
-	std::vector<std::unique_ptr<Shader>> shaders;
+	std::vector<Shader> shaders;
+	static ShaderStore shaderStore;
 public:
 	ShaderList();
 	~ShaderList();
-
-	void addShader(std::string filename);
+	
+	void addShader(std::string name);
 	void removeShader(int pos);
 	void removeShader(Shader* sh);
 	void moveShader(int pos, int delta);
@@ -15,6 +16,5 @@ public:
 	Shader* getShader(int pos);
 	int size();
 	void clear();
-	static std::vector<std::string> getShaderList();
 };
 

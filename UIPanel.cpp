@@ -1,6 +1,7 @@
 #include "UIPanel.h"
 #include "PaletteView.h"
 #include "UIComboBox.h"
+#include "ShaderStore.h"
 
 using namespace UIStyle::Layout;
 
@@ -57,7 +58,7 @@ void UIPanel::rebuildChildren()
 	addChild<GeneratorView>(x, y, w, 16, sceneList->getCurentScene());
 	addChild<ShaderListView>(x, y, w, 16, shaders);
 	std::function<void(std::string)> cb = [this](std::string str){shaders->addShader(str); rebuildChildren(); };
-	addChild<UIComboBox>(x + hPad, y, w - 2 * hPad, sliderH, ShaderList::getShaderList(), cb);
+	addChild<UIComboBox>(x + hPad, y, w - 2 * hPad, sliderH, ShaderStore::getShaderList(), cb);
 	repositionChildren();
 	requestRefresh();
 }

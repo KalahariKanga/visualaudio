@@ -1,8 +1,11 @@
 #include "ShaderList.h"
+#include "ShaderStore.h"
 
+ShaderStore ShaderList::shaderStore;
 
 ShaderList::ShaderList()
 {
+	shaderStore.loadShaders();
 }
 
 
@@ -10,9 +13,16 @@ ShaderList::~ShaderList()
 {
 }
 
-void ShaderList::addShader(std::string filename)
+void ShaderList::addShader(std::string name)
 {
-	shaders.push_back(std::make_unique<Shader>(filename));
+	try
+	{
+		shaders.push_back(shaderStore.getShader(name));
+	}
+	catch (...)
+	{
+		std::cout << "Could not find shader " << name << "\n";
+	}
 }
 
 void ShaderList::removeShader(int pos)
@@ -24,8 +34,8 @@ void ShaderList::removeShader(int pos)
 
 void ShaderList::removeShader(Shader* sh)
 {
-	auto it = std::find_if(shaders.begin(), shaders.end(), 
-		[sh](std::unique_ptr<Shader>& elem){return (elem.get() == sh); });
+	auto it = std::find_if(shaders.begin(), shaders.end(),
+		[sh](Shader& elem){return (&elem == sh); });
 	if (it != shaders.end())
 		shaders.erase(it);
 }
@@ -40,7 +50,7 @@ void ShaderList::moveShader(int pos, int delta)
 void ShaderList::moveShader(Shader* sh, int delta)
 {
 	auto it = std::find_if(shaders.begin(), shaders.end(),
-		[sh](std::unique_ptr<Shader>& elem){return (elem.get() == sh); });
+		[sh](Shader& elem){return (&elem == sh); });
 	if (it != shaders.end())
 	{
 		int index = it - shaders.begin();
@@ -59,7 +69,7 @@ Shader* ShaderList::getShader(int pos)
 {
 	try
 	{
-		return shaders[pos].get();
+		return &shaders.at(pos);
 	}
 	catch (...)
 	{
@@ -74,21 +84,4 @@ int ShaderList::size()
 void ShaderList::clear()
 {
 	shaders.clear();
-}
-
-std::vector<std::string> ShaderList::getShaderList()
-{
-	std::vector<std::string> list;
-	list = {
-		"bend",
-		"blend",
-		"bloom",
-		"edgedetect",
-		"kaleidoscope",
-		"mosaic",
-		"polar",
-		"separatechannels",
-		"tile"
-	};
-	return list;
 }

@@ -1,47 +1,15 @@
 #include "Shader.h"
-#include <sstream>
 
-const std::string Shader::preamble =	"uniform float aspectRatio;\n\
-										uniform sampler2D texture;\n\
-										uniform sampler2D lastFrame;\n";
 
-Shader::Shader(std::string fname)
+
+
+Shader::Shader(std::string name, sf::Shader* shaderProgram_) : shaderProgram(shaderProgram_), filename(name)
 {
-	shader = new sf::Shader();
-	filename = fname;
-	load(fname);
+	loadParams();
 }
 
-Shader& Shader::operator=(Shader&& other)
+void Shader::loadParams()
 {
-	delete shader;
-	shader = other.shader;
-	other.shader = nullptr;
-	return *this;
-}
-
-Shader::Shader(Shader && other)
-{
-	delete shader;
-	shader = other.shader;
-	other.shader = nullptr;
-}
-
-Shader::~Shader()
-{
-	delete shader;
-}
-
-void Shader::load(std::string filename)
-{
-	std::ifstream file("shaders/"+filename);
-	//if (!file.is_open())	:/
-		
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-	auto shader_str = preamble + buffer.str();
-	shader->loadFromMemory(shader_str, sf::Shader::Type::Fragment);
-
 	parameters.clear();
 	addParameter("bypass", 0, 0, 1, Parameter::Type::Switch);
 	std::fstream params("shaders/" + filename + ".params");
@@ -81,7 +49,7 @@ void Shader::load(std::string filename)
 				std::cout << "Error reading .params file for shader " << filename << std::endl;
 				return;
 			}
-			
+
 		}
 	}
 	else
@@ -96,6 +64,7 @@ void Shader::update()
 		active = true;
 	for (auto p : parameters)
 	{
-		shader->setUniform(p.first, p.second.getValue());
+		//kinda strange...
+		shaderProgram->setUniform(p.first, p.second.getValue());
 	}
 }

@@ -22,6 +22,11 @@ void ShaderListView::update()
 
 void ShaderListView::refresh()
 {
+	children.clear();
+	for (int i = 0; i < shaderList->size(); ++i)
+	{
+		addChild<ShaderView>(x, y, w, 16, shaderList->getShader(i));
+	}
 	repositionChildren();
 }
 
@@ -30,9 +35,9 @@ void ShaderListView::processEvent(sf::Event ev)
 
 }
 
-void ShaderListView::addShader(std::string filename)
+void ShaderListView::addShader(std::string name)
 {
-	shaderList->addShader(filename);
+	shaderList->addShader(name);
 	addChild<ShaderView>(x, y, w, 16, shaderList->getShader(shaderList->size()-1));
 	requestRefresh();
 }
@@ -40,28 +45,12 @@ void ShaderListView::addShader(std::string filename)
 void ShaderListView::removeShader(ShaderView* sh)
 {
 	shaderList->removeShader(sh->getShader());
-	removeChild((UIElement*)sh);
-	requestRefresh();
+	//removeChild((UIElement*)sh);
+	needRefresh = 1;
 }
 
 void ShaderListView::moveShader(ShaderView* sh, int delta)
 {
 	shaderList->moveShader(sh->getShader(), delta);
-	
-	auto it = std::find_if(children.begin(), children.end(),
-		[sh](std::unique_ptr<UIElement>& elem){return (elem.get() == sh); });
-
-	if (it != children.end())
-	{
-		int index = it - children.begin();
-		try
-		{
-			std::swap(children.at(index), children.at(index + delta));
-		}
-		catch (...)
-		{
-			//im dreadful
-		}
-	}
-	requestRefresh();
+	needRefresh = 1;
 }

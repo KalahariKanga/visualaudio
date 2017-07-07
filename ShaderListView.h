@@ -12,7 +12,7 @@ public:
 	virtual void update();
 	virtual void processEvent(sf::Event ev);
 	virtual void refresh();
-	void addShader(std::string filename);
+	void addShader(std::string name);
 	void removeShader(ShaderView* sh);
 	void moveShader(ShaderView* sh, int delta);
 };
