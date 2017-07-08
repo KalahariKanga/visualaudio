@@ -12,6 +12,7 @@
 #include "Gen_Julia.h"
 #include "Palette.h"
 #include "EventHandler.h"
+#include "ShaderList.h"
 
 class Scene :
 	public InputReciever
@@ -19,6 +20,7 @@ class Scene :
 	Canvas* canvas;
 	std::unique_ptr<Generator> gen;
 	AudioCapture* ac;
+	ShaderList shaderList;
 public:
 	Scene(AudioCapture* ac, Canvas* canvas);
 	~Scene();
@@ -29,4 +31,5 @@ public:
 	std::vector<Parameter*> getParameterList() override;
 	Generator* getGenerator() { return gen.get(); } ///nonono
 	void setParameterLock(bool lock);
+	ShaderList* getShaderList(){ return &shaderList; }
 };

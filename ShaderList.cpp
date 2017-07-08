@@ -5,7 +5,7 @@ ShaderStore ShaderList::shaderStore;
 
 ShaderList::ShaderList()
 {
-	shaderStore.loadShaders();
+	
 }
 
 
@@ -84,4 +84,9 @@ int ShaderList::size()
 void ShaderList::clear()
 {
 	shaders.clear();
+}
+
+void ShaderList::loadShaders()
+{
+	shaderStore.loadShaders();
 }

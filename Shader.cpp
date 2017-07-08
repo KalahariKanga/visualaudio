@@ -68,3 +68,25 @@ void Shader::update()
 		shaderProgram->setUniform(p.first, p.second.getValue());
 	}
 }
+
+void Shader::setUniform(std::string name, float value)
+{
+	shaderProgram->setUniform(name, value);
+}
+
+void Shader::setUniform(std::string name, const sf::Texture& texture)
+{
+	shaderProgram->setUniform(name, texture);
+}
+
+void Shader::apply(const sf::Drawable& source, sf::RenderTarget& destination)
+{
+	if (isActive())
+	{
+		destination.draw(source, shaderProgram);
+	}
+	else
+	{
+		destination.draw(source);
+	}
+}

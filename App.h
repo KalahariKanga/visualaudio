@@ -36,8 +36,6 @@ class App : public InputReciever
 
 	InputMap inputMap;
 	EventHandler eventHandler;
-	
-	ShaderList shaderList;
 
 	std::unique_ptr<UIPanel> panel;
 	std::unique_ptr<UISubPanel> subPanel;
@@ -47,7 +45,7 @@ class App : public InputReciever
 
 	void processEvents();
 	void applyShaders();
-	void debugShaders();
+	//void debugShaders();
 	void toggleFullscreen();
 	void resize(int width, int height);
 	void initialize();

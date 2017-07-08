@@ -7,11 +7,10 @@
 class UIPanel :
 	public UIElement
 {
-	ShaderList* shaders;
 	SceneList* sceneList;
 	Palette* palette;
 public:
-	UIPanel(int x, int y, int w, int h, ShaderList* shaders, SceneList* sl, Palette* pal, sf::RenderTexture* texture);
+	UIPanel(int x, int y, int w, int h, SceneList* sl, Palette* pal, sf::RenderTexture* texture);
 	~UIPanel();
 	virtual void update();
 	virtual void refresh();

@@ -16,5 +16,6 @@ public:
 	Shader* getShader(int pos);
 	int size();
 	void clear();
+	static void loadShaders();
 };
 

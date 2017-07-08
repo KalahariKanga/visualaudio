@@ -16,15 +16,22 @@ ShaderStore::~ShaderStore()
 void ShaderStore::loadShader(std::string filename)
 {
 	std::ifstream file("shaders/" + filename);
-	//if (!file.is_open())	:/
+	if (!file.is_open())
+	{
+		std::cout << "Cannot open file shaders\\" << filename << "\n";
+		return;
+	}
 
 	std::stringstream buffer;
 	buffer << file.rdbuf();
 	auto shader_str = preamble + buffer.str();
 	shaderPrograms.push_back(std::unique_ptr<sf::Shader>(new sf::Shader()));
 	std::cout << "Compiling " << filename << "...";
-	shaderPrograms.back()->loadFromMemory(shader_str, sf::Shader::Type::Fragment);
-	std::cout << "done\n";
+	bool compiled = shaderPrograms.back()->loadFromMemory(shader_str, sf::Shader::Type::Fragment);
+	if (compiled)
+		std::cout << "done\n";
+	else
+		std::cout << "falied\n";
 	Shader shader(filename, shaderPrograms.back().get());
 	shaders.insert(std::make_pair(filename, shader));
 }

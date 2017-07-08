@@ -16,6 +16,8 @@ App::App()
 	sceneList = std::make_unique<SceneList>(&AC, canvas.get(), [&]{rebuildUI();} );
 	setupMidi();
 	//midiIn->openPort(3);
+
+	ShaderList::loadShaders();
 	
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Window");
 	//window.setVerticalSyncEnabled(true);
@@ -47,7 +49,7 @@ App::App()
 	sceneList->addScene("Waveform");
 
 	UITexture.create(UIWidth * 2, windowHeight);
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList.get(), &palette,&UITexture);
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, sceneList.get(), &palette,&UITexture);
 }
 
 App::~App()
@@ -200,8 +202,9 @@ void App::processEvents()
 
 void App::applyShaders()
 {
+	auto shaderList = sceneList->getCurentScene()->getShaderList();
 	//probably could be simpler
-	if (shaderList.size() == 0)
+	if (shaderList->size() == 0)
 	{
 		renderTexture[0].draw(sprite);
 		window.draw(sf::Sprite(renderTexture[0].getTexture()));
@@ -210,30 +213,23 @@ void App::applyShaders()
 		renderTexture[0].clear();
 		return;
 	}
-	shaderList.getShader(0)->update();
-	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
-	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
-
+	
 	sprite.setScale(1, -1);
 	sprite.setPosition(0, windowHeight);//dump on gpu
 
-	if (shaderList.getShader(0)->isActive())
-		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
-	else
-		renderTexture[0].draw(sprite);
+	shaderList->getShader(0)->update();
+	shaderList->getShader(0)->setUniform("aspectRatio", (float)windowWidth / windowHeight);
+	shaderList->getShader(0)->setUniform("lastFrame", lastFrame.getTexture());
+	shaderList->getShader(0)->apply(sprite, renderTexture[0]);
 	renderTexture[0].display();
 
 	int t = 1;
-	for (; t < shaderList.size(); t++)
+	for (; t < shaderList->size(); t++)
 	{
-		shaderList.getShader(t)->update();
-		shaderList.getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
-		shaderList.getShader(t)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
-
-		if (shaderList.getShader(t)->isActive())
-			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
-		else
-			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+		shaderList->getShader(t)->update();
+		shaderList->getShader(t)->setUniform("aspectRatio", (float)windowWidth / windowHeight);
+		shaderList->getShader(t)->setUniform("lastFrame", lastFrame.getTexture());
+		shaderList->getShader(t)->apply(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), renderTexture[t % 2]);
 		renderTexture[t % 2].display();
 	}
 
@@ -243,78 +239,80 @@ void App::applyShaders()
 	renderTexture[0].clear();
 }
 
-void App::debugShaders()
-{
-	//dumb as heck, dont actually use
-	static sf::RenderTexture temptex;
-	static bool created = 0;
-	if (!created)
-	{
-		temptex.create(windowWidth, windowHeight);
-		created = 1;
-	}
-	if (shaderList.size() == 0) return;
-	shaderList.getShader(0)->update();
-	shaderList.getShader(0)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
-	shaderList.getShader(0)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
-
-	sprite.setScale(1, -1);
-	sprite.setPosition(0, windowHeight);//dump on gpu
-
-	if (shaderList.getShader(0)->isActive())
-	{
-		sf::Sprite spr;
-		spr.setTexture(renderTexture[0].getTexture());
-		spr.setScale(0.16, 0.16);
-		spr.setPosition(windowWidth*5.0/6.0, 0);
-		temptex.draw(spr, shaderList.getShader(0)->getShader());
-		renderTexture[0].draw(sprite, shaderList.getShader(0)->getShader());
-	}
-	else
-	{
-		sf::Sprite spr;
-		spr.setTexture(renderTexture[0].getTexture());
-		spr.setScale(0.16, 0.16);
-		spr.setPosition(windowWidth*5.0 / 6.0, 0);
-		temptex.draw(spr);
-		renderTexture[0].draw(sprite);
-	}
-
-	renderTexture[0].display();
-	int t = 1;
-	for (; t < shaderList.size(); t++)
-	{
-		shaderList.getShader(t)->update();
-		shaderList.getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
-		shaderList.getShader(t)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
-
-		if (shaderList.getShader(t)->isActive())
-		{
-			sf::Sprite spr;
-			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
-			spr.setScale(0.16, 0.16);
-			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
-			temptex.draw(spr, shaderList.getShader(t)->getShader());
-			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList.getShader(t)->getShader());
-		}
-		else
-		{
-			sf::Sprite spr;
-			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
-			spr.setScale(0.16, 0.16);
-			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
-			temptex.draw(spr);
-			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
-		}
-		renderTexture[t % 2].display();
-	}
-	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
-	window.draw(sf::Sprite(temptex.getTexture()));
-	lastFrame.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
-	lastFrame.display();
-	temptex.display();
-	renderTexture[0].clear();
-}
+//void App::debugShaders()
+//{
+//	//dumb as heck, dont actually use
+//	auto shaderList = sceneList->getCurentScene()->getShaderList();
+//
+//	static sf::RenderTexture temptex;
+//	static bool created = 0;
+//	if (!created)
+//	{
+//		temptex.create(windowWidth, windowHeight);
+//		created = 1;
+//	}
+//	if (shaderList->size() == 0) return;
+//	shaderList->getShader(0)->update();
+//	shaderList->getShader(0)->setUniform("aspectRatio", (float)windowWidth / windowHeight);//omg :(
+//	shaderList->getShader(0)->setUniform("lastFrame", lastFrame.getTexture());
+//
+//	sprite.setScale(1, -1);
+//	sprite.setPosition(0, windowHeight);//dump on gpu
+//
+//	if (shaderList->getShader(0)->isActive())
+//	{
+//		sf::Sprite spr;
+//		spr.setTexture(renderTexture[0].getTexture());
+//		spr.setScale(0.16, 0.16);
+//		spr.setPosition(windowWidth*5.0/6.0, 0);
+//		temptex.draw(spr, shaderList->getShader(0)->getShader());
+//		renderTexture[0].draw(sprite, shaderList->getShader(0)->getShader());
+//	}
+//	else
+//	{
+//		sf::Sprite spr;
+//		spr.setTexture(renderTexture[0].getTexture());
+//		spr.setScale(0.16, 0.16);
+//		spr.setPosition(windowWidth*5.0 / 6.0, 0);
+//		temptex.draw(spr);
+//		renderTexture[0].draw(sprite);
+//	}
+//
+//	renderTexture[0].display();
+//	int t = 1;
+//	for (; t < shaderList->size(); t++)
+//	{
+//		shaderList->getShader(t)->update();
+//		shaderList->getShader(t)->getShader()->setUniform("aspectRatio", (float)windowWidth / windowHeight);
+//		shaderList->getShader(t)->getShader()->setUniform("lastFrame", lastFrame.getTexture());
+//
+//		if (shaderList->getShader(t)->isActive())
+//		{
+//			sf::Sprite spr;
+//			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
+//			spr.setScale(0.16, 0.16);
+//			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
+//			temptex.draw(spr, shaderList->getShader(t)->getShader());
+//			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()), shaderList->getShader(t)->getShader());
+//		}
+//		else
+//		{
+//			sf::Sprite spr;
+//			spr.setTexture(renderTexture[(t + 1) % 2].getTexture());
+//			spr.setScale(0.16, 0.16);
+//			spr.setPosition(windowWidth*5.0 / 6.0, t*windowHeight / 6.0);
+//			temptex.draw(spr);
+//			renderTexture[t % 2].draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+//		}
+//		renderTexture[t % 2].display();
+//	}
+//	window.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+//	window.draw(sf::Sprite(temptex.getTexture()));
+//	lastFrame.draw(sf::Sprite(renderTexture[(t + 1) % 2].getTexture()));
+//	lastFrame.display();
+//	temptex.display();
+//	renderTexture[0].clear();
+//}
 
 void App::toggleFullscreen()
 {
@@ -350,14 +348,14 @@ void App::initialize()
 	sceneList->clear();
 	inputMap.clear();
 	//eventHandler.clear();//impl
-	shaderList.clear();
+	//shaderList.clear();
 
 	sceneList->setScene(0);//could do something here re: onscenechange being public
 }
 
 void App::rebuildUI()
 {
-	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, &shaderList, sceneList.get(), &palette, &UITexture);
+	panel = std::make_unique<UIPanel>(0, 0, UIWidth, windowHeight, sceneList.get(), &palette, &UITexture);
 	panel->doRefresh();
 	subPanel.reset(nullptr);
 }
@@ -417,7 +415,7 @@ void App::serializeLinkList(std::ofstream& file, Parameter* p)
 
 void App::save(std::string fname)
 {
-	std::ofstream file(fname, std::ios::trunc);
+	/*std::ofstream file(fname, std::ios::trunc);
 	std::cout << "Saving to file " << fname << "...";
 	if (!file.is_open())
 	{
@@ -449,91 +447,91 @@ void App::save(std::string fname)
 	}
 
 	serializeParameterList(file, palette.getParameterList());
-	std::cout << "done!\n";
+	std::cout << "done!\n";*/
 }
 
 void App::load(std::string fname)
 {
-	std::ifstream file(fname);
-	std::cout << "Loading file " << fname << "...";
-	if (!file.is_open())
-	{
-		std::cout << "Could not open file.\n";
-		return;
-	}
+	//std::ifstream file(fname);
+	//std::cout << "Loading file " << fname << "...";
+	//if (!file.is_open())
+	//{
+	//	std::cout << "Could not open file.\n";
+	//	return;
+	//}
 
-	initialize();
+	//initialize();
 
-	int noScenes = 0;
-	file >> noScenes;
-	for (int c = 0; c < noScenes; c++)
-	{
-		Scene* sc = nullptr;
-		std::string scenetype;
-		file >> scenetype;//
-		sc = sceneList->addScene(scenetype);
-		int noParams = 0;
-		file >> noParams;
-		for (int d = 0; d < noParams; d++)
-		{
-			std::string name;
-			float val = 0;
-			file >> name;//
-			file >> val;
-			auto param = sc->getParameter(name);
-			param->setValue(val);//try
+	//int noScenes = 0;
+	//file >> noScenes;
+	//for (int c = 0; c < noScenes; c++)
+	//{
+	//	Scene* sc = nullptr;
+	//	std::string scenetype;
+	//	file >> scenetype;//
+	//	sc = sceneList->addScene(scenetype);
+	//	int noParams = 0;
+	//	file >> noParams;
+	//	for (int d = 0; d < noParams; d++)
+	//	{
+	//		std::string name;
+	//		float val = 0;
+	//		file >> name;//
+	//		file >> val;
+	//		auto param = sc->getParameter(name);
+	//		param->setValue(val);//try
 
-			deserializeLinkList(file, param);
-		}
-	}
+	//		deserializeLinkList(file, param);
+	//	}
+	//}
 
-	int scene;
-	file >> scene;
-	sceneList->getParameter("scene")->setValue(scene);
-	deserializeLinkList(file, sceneList->getParameter("scene"));
+	//int scene;
+	//file >> scene;
+	//sceneList->getParameter("scene")->setValue(scene);
+	//deserializeLinkList(file, sceneList->getParameter("scene"));
 
-	int noShaders = 0;
-	file >> noShaders;
-	for (int c = 0; c < noShaders; c++)
-	{
-		std::string name;
-		bool active;
-		file >> name;
-		file >> active;
-		shaderList.addShader(name);//try
-		auto sh = shaderList.getShader(c);
-		sh->setActive(active);
+	//int noShaders = 0;
+	//file >> noShaders;
+	//for (int c = 0; c < noShaders; c++)
+	//{
+	//	std::string name;
+	//	bool active;
+	//	file >> name;
+	//	file >> active;
+	//	shaderList.addShader(name);//try
+	//	auto sh = shaderList.getShader(c);
+	//	sh->setActive(active);
 
-		int noParams = 0;
-		file >> noParams;
-		for (int d = 0; d < noParams; d++)
-		{
-			std::string name;
-			float val = 0;
-			file >> name;//
-			file >> val;
-			auto param = sh->getParameter(name);
-			param->setValue(val);//try
+	//	int noParams = 0;
+	//	file >> noParams;
+	//	for (int d = 0; d < noParams; d++)
+	//	{
+	//		std::string name;
+	//		float val = 0;
+	//		file >> name;//
+	//		file >> val;
+	//		auto param = sh->getParameter(name);
+	//		param->setValue(val);//try
 
-			deserializeLinkList(file, param);
-		}
-	}
+	//		deserializeLinkList(file, param);
+	//	}
+	//}
 
-	int noParams = 0;
-	file >> noParams;
-	for (int c = 0; c < noParams; c++)
-	{
-		std::string name;
-		float val = 0;
-		file >> name;//
-		file >> val;
-		auto param = palette.getParameter(name);
-		param->setValue(val);//try
+	//int noParams = 0;
+	//file >> noParams;
+	//for (int c = 0; c < noParams; c++)
+	//{
+	//	std::string name;
+	//	float val = 0;
+	//	file >> name;//
+	//	file >> val;
+	//	auto param = palette.getParameter(name);
+	//	param->setValue(val);//try
 
-		deserializeLinkList(file, param);
-	}
+	//	deserializeLinkList(file, param);
+	//}
 
-	sceneList->onSceneChange();
+	//sceneList->onSceneChange();
 
-	std::cout << "done!\n";
+	//std::cout << "done!\n";
 }

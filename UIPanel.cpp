@@ -5,9 +5,8 @@
 
 using namespace UIStyle::Layout;
 
-UIPanel::UIPanel(int x, int y, int w, int h, ShaderList* shaders_, SceneList* sl, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h), palette(pal), sceneList(sl)
+UIPanel::UIPanel(int x, int y, int w, int h, SceneList* sl, Palette* pal, sf::RenderTexture* texture) : UIElement(x, y, w, h), palette(pal), sceneList(sl)
 {
-	this->shaders = shaders_;
 	this->texture = texture;
 	rebuildChildren();
 }
@@ -24,8 +23,8 @@ void UIPanel::update()
 
 void UIPanel::refresh()
 {
-	if (!shaders)
-		return;//look at how shaders is initialized
+	//if (!shaders)
+	//	return;//look at how shaders is initialized
 
 	repositionChildren();
 }
@@ -53,11 +52,13 @@ void UIPanel::processEvent(sf::Event ev)
 void UIPanel::rebuildChildren()
 {
 	children.clear();
+	auto scene = sceneList->getCurentScene();
+	auto shaders = scene->getShaderList();
 	addChild<SceneListView>(x, y, w, 16, sceneList);
 	addChild<PaletteView>(x, y, w, 16, palette);
-	addChild<GeneratorView>(x, y, w, 16, sceneList->getCurentScene());
+	addChild<GeneratorView>(x, y, w, 16, scene);
 	addChild<ShaderListView>(x, y, w, 16, shaders);
-	std::function<void(std::string)> cb = [this](std::string str){shaders->addShader(str); rebuildChildren(); };
+	std::function<void(std::string)> cb = [shaders, this](std::string str){shaders->addShader(str); rebuildChildren(); };
 	addChild<UIComboBox>(x + hPad, y, w - 2 * hPad, sliderH, ShaderStore::getShaderList(), cb);
 	repositionChildren();
 	requestRefresh();
