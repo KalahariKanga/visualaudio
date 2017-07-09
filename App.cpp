@@ -415,7 +415,7 @@ void App::serializeLinkList(std::ofstream& file, Parameter* p)
 
 void App::save(std::string fname)
 {
-	/*std::ofstream file(fname, std::ios::trunc);
+	std::ofstream file(fname, std::ios::trunc);
 	std::cout << "Saving to file " << fname << "...";
 	if (!file.is_open())
 	{
@@ -430,108 +430,110 @@ void App::save(std::string fname)
 		auto sc = sceneList->getScene(c);
 		file << sc->getGenerator()->getName() << std::endl;
 		serializeParameterList(file, sc->getGenerator()->getParameterList());
+		
+		auto shl = sc->getShaderList();
+		file << shl->size() << std::endl;
+	
+		for (int c = 0; c < shl->size(); c++)
+		{
+			auto sh = shl->getShader(c);
+			file << sh->getName() << std::endl;
+			file << sh->isActive() << std::endl;
+			serializeParameterList(file, sh->getParameterList());
+		}
+
 	}
 
 	int sceneID = (int)sceneList->getParameter("scene")->getValue();
 	file << sceneID << std::endl;
 	serializeLinkList(file, sceneList->getParameter("scene"));
 
-	file << shaderList.size() << std::endl;
 	
-	for (int c = 0; c < shaderList.size(); c++)
-	{
-		auto sh = shaderList.getShader(c);
-		file << sh->getName() << std::endl;
-		file << sh->isActive() << std::endl;
-		serializeParameterList(file, sh->getParameterList());
-	}
-
 	serializeParameterList(file, palette.getParameterList());
-	std::cout << "done!\n";*/
+	std::cout << "done!\n";
 }
 
 void App::load(std::string fname)
 {
-	//std::ifstream file(fname);
-	//std::cout << "Loading file " << fname << "...";
-	//if (!file.is_open())
-	//{
-	//	std::cout << "Could not open file.\n";
-	//	return;
-	//}
+	std::ifstream file(fname);
+	std::cout << "Loading file " << fname << "...";
+	if (!file.is_open())
+	{
+		std::cout << "Could not open file.\n";
+		return;
+	}
 
-	//initialize();
+	initialize();
 
-	//int noScenes = 0;
-	//file >> noScenes;
-	//for (int c = 0; c < noScenes; c++)
-	//{
-	//	Scene* sc = nullptr;
-	//	std::string scenetype;
-	//	file >> scenetype;//
-	//	sc = sceneList->addScene(scenetype);
-	//	int noParams = 0;
-	//	file >> noParams;
-	//	for (int d = 0; d < noParams; d++)
-	//	{
-	//		std::string name;
-	//		float val = 0;
-	//		file >> name;//
-	//		file >> val;
-	//		auto param = sc->getParameter(name);
-	//		param->setValue(val);//try
+	int noScenes = 0;
+	file >> noScenes;
+	for (int c = 0; c < noScenes; c++)
+	{
+		Scene* sc = nullptr;
+		std::string scenetype;
+		file >> scenetype;//
+		sc = sceneList->addScene(scenetype);
+		int noParams = 0;
+		file >> noParams;
+		for (int d = 0; d < noParams; d++)
+		{
+			std::string name;
+			float val = 0;
+			file >> name;//
+			file >> val;
+			auto param = sc->getParameter(name);
+			param->setValue(val);//try
 
-	//		deserializeLinkList(file, param);
-	//	}
-	//}
+			deserializeLinkList(file, param);
+		}
+		int noShaders = 0;
+		file >> noShaders;
+		for (int c = 0; c < noShaders; c++)
+		{
+			std::string name;
+			bool active;
+			file >> name;
+			file >> active;
+			sc->getShaderList()->addShader(name);//try
+			auto sh = sc->getShaderList()->getShader(c);
+			sh->setActive(active);
 
-	//int scene;
-	//file >> scene;
-	//sceneList->getParameter("scene")->setValue(scene);
-	//deserializeLinkList(file, sceneList->getParameter("scene"));
+			int noParams = 0;
+			file >> noParams;
+			for (int d = 0; d < noParams; d++)
+			{
+				std::string name;
+				float val = 0;
+				file >> name;//
+				file >> val;
+				auto param = sh->getParameter(name);
+				param->setValue(val);//try
 
-	//int noShaders = 0;
-	//file >> noShaders;
-	//for (int c = 0; c < noShaders; c++)
-	//{
-	//	std::string name;
-	//	bool active;
-	//	file >> name;
-	//	file >> active;
-	//	shaderList.addShader(name);//try
-	//	auto sh = shaderList.getShader(c);
-	//	sh->setActive(active);
+				deserializeLinkList(file, param);
+			}
+		}
+	}
 
-	//	int noParams = 0;
-	//	file >> noParams;
-	//	for (int d = 0; d < noParams; d++)
-	//	{
-	//		std::string name;
-	//		float val = 0;
-	//		file >> name;//
-	//		file >> val;
-	//		auto param = sh->getParameter(name);
-	//		param->setValue(val);//try
+	int scene;
+	file >> scene;
+	sceneList->getParameter("scene")->setValue(scene);
+	deserializeLinkList(file, sceneList->getParameter("scene"));
 
-	//		deserializeLinkList(file, param);
-	//	}
-	//}
+	int noParams = 0;
+	file >> noParams;
+	for (int c = 0; c < noParams; c++)
+	{
+		std::string name;
+		float val = 0;
+		file >> name;//
+		file >> val;
+		auto param = palette.getParameter(name);
+		param->setValue(val);//try
 
-	//int noParams = 0;
-	//file >> noParams;
-	//for (int c = 0; c < noParams; c++)
-	//{
-	//	std::string name;
-	//	float val = 0;
-	//	file >> name;//
-	//	file >> val;
-	//	auto param = palette.getParameter(name);
-	//	param->setValue(val);//try
+		deserializeLinkList(file, param);
+	}
 
-	//	deserializeLinkList(file, param);
-	//}
+	sceneList->onSceneChange();
 
-	//sceneList->onSceneChange();
-
-	//std::cout << "done!\n";
+	std::cout << "done!\n";
 }
