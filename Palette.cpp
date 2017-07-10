@@ -5,18 +5,18 @@ Palette::Palette()
 {
 	addParameter("speed", 0.002, 0, 0.1);
 
-	addParameter("r1", 255, 0, 255);
-	addParameter("g1", 0, 0, 255);
-	addParameter("b1", 0, 0, 255);
-	addParameter("r2", 0, 0, 255);
-	addParameter("g2", 255, 0, 255);
-	addParameter("b2", 0, 0, 255);
-	addParameter("r3", 128, 0, 255);
-	addParameter("g3", 128, 0, 255);
-	addParameter("b3", 0, 0, 255);
-	addParameter("r4", 255, 0, 255);
-	addParameter("g4", 0, 0, 255);
-	addParameter("b4", 255, 0, 255);
+	addParameter("r1", 255, 0, 255, Parameter::Type::Discrete);
+	addParameter("g1", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("b1", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("r2", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("g2", 255, 0, 255, Parameter::Type::Discrete);
+	addParameter("b2", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("r3", 128, 0, 255, Parameter::Type::Discrete);
+	addParameter("g3", 128, 0, 255, Parameter::Type::Discrete);
+	addParameter("b3", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("r4", 255, 0, 255, Parameter::Type::Discrete);
+	addParameter("g4", 0, 0, 255, Parameter::Type::Discrete);
+	addParameter("b4", 255, 0, 255, Parameter::Type::Discrete);
 	
 	pos = 0;
 	speed = 0.002;

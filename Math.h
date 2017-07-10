@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 class Math
 {
@@ -42,6 +43,13 @@ public:
 		if (py < y1) return 0;
 		if (py > y2) return 0;
 		return 1;
+	}
+	static std::string toSigFigString(float x, int sigFigs = 3)
+	{
+		std::stringstream stream;
+		stream.precision(sigFigs);
+		stream << x;
+		return stream.str();
 	}
 };
 

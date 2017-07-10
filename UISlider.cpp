@@ -45,9 +45,7 @@ void UISlider::update()
 {
 	if (parameter)
 		setValue(parameter->getValue());
-	std::stringstream stream;
-	stream << value;
-	valueText.setString(stream.str());
+	valueText.setString(Math::toSigFigString(value));
 
 	sf::Vector2f sz(valueToXPos(value) - valueToXPos(Math::clamp(0, min, max)), h);
 	fill.setSize(sz);
