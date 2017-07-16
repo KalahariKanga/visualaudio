@@ -63,7 +63,8 @@ std::vector<std::string> ShaderStore::getShaderList()
 		"mosaic",
 		"polar",
 		"separatechannels",
-		"tile"
+		"tile",
+		"transform"
 	};
 	return list;
 }

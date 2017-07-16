@@ -1,0 +1,10 @@
+shiftX c
+0 -0.5 0.5
+shiftY c
+0 -0.5 0.5
+zoom c
+1 0.5 2
+angle c
+0 -3.142 3.142
+wrap s
+1

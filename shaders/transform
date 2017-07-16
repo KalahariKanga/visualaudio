@@ -1,0 +1,38 @@
+uniform float shiftX;
+uniform float shiftY;
+uniform float zoom;
+uniform float angle;
+uniform float wrap;
+
+void main()
+{
+	vec4 lastColour;
+
+	vec2 texcoord = vec2(gl_TexCoord[0]);
+	texcoord = texcoord - vec2(0.5,0.5);
+	texcoord.y *= 1/aspectRatio;
+	
+	
+	mat2 rot;
+	rot[0] = vec2(cos(angle),sin(angle));
+	rot[1] = vec2(-sin(angle),cos(angle));
+
+	vec2 drift = vec2(shiftX,shiftY);
+	drift.y *= 1/aspectRatio;	
+	vec2 newcoord = texcoord * zoom * rot + drift;
+
+	newcoord.y *= aspectRatio;
+	
+	newcoord = newcoord + vec2(0.5,0.5);
+
+	if(wrap > 0)
+	{
+		if(newcoord.x > 1) newcoord.x = 2 - newcoord.x;
+		if(newcoord.y > 1) newcoord.y = 2 - newcoord.y;
+		if(newcoord.x < 0) newcoord.x *= -1;
+		if(newcoord.y < 0) newcoord.y *= -1;
+	}
+	
+	gl_FragColor = texture2D(texture, newcoord);
+	gl_FragColor.a = 1;
+}
