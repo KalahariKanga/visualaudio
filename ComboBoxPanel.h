@@ -8,6 +8,8 @@ class ComboBoxPanel :
 	UIComboBox* box;
 	std::vector<std::string> list;
 	sf::Text text;
+	sf::RectangleShape outline;
+	int mouseOverId = -1;
 public:
 	ComboBoxPanel(int w, int h, UIComboBox* box, sf::RenderTexture* tex);
 	~ComboBoxPanel();
