@@ -58,6 +58,7 @@ std::vector<std::string> ShaderStore::getShaderList()
 		"bend",
 		"blend",
 		"bloom",
+		"displace",
 		"edgedetect",
 		"kaleidoscope",
 		"mosaic",

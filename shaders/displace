@@ -1,0 +1,18 @@
+uniform float distance;
+
+float rand(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+void main()
+{
+	vec2 texcoord = vec2(gl_TexCoord[0]);
+	vec2 pixeldelta = textureSize(texture, 0);
+	float dx = float(int(distance)) / float(pixeldelta.x);
+	float dy = float(int(distance)) / float(pixeldelta.y);
+	float ox = dx * (mod(int(rand(texcoord)*3),3) - 1);
+	float oy = dy * (mod(int(rand(2*texcoord)*3),3) - 1);
+
+	gl_FragColor = texture2D(texture, texcoord + vec2(ox,oy));
+}
+
