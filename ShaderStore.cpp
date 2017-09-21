@@ -65,6 +65,7 @@ std::vector<std::string> ShaderStore::getShaderList()
 		"polar",
 		"separatechannels",
 		"tile",
+		"totalkaleidoscope",
 		"transform"
 	};
 	return list;

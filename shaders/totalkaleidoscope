@@ -1,0 +1,46 @@
+#define PI 3.141592653
+
+uniform float reflections;
+uniform float xpos;
+uniform float ypos;
+uniform float flip;
+uniform float wrap;
+uniform float initRotation;
+ 
+void main() {
+    
+	vec2 offset = vec2(xpos,ypos);
+    vec2 newPos = vec2(gl_TexCoord[0]) - offset;
+	newPos.y *= 1/aspectRatio;	
+	int ireflections = int(reflections);
+
+	float distance = length(newPos.xy);
+    float theta = atan(newPos.y, newPos.x);
+
+	vec4 col = vec4(0,0,0,0);
+	int c;
+	int sign = -1;
+	for(c = 0; c < ireflections; c += 1)
+	{
+		sign *= -1;
+		float targetAngle;
+		if(flip > 0 && sign == -1)
+			targetAngle = sign*theta + (2 * (c+1) * PI) / ireflections + initRotation;
+		else
+			targetAngle = theta + (2 * c * PI) / ireflections + initRotation;
+		vec2 target = distance * vec2(cos(targetAngle), sin(targetAngle));
+		target.y *= aspectRatio;
+		target += offset;
+		
+		if(wrap > 0)
+		{
+			if(target.x > 1) target.x = 2 - target.x;
+			if(target.y > 1) target.y = 2 - target.y;
+			if(target.x < 0) target.x *= -1;
+			if(target.y < 0) target.y *= -1;
+		}
+		col = max(col,texture2D(texture, target));
+	}
+	 
+    gl_FragColor = col;
+}
