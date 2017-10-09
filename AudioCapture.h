@@ -5,14 +5,16 @@
 class AudioCapture
 {
 	int boost = 5000;
+	int noChannels;
 	const int bufferSize = 512;
 	int waveformSize;
 	bool amplitudeRecalc = 1;
+	int fftSize = 1;
 
 	PaStream* stream;
 
 	kiss_fft_cfg cfg;
-	kiss_fft_cpx *waveform, *fft, *data;
+	kiss_fft_cpx *waveform, *fft, *longWaveform;
 public:
 	AudioCapture();
 	~AudioCapture();
